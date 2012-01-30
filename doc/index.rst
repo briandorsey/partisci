@@ -8,8 +8,8 @@ Welcome to Partisci's documentation!
 
 .. include:: ../README.rst
 
-Details:
---------
+Details
+-------
 
 Some limitations:
  * Applications must be modified to send updates.
@@ -30,13 +30,18 @@ Partisci also logs:
  * time the update is recieved
 
 Where does the name come from?
- * It is a truncated portmanteau from Partially Omniscient.
+ * It is a truncated portmanteau from Partially Omniscient. Within its limited domain, Partisci strives to be omniscient.
 
-----
+
+Contents
+--------
 
 .. toctree::
    :maxdepth: 2
 
+   api
+   testing
+   status
 
 Indices and tables
 ==================
