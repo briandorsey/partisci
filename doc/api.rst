@@ -34,13 +34,15 @@ Version JSON
 Version updates have the following JSON structure::
 
     {
-      "appname" : "application_name",
-      "appversion" : "1.2.3dev",
+      "name" : "Application Name",
+      "version" : "1.2.3dev",
       "host" : "hostname",
       "instance" : 0,
     }
 
-appname, appversion & host are limited to 50 unicode characters & instance is a JSON number.
+name, version & host are limited to 50 unicode characters & instance is a JSON number.
+
+TODO: name format: underscores, no spaces, etc? Or accept anything, covert it, and use the simplified form on the urls, as an id? Yes, this.
 
 When returned from Partisci, the following additional fields will be added::
 

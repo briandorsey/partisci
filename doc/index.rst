@@ -20,8 +20,8 @@ Some limitations:
 Partisci accepts update updates via UDP and HTTP. Sending UDP updates is recommended. When UDP isn't easy or possible, use HTTP (for example: network restrictions or browser based apps). Partisci requres each application to be modified to send these updates.
 
 Updates contain:
- * appname
- * appversion
+ * application name
+ * version
  * hostname
  * instance number
 
