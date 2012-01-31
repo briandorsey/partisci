@@ -7,7 +7,7 @@ __version__ = "0.1demo"
 def update_template():
     return dict(
         name="",
-        ersion="",
+        version="",
         host="",
         instance=0)
 
