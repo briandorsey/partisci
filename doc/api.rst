@@ -28,8 +28,8 @@ GET     /host/Z                     all active 'version's for all X on host Z
 POST    /version                    endpoint for appliction updates
 ======  ==========================  ====
 
-Version structure
------------------
+Version JSON
+------------
 
 Version updates have the following JSON structure::
 
@@ -40,10 +40,23 @@ Version updates have the following JSON structure::
       "instance" : 0,
     }
 
+appname, appversion & host are limited to 50 unicode characters & instance is a JSON number.
+
 When returned from Partisci, the following additional fields will be added::
 
     "host_ip" : "10.0.0.1"
     "last_update" : 1327940599
 
 
+Update clients
+--------------
+
+Clients should send update packets via UDP. Update packets are raw UTF8 encoded bytes containing the version JSON.
+
+For clients which cannot use UDP, they can post the version JSON to the /version URL.
+
+Example client in Python
+------------------------
+
+<TODO>
 
