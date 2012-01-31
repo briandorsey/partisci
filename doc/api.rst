@@ -40,7 +40,7 @@ Version updates have the following JSON structure::
       "instance" : 0,
     }
 
-name, version & host are limited to 50 unicode characters & instance is a JSON number.
+name, version & host are limited to 50 unicode characters & instance is an integer <= 65535 (uint16).
 
 TODO: name format: underscores, no spaces, etc? Or accept anything, covert it, and use the simplified form on the urls, as an id? Yes, this.
 
