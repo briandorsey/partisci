@@ -26,7 +26,7 @@ if __name__ == '__main__':
     update["version"] = __version__
     update["host"] = socket.gethostname()
     while True:
-        print "Sending update"
+        print time.time(), "Sending update"
         send_update(update, 'localhost', 7777)
         time.sleep(3)
 
