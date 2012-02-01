@@ -5,8 +5,8 @@ import (
 	logpkg "log"
 	"net"
 	"os"
+	"strings"
 	"time"
-    "strings"
 )
 
 const listenAddr = "localhost:7777"
@@ -24,16 +24,16 @@ type Version struct {
 }
 
 func safeRunes(r rune) rune {
-    if 'a' <= r && r <= 'z' {
-        return r
-    }
-    return '_'
+	if 'a' <= r && r <= 'z' {
+		return r
+	}
+	return '_'
 }
 
 func AppNameToID(app string) (id string) {
-    id = strings.ToLower(app)
-    id = strings.Map(safeRunes, id)
-    return
+	id = strings.ToLower(app)
+	id = strings.Map(safeRunes, id)
+	return
 }
 
 func parsePacket(host string, b []byte) (v Version, err error) {
@@ -43,9 +43,20 @@ func parsePacket(host string, b []byte) (v Version, err error) {
 	if err != nil {
 		log.Print("parsePacket: ", err)
 	}
-    v.AppId = AppNameToID(v.Name)
-    log.Print(v)
+	v.AppId = AppNameToID(v.Name)
+	log.Print(v)
 	return
+}
+
+func handleUpdateUDP(conn net.PacketConn) {
+	b := make([]byte, 2048)
+	n, addr, err := conn.ReadFrom(b)
+	if err != nil {
+		log.Print("Error reading UDP packet:\n  ", err)
+		continue
+	}
+	ip := addr.(*net.UDPAddr).IP
+	parsePacket(ip.String(), b[:n])
 }
 
 func main() {
@@ -58,14 +69,7 @@ func main() {
 	log.Print("listening on: ", conn.LocalAddr())
 
 	for {
-		b := make([]byte, 2048)
-		n, addr, err := conn.ReadFrom(b)
-		if err != nil {
-			log.Print("Error reading UDP packet:\n  ", err)
-			continue
-		}
-		ip := addr.(*net.UDPAddr).IP
-		parsePacket(ip.String(), b[:n])
+		handleUpdateUDP(conn)
 	}
 
 	log.Print("Exit.")
