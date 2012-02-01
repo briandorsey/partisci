@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"io"
-	logpkg "log"
+	"log"
 	"net"
 	"net/http"
 	"os"
@@ -13,7 +13,7 @@ import (
 
 const listenAddr = "localhost:7777"
 
-var log = logpkg.New(os.Stderr, "", logpkg.Ldate|logpkg.Ltime)
+var l = log.New(os.Stderr, "", log.Ldate|log.Ltime)
 
 type Version struct {
 	AppId      string `json:"app_id"`
@@ -43,10 +43,10 @@ func parsePacket(host string, b []byte) (v Version, err error) {
 	v.LastUpdate = time.Now().Unix()
 	err = json.Unmarshal(b[:len(b)], &v)
 	if err != nil {
-		log.Print("parsePacket: ", err)
+		l.Print("parsePacket: ", err)
 	}
 	v.AppId = AppNameToID(v.Name)
-	log.Print(v)
+	l.Print(v)
 	return
 }
 
@@ -55,7 +55,7 @@ func handleUpdateUDP(conn net.PacketConn) {
 		b := make([]byte, 2048)
 		n, addr, err := conn.ReadFrom(b)
 		if err != nil {
-			log.Print("Error reading UDP packet:\n  ", err)
+			l.Print("Error reading UDP packet:\n  ", err)
 			continue
 		}
 		ip := addr.(*net.UDPAddr).IP
@@ -69,20 +69,20 @@ func HelloServer(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-	log.Print("Starting.")
+	l.Print("Starting.")
 
 	conn, err := net.ListenPacket("udp", listenAddr)
 	if err != nil {
-		log.Fatalf("Error opening listen socket: %v\n  %v", listenAddr, err)
+		l.Fatalf("Error opening listen socket: %v\n  %v", listenAddr, err)
 	}
-	log.Print("listening on: ", conn.LocalAddr())
+	l.Print("listening on: ", conn.LocalAddr())
 
 	go handleUpdateUDP(conn)
 
 	http.HandleFunc("/", HelloServer)
 	err = http.ListenAndServe(listenAddr, nil)
 	if err != nil {
-		log.Fatal("ListenAndServe: ", err)
+		l.Fatal("ListenAndServe: ", err)
 	}
-	log.Print("Exit.")
+	l.Print("Exit.")
 }
