@@ -12,6 +12,7 @@ import (
 )
 
 const listenAddr = "localhost:7777"
+const updateInterval = 10 * time.Second
 
 var l = log.New(os.Stderr, "", log.Ldate|log.Ltime)
 
@@ -23,6 +24,10 @@ type Version struct {
 	Instance   uint16 `json:"instance"`
 	HostIP     string `json:"host_ip"`
 	LastUpdate int64  `json:"last_update"`
+}
+
+type OpStats struct {
+	updates int64
 }
 
 func safeRunes(r rune) rune {
@@ -43,14 +48,13 @@ func parsePacket(host string, b []byte) (v Version, err error) {
 	v.LastUpdate = time.Now().Unix()
 	err = json.Unmarshal(b[:len(b)], &v)
 	if err != nil {
-		l.Print("parsePacket: ", err)
+		return v, err
 	}
 	v.AppId = AppNameToID(v.Name)
-	l.Print(v)
 	return
 }
 
-func handleUpdateUDP(conn net.PacketConn) {
+func handleUpdateUDP(conn net.PacketConn, updates chan<- Version) {
 	for {
 		b := make([]byte, 2048)
 		n, addr, err := conn.ReadFrom(b)
@@ -59,8 +63,29 @@ func handleUpdateUDP(conn net.PacketConn) {
 			continue
 		}
 		ip := addr.(*net.UDPAddr).IP
-		parsePacket(ip.String(), b[:n])
+		update, err := parsePacket(ip.String(), b[:n])
+		if err != nil {
+			l.Print("parsePacket: ", err)
+		}
+		updates <- update
 	}
+}
+
+func processUpdates(updates <-chan Version) {
+	stats := OpStats{}
+	ticker := time.NewTicker(updateInterval)
+	go func() {
+		for {
+			select {
+			case <-ticker.C:
+				l.Printf("%v updates in last %v", stats.updates , updateInterval)
+                stats.updates = 0
+			case v := <-updates:
+                stats.updates++
+				l.Println(v)
+			}
+		}
+	}()
 }
 
 // hello world, the web server
@@ -77,7 +102,9 @@ func main() {
 	}
 	l.Print("listening on: ", conn.LocalAddr())
 
-	go handleUpdateUDP(conn)
+	updates := make(chan Version)
+	go processUpdates(updates)
+	go handleUpdateUDP(conn, updates)
 
 	http.HandleFunc("/", HelloServer)
 	err = http.ListenAndServe(listenAddr, nil)
