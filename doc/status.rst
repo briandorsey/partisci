@@ -5,14 +5,14 @@ Implemented
 -----------
 
  * Initial documentation
+ * example Python update module
+ * initial UDP listener
 
 Planned
 -------
 
+ * barebones REST API with tests
  * in-memory version storage and interface
- * initial UDP listener
- * write Python update module
- * barebones REST API
  * write quickstart documentation
  * fully implement documented REST API
  * Persistent store for the version data

@@ -46,9 +46,11 @@ TODO: name format: underscores, no spaces, etc? Or accept anything, covert it, a
 
 When returned from Partisci, the following additional fields will be added::
 
+    "app_id" : "application_name"
     "host_ip" : "10.0.0.1"
     "last_update" : 1327940599
 
+Where host_ip is the IP address of the sending machine as seen by Partisci and last_update is a unix epoch time stamp, rounded to the nearest second. app_id is a simplified form of "name" for use in referring to this application in the REST API.
 
 Update clients
 --------------

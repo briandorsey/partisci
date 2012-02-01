@@ -22,7 +22,7 @@ def send_update(update, host, port):
 
 if __name__ == '__main__':
     update = update_template()
-    update["name"] = 'python_client_demo'
+    update["name"] = 'Python Client demo'
     update["version"] = __version__
     update["host"] = socket.gethostname()
     while True:
