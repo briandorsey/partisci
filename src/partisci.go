@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	logpkg "log"
 	"net"
+    "net/http"
 	"os"
+    "io"
 	"strings"
 	"time"
 )
@@ -49,14 +51,21 @@ func parsePacket(host string, b []byte) (v Version, err error) {
 }
 
 func handleUpdateUDP(conn net.PacketConn) {
-	b := make([]byte, 2048)
-	n, addr, err := conn.ReadFrom(b)
-	if err != nil {
-		log.Print("Error reading UDP packet:\n  ", err)
-		continue
+	for {
+		b := make([]byte, 2048)
+		n, addr, err := conn.ReadFrom(b)
+		if err != nil {
+			log.Print("Error reading UDP packet:\n  ", err)
+			continue
+		}
+		ip := addr.(*net.UDPAddr).IP
+		parsePacket(ip.String(), b[:n])
 	}
-	ip := addr.(*net.UDPAddr).IP
-	parsePacket(ip.String(), b[:n])
+}
+
+// hello world, the web server
+func HelloServer(w http.ResponseWriter, req *http.Request) {
+	io.WriteString(w, "hello, world!\n")
 }
 
 func main() {
@@ -68,9 +77,12 @@ func main() {
 	}
 	log.Print("listening on: ", conn.LocalAddr())
 
-	for {
-		handleUpdateUDP(conn)
-	}
+	go handleUpdateUDP(conn)
 
+	http.HandleFunc("/", HelloServer)
+	err = http.ListenAndServe(listenAddr, nil)
+	if err != nil {
+		log.Fatal("ListenAndServe: ", err)
+	}
 	log.Print("Exit.")
 }
