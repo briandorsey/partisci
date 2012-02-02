@@ -7,6 +7,7 @@ Implemented
  * Initial documentation
  * example Python update module
  * initial UDP listener
+ * implement a benchmark test for update parsing
 
 Planned
 -------

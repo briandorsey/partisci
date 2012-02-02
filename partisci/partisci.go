@@ -1,4 +1,4 @@
-package main
+package partisci
 
 import (
 	"encoding/json"
