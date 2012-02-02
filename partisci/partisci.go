@@ -78,10 +78,10 @@ func processUpdates(updates <-chan Version) {
 		for {
 			select {
 			case <-ticker.C:
-				l.Printf("%v updates in last %v", stats.updates , updateInterval)
-                stats.updates = 0
+				l.Printf("%v updates in last %v", stats.updates, updateInterval)
+				stats.updates = 0
 			case v := <-updates:
-                stats.updates++
+				stats.updates++
 				l.Println(v)
 			}
 		}
