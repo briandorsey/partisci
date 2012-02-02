@@ -1,4 +1,4 @@
-package partisci
+package main
 
 import (
 	"encoding/json"
@@ -7,10 +7,11 @@ import (
 	"net"
 	"net/http"
 	"os"
-	"strings"
 	"time"
+    "partisci/version"
 )
 
+const partisci_version = "0.1"
 const listenAddr = "localhost:7777"
 const updateInterval = 10 * time.Second
 
@@ -30,31 +31,7 @@ type OpStats struct {
 	updates int64
 }
 
-func safeRunes(r rune) rune {
-	if 'a' <= r && r <= 'z' {
-		return r
-	}
-	return '_'
-}
-
-func AppNameToID(app string) (id string) {
-	id = strings.ToLower(app)
-	id = strings.Map(safeRunes, id)
-	return
-}
-
-func parsePacket(host string, b []byte) (v Version, err error) {
-	v.HostIP = host
-	v.LastUpdate = time.Now().Unix()
-	err = json.Unmarshal(b[:len(b)], &v)
-	if err != nil {
-		return v, err
-	}
-	v.AppId = AppNameToID(v.Name)
-	return
-}
-
-func handleUpdateUDP(conn net.PacketConn, updates chan<- Version) {
+func handleUpdateUDP(conn net.PacketConn, updates chan<- version.Version) {
 	for {
 		b := make([]byte, 2048)
 		n, addr, err := conn.ReadFrom(b)
@@ -63,7 +40,7 @@ func handleUpdateUDP(conn net.PacketConn, updates chan<- Version) {
 			continue
 		}
 		ip := addr.(*net.UDPAddr).IP
-		update, err := parsePacket(ip.String(), b[:n])
+		update, err := version.ParsePacket(ip.String(), b[:n])
 		if err != nil {
 			l.Print("parsePacket: ", err)
 		}
@@ -71,7 +48,7 @@ func handleUpdateUDP(conn net.PacketConn, updates chan<- Version) {
 	}
 }
 
-func processUpdates(updates <-chan Version) {
+func processUpdates(updates <-chan version.Version) {
 	stats := OpStats{}
 	ticker := time.NewTicker(updateInterval)
 	go func() {
@@ -93,6 +70,16 @@ func HelloServer(w http.ResponseWriter, req *http.Request) {
 	io.WriteString(w, "hello, world!\n")
 }
 
+type InfoRes struct {
+    Version string `json:"version"`
+}
+
+func ApiPartisci(w http.ResponseWriter, req *http.Request) {
+    info := InfoRes{partisci_version}
+    data, _ := json.Marshal(info)
+    w.Write(data)
+}
+
 func main() {
 	l.Print("Starting.")
 
@@ -102,11 +89,12 @@ func main() {
 	}
 	l.Print("listening on: ", conn.LocalAddr())
 
-	updates := make(chan Version)
+	updates := make(chan version.Version)
 	go processUpdates(updates)
 	go handleUpdateUDP(conn, updates)
 
-	http.HandleFunc("/", HelloServer)
+	http.HandleFunc("/api/v1/_partisci", ApiPartisci)
+	http.HandleFunc("/hello", HelloServer)
 	err = http.ListenAndServe(listenAddr, nil)
 	if err != nil {
 		l.Fatal("ListenAndServe: ", err)

@@ -18,14 +18,18 @@ Partisci can answer the following questions:
 ======  ==========================  ====
 verb    path                        description
 ======  ==========================  ====
-GET     /                           overview
-GET     /application/               distinct list of applications
-GET     /application/X              most recent 'version' for every Z running X
-GET     /application/X/version      distinct active versions
-GET     /application/X/version/Y    only 'version's running version Y
-GET     /host                       distinct active hosts
-GET     /host/Z                     all active 'version's for all X on host Z
-POST    /version                    endpoint for appliction updates
+GET     /api/v1/_partisci           information about this partisci instance
+---     ---                         --- Below items not implemented yet ---
+GET     /api/v1/                    overview
+GET     /api/v1/app/                distinct list of applications
+GET     /api/v1/app/X               current 'version' for every Z running X
+GET     /api/v1/app/X/version       distinct active versions
+GET     /api/v1/app/X/version/Y     only 'version's running version Y
+GET     /api/v1/app/X/host          distinct active hosts running X
+GET     /api/v1/app/X/host/Z        current app 'version' for Z
+GET     /api/v1/host                distinct active hosts
+GET     /api/v1/host/Z              all active 'version's for all X on host Z
+POST    /api/v1/version             endpoint for appliction updates
 ======  ==========================  ====
 
 Version JSON

@@ -1,4 +1,4 @@
-package partisci
+package version
 
 import (
 	"testing"
