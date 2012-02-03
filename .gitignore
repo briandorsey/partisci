@@ -1,4 +1,5 @@
 _build
 *.swp
+*.pyc
 a.out
 __pycache__
