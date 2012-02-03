@@ -9,7 +9,7 @@ Partisci itself is written in Go (golang.org). The (whitebox) test suite is writ
  * py.test (pytest.org)
  * requests (python-requests.org)
 
-Partisci should be running on localhost. Then open a shell to the test directory and run::
+With partisci running, open a shell to the test directory and run::
 
   $ py.test
 

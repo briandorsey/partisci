@@ -9,11 +9,11 @@ import (
 type Version struct {
 	AppId      string `json:"app_id"`
 	Name       string `json:"name"`
-	Version    string `json:"version"`
-	Host       string `json:"host"`
-	Instance   uint16 `json:"instance"`
-	HostIP     string `json:"host_ip"`
-	LastUpdate int64  `json:"last_update"`
+	Version    string `json:"version,omitempty"`
+	Host       string `json:"host,omitempty"`
+	Instance   uint16 `json:"instance,omitempty"`
+	HostIP     string `json:"host_ip,omitempty"`
+	LastUpdate int64  `json:"last_update,omitempty"`
 }
 
 func safeRunes(r rune) rune {

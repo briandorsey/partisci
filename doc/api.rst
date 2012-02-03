@@ -18,18 +18,18 @@ Partisci can answer the following questions:
 ======  ==========================  ====
 verb    path                        description
 ======  ==========================  ====
-GET     /api/v1/_partisci           information about this partisci instance
+GET     /api/v1/_partisci/          information about this partisci instance
+GET     /api/v1/app/                distinct list of applications
 ---     ---                         --- Below items not implemented yet ---
 GET     /api/v1/                    overview
-GET     /api/v1/app/                distinct list of applications
-GET     /api/v1/app/X               current 'version' for every Z running X
-GET     /api/v1/app/X/version       distinct active versions
-GET     /api/v1/app/X/version/Y     only 'version's running version Y
-GET     /api/v1/app/X/host          distinct active hosts running X
-GET     /api/v1/app/X/host/Z        current app 'version' for Z
-GET     /api/v1/host                distinct active hosts
-GET     /api/v1/host/Z              all active 'version's for all X on host Z
-POST    /api/v1/version             endpoint for appliction updates
+GET     /api/v1/app/X/              current 'version' for every Z running X
+GET     /api/v1/app/X/version/      distinct active versions
+GET     /api/v1/app/X/version/Y/    only 'version's running version Y
+GET     /api/v1/app/X/host/         distinct active hosts running X
+GET     /api/v1/app/X/host/Z/       current app 'version' for Z
+GET     /api/v1/host/               distinct active hosts
+GET     /api/v1/host/Z/             all active 'version's for all X on host Z
+POST    /api/v1/version/            endpoint for appliction updates
 ======  ==========================  ====
 
 Version JSON
@@ -63,8 +63,38 @@ Clients should send update packets via UDP. Update packets are raw UTF8 encoded 
 
 For clients which cannot use UDP, they can post the version JSON to the /version URL.
 
+Update timing recommendations
+-----------------------------
+
+Clients should send a version update at every start up. Long running processes should send an update at least once every 24 hours, but not more than every hour.
+
 Example client in Python
 ------------------------
 
 <TODO>
 
+REST API details
+----------------
+
+All response bodies are JSON objects.
+
+The examples below assume Partisci is running on localhost, port 7777 (default).
+
+GET /api/v1/_partisci/
+----------------------
+
+This call returns basic information about the Partisci instance. Currently, very limited. Example::
+
+    $curl http://localhost:7777/api/v1/_partisci/
+    {"version":"0.1"}
+
+GET /api/v1/app/
+----------------
+
+The response contains a distinct list of all known application names and ids. Example::
+
+    $curl http://localhost:7777/api/v1/app/
+    {"data":[{
+      "name" : "Application Name",
+      "id" : "application_name",
+    }]}

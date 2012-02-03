@@ -13,6 +13,7 @@ Planned
 -------
 
  * barebones REST API with tests
+ * python client: add start_update_thread(), docs
  * in-memory version storage and interface
  * write quickstart documentation
  * fully implement documented REST API
@@ -25,7 +26,7 @@ Planned
    * OS/X binaries
    * linux binaries
 
- * write golang update package
+ * write golang update client
  * Add paging to REST results
 
 Possible

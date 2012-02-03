@@ -7,28 +7,32 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"partisci/version"
 	"time"
-    "partisci/version"
 )
 
 const partisci_version = "0.1"
-const listenAddr = "localhost:7777"
+const listenAddr = ":7777"
 const updateInterval = 10 * time.Second
 
 var l = log.New(os.Stderr, "", log.Ldate|log.Ltime)
 
-type Version struct {
-	AppId      string `json:"app_id"`
-	Name       string `json:"name"`
-	Version    string `json:"version"`
-	Host       string `json:"host"`
-	Instance   uint16 `json:"instance"`
-	HostIP     string `json:"host_ip"`
-	LastUpdate int64  `json:"last_update"`
-}
-
 type OpStats struct {
 	updates int64
+}
+
+type UpdateStore interface {
+	GetApps() (vers []version.Version)
+}
+
+type MemoryStore struct {
+	Versions []version.Version
+}
+
+func (s *MemoryStore) GetApps() (vers []version.Version) {
+	v := version.Version{Name: "fake", AppId: "fake"}
+	vers = append(vers, v)
+	return
 }
 
 func handleUpdateUDP(conn net.PacketConn, updates chan<- version.Version) {
@@ -36,48 +40,88 @@ func handleUpdateUDP(conn net.PacketConn, updates chan<- version.Version) {
 		b := make([]byte, 2048)
 		n, addr, err := conn.ReadFrom(b)
 		if err != nil {
-			l.Print("Error reading UDP packet:\n  ", err)
+			l.Print("ERROR: handleUpdateUDP: ReadFrom:\n  ", err)
 			continue
 		}
 		ip := addr.(*net.UDPAddr).IP
 		update, err := version.ParsePacket(ip.String(), b[:n])
 		if err != nil {
-			l.Print("parsePacket: ", err)
+			l.Print("ERROR: handleUpdateUDP: parsePacket:\n  ", err)
+			continue
 		}
 		updates <- update
 	}
 }
 
-func processUpdates(updates <-chan version.Version) {
+func processUpdates(updates <-chan version.Version,
+	store UpdateStore) {
 	stats := OpStats{}
 	ticker := time.NewTicker(updateInterval)
 	go func() {
 		for {
 			select {
 			case <-ticker.C:
-				l.Printf("%v updates in last %v", stats.updates, updateInterval)
+				l.Printf("STAT: %v updates in last %v", stats.updates, updateInterval)
 				stats.updates = 0
-			case v := <-updates:
+			case _ = <-updates:
 				stats.updates++
-				l.Println(v)
+				//l.Println(v)
 			}
 		}
 	}()
 }
+
+type InfoRes struct {
+	Version string `json:"version"`
+}
+
+type ErrorRes struct {
+	Error string `json:"error"`
+}
+
+type DataRes struct {
+	Data []version.Version `json:"data"`
+}
+
+func NewDataRes() (r *DataRes) {
+	r = new(DataRes)
+	r.Data = make([]version.Version, 0)
+	return r
+}
+
+// HTTP handlers
 
 // hello world, the web server
 func HelloServer(w http.ResponseWriter, req *http.Request) {
 	io.WriteString(w, "hello, world!\n")
 }
 
-type InfoRes struct {
-    Version string `json:"version"`
+func ApiPartisci(w http.ResponseWriter, req *http.Request) {
+	info := InfoRes{partisci_version}
+	data, _ := json.Marshal(info)
+	w.Write(data)
 }
 
-func ApiPartisci(w http.ResponseWriter, req *http.Request) {
-    info := InfoRes{partisci_version}
-    data, _ := json.Marshal(info)
-    w.Write(data)
+func ApiApp(w http.ResponseWriter, req *http.Request, s UpdateStore) {
+	r := NewDataRes()
+	r.Data = s.GetApps()
+	data, err := json.Marshal(r)
+	if err != nil {
+		m := "ERROR: ApiApp: " + err.Error()
+		l.Print(m)
+		errRes := ErrorRes{Error: m}
+		data, _ := json.Marshal(errRes)
+		w.WriteHeader(500)
+		w.Write(data)
+		return
+	}
+	w.Write(data)
+}
+
+func makeStoreHandler(fn func(w http.ResponseWriter, req *http.Request, s UpdateStore), s UpdateStore) http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		fn(w, req, s)
+	}
 }
 
 func main() {
@@ -90,10 +134,12 @@ func main() {
 	l.Print("listening on: ", conn.LocalAddr())
 
 	updates := make(chan version.Version)
-	go processUpdates(updates)
+	store := new(MemoryStore)
+	go processUpdates(updates, store)
 	go handleUpdateUDP(conn, updates)
 
-	http.HandleFunc("/api/v1/_partisci", ApiPartisci)
+	http.HandleFunc("/api/v1/_partisci/", ApiPartisci)
+	http.HandleFunc("/api/v1/app/", makeStoreHandler(ApiApp, store))
 	http.HandleFunc("/hello", HelloServer)
 	err = http.ListenAndServe(listenAddr, nil)
 	if err != nil {
