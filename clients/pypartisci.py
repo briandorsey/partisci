@@ -12,21 +12,28 @@ def update_template():
         instance=0)
 
 
-def send_update(update, host, port):
+def send_update(server, port, name, version, host="", instance=0):
+    if not host:
+        try:
+            host = socket.gethostname()
+        except StandardError:
+            pass
+
+    update = dict(
+                name=name,
+                version=version,
+                host=host,
+                instance=instance)
     data = json.dumps(update)
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect((host, port))
+    s.connect((server, port))
     s.send(data)
     s.close()
     return
 
 if __name__ == '__main__':
-    update = update_template()
-    update["name"] = 'Python Client demo'
-    update["version"] = __version__
-    update["host"] = socket.gethostname()
     while True:
-        print time.time(), "Sending update"
-        send_update(update, 'localhost', 7777)
+        print "%-14s Sending update" % time.time()
+        send_update('localhost', 7777, 'Python Client demo', __version__)
         time.sleep(3)
 
