@@ -1,85 +1,369 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset='utf-8'>
 
-  <title>briandorsey/Partisci @ GitHub</title>
 
-  <style type="text/css">
-    body {
-      margin-top: 1.0em;
-      background-color: #7f284e;
-      font-family: Helvetica, Arial, FreeSans, san-serif;
-      color: #ffffff;
-    }
-    #container {
-      margin: 0 auto;
-      width: 700px;
-    }
-    h1 { font-size: 3.8em; color: #80d7b1; margin-bottom: 3px; }
-    h1 .small { font-size: 0.4em; }
-    h1 a { text-decoration: none }
-    h2 { font-size: 1.5em; color: #80d7b1; }
-    h3 { text-align: center; color: #80d7b1; }
-    a { color: #80d7b1; }
-    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
-    .download { float: right; }
-    pre { background: #000; color: #fff; padding: 15px;}
-    hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
-    .footer { text-align:center; padding-top:30px; font-style: italic; }
-  </style>
-</head>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<body>
-  <a href="https://github.com/briandorsey/Partisci"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
 
-  <div id="container">
-
-    <div class="download">
-      <a href="https://github.com/briandorsey/Partisci/zipball/master">
-        <img border="0" width="90" src="https://github.com/images/modules/download/zip.png"></a>
-      <a href="https://github.com/briandorsey/Partisci/tarball/master">
-        <img border="0" width="90" src="https://github.com/images/modules/download/tar.png"></a>
-    </div>
-
-    <h1><a href="https://github.com/briandorsey/Partisci">Partisci</a>
-      <span class="small">by <a href="https://github.com/briandorsey">briandorsey</a></span></h1>
-
-    <div class="description">
-      Partisci knows where your software is deployed and what versions are in use.
-    </div>
-
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-
+    <title>Partisci 0.1 documentation</title>
     
-
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="None" href="#" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li><a href="#">Partisci 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
 
-    
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="welcome-to-partisci-s-documentation">
+<h1>Welcome to Partisci&#8217;s documentation!<a class="headerlink" href="#welcome-to-partisci-s-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This project is using readme driven development and has not been implemented yet.</p>
+</div>
+<p>Where is your software installed?  Is version X still in use anywhere?</p>
+<p>Partisci answers these questions by collecting updates from your programs and providing a REST API to access the data.</p>
+<dl class="docutils">
+<dt>Partisci can answer these questions:</dt>
+<dd><ul class="first last simple">
+<li>What hosts is application X installed on?</li>
+<li>Which versions of application X are active?</li>
+<li>Is version Y of application X still active anywhere?</li>
+<li>Which hosts are runinng version Y of application X?</li>
+<li>When did application X last update? (from host Z?)</li>
+<li>What applications are installed on host Z?</li>
+</ul>
+</dd>
+</dl>
+<p>However, Partisci <em>only</em> knows about applications which have been modified to send it updates.</p>
+<div class="section" id="details">
+<h2>Details<a class="headerlink" href="#details" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>Some limitations:</dt>
+<dd><ul class="first last simple">
+<li>Applications must be modified to send updates.</li>
+<li>If applications are not running, no information is updated.</li>
+<li>Partisci only logs the most recent data fro each host/app/instance combination. In the future, Partisci may keep more historical data.</li>
+<li>It is intended to be used within an organization to track custom software. It has no features to support publicly released software, or anything your organization can&#8217;t modify.</li>
+</ul>
+</dd>
+</dl>
+<p>Partisci accepts update updates via UDP and HTTP. Sending UDP updates is recommended. When UDP isn&#8217;t easy or possible, use HTTP (for example: network restrictions or browser based apps). Partisci requres each application to be modified to send these updates.</p>
+<dl class="docutils">
+<dt>Updates contain:</dt>
+<dd><ul class="first last simple">
+<li>application name</li>
+<li>version</li>
+<li>hostname</li>
+<li>instance number</li>
+</ul>
+</dd>
+<dt>Partisci also logs:</dt>
+<dd><ul class="first last simple">
+<li>client address (as seen by Partisci)</li>
+<li>time the update is recieved</li>
+</ul>
+</dd>
+<dt>Where does the name come from?</dt>
+<dd><ul class="first last simple">
+<li>It is a truncated portmanteau from Partially Omniscient. Within its limited domain, Partisci strives to be omniscient.</li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="contents">
+<h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<span id="document-api"></span><div class="section" id="api">
+<h3>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h3>
+<p>Partisci provides access to the data it collects via a REST API.</p>
+<p>The REST API also inclues an update resource for situtaions where applications cannot update via UDP.</p>
+<p>Partisci can answer the following questions:</p>
+<blockquote>
+<div><ul class="simple">
+<li>What hosts is application X installed on?</li>
+<li>Which versions of application X are active?</li>
+<li>Is version Y of application X still active anywhere?</li>
+<li>Which hosts are runinng version Y of application X?</li>
+<li>When did application X last update? (from host Z?)</li>
+<li>What applications are installed on host Z?</li>
+</ul>
+</div></blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="36%" />
+<col width="56%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">verb</th>
+<th class="head">path</th>
+<th class="head">description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>GET</td>
+<td>/api/v1/_partisci/</td>
+<td>information about this partisci instance</td>
+</tr>
+<tr class="row-odd"><td>GET</td>
+<td>/api/v1/app/</td>
+<td>distinct list of applications</td>
+</tr>
+<tr class="row-even"><td>&#8212;</td>
+<td>&#8212;</td>
+<td>&#8212; Below items not implemented yet &#8212;</td>
+</tr>
+<tr class="row-odd"><td>GET</td>
+<td>/api/v1/</td>
+<td>overview</td>
+</tr>
+<tr class="row-even"><td>GET</td>
+<td>/api/v1/app/X/</td>
+<td>current &#8216;version&#8217; for every Z running X</td>
+</tr>
+<tr class="row-odd"><td>GET</td>
+<td>/api/v1/app/X/version/</td>
+<td>distinct active versions</td>
+</tr>
+<tr class="row-even"><td>GET</td>
+<td>/api/v1/app/X/version/Y/</td>
+<td>only &#8216;version&#8217;s running version Y</td>
+</tr>
+<tr class="row-odd"><td>GET</td>
+<td>/api/v1/app/X/host/</td>
+<td>distinct active hosts running X</td>
+</tr>
+<tr class="row-even"><td>GET</td>
+<td>/api/v1/app/X/host/Z/</td>
+<td>current app &#8216;version&#8217; for Z</td>
+</tr>
+<tr class="row-odd"><td>GET</td>
+<td>/api/v1/host/</td>
+<td>distinct active hosts</td>
+</tr>
+<tr class="row-even"><td>GET</td>
+<td>/api/v1/host/Z/</td>
+<td>all active &#8216;version&#8217;s for all X on host Z</td>
+</tr>
+<tr class="row-odd"><td>POST</td>
+<td>/api/v1/version/</td>
+<td>endpoint for appliction updates</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="version-json">
+<h4>Version JSON<a class="headerlink" href="#version-json" title="Permalink to this headline">¶</a></h4>
+<p>Version updates have the following JSON structure:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;name&quot;</span> <span class="p">:</span> <span class="s">&quot;Application Name&quot;</span><span class="p">,</span>
+  <span class="s">&quot;version&quot;</span> <span class="p">:</span> <span class="s">&quot;1.2.3dev&quot;</span><span class="p">,</span>
+  <span class="s">&quot;host&quot;</span> <span class="p">:</span> <span class="s">&quot;hostname&quot;</span><span class="p">,</span>
+  <span class="s">&quot;instance&quot;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>name, version &amp; host are limited to 50 unicode characters &amp; instance is an integer &lt;= 65535 (uint16).</p>
+<p>TODO: name format: underscores, no spaces, etc? Or accept anything, covert it, and use the simplified form on the urls, as an id? Yes, this.</p>
+<p>When returned from Partisci, the following additional fields will be added:</p>
+<div class="highlight-python"><pre>"app_id" : "application_name"
+"host_ip" : "10.0.0.1"
+"last_update" : 1327940599</pre>
+</div>
+<p>Where host_ip is the IP address of the sending machine as seen by Partisci and last_update is a unix epoch time stamp, rounded to the nearest second. app_id is a simplified form of &#8220;name&#8221; for use in referring to this application in the REST API.</p>
+</div>
+<div class="section" id="update-clients">
+<h4>Update clients<a class="headerlink" href="#update-clients" title="Permalink to this headline">¶</a></h4>
+<p>Clients should send update packets via UDP. Update packets are raw UTF8 encoded bytes containing the version JSON.</p>
+<p>For clients which cannot use UDP, they can post the version JSON to the /version URL.</p>
+</div>
+<div class="section" id="update-timing-recommendations">
+<h4>Update timing recommendations<a class="headerlink" href="#update-timing-recommendations" title="Permalink to this headline">¶</a></h4>
+<p>Clients should send a version update at every start up. Long running processes should send an update at least once every 24 hours, but not more than every hour.</p>
+</div>
+<div class="section" id="example-client-in-python">
+<h4>Example client in Python<a class="headerlink" href="#example-client-in-python" title="Permalink to this headline">¶</a></h4>
+<p>&lt;TODO&gt;</p>
+</div>
+<div class="section" id="rest-api-details">
+<h4>REST API details<a class="headerlink" href="#rest-api-details" title="Permalink to this headline">¶</a></h4>
+<p>All response bodies are JSON objects.</p>
+<p>The examples below assume Partisci is running on localhost, port 7777 (default).</p>
+</div>
+<div class="section" id="get-api-v1-partisci">
+<h4>GET /api/v1/_partisci/<a class="headerlink" href="#get-api-v1-partisci" title="Permalink to this headline">¶</a></h4>
+<p>This call returns basic information about the Partisci instance. Currently, very limited. Example:</p>
+<div class="highlight-python"><pre>$curl http://localhost:7777/api/v1/_partisci/
+{"version":"0.1"}</pre>
+</div>
+</div>
+<div class="section" id="get-api-v1-app">
+<h4>GET /api/v1/app/<a class="headerlink" href="#get-api-v1-app" title="Permalink to this headline">¶</a></h4>
+<p>The response contains a distinct list of all known application names and ids. Example:</p>
+<div class="highlight-python"><pre>$curl http://localhost:7777/api/v1/app/
+{"data":[{
+  "name" : "Application Name",
+  "id" : "application_name",
+}]}</pre>
+</div>
+</div>
+</div>
+<span id="document-testing"></span><div class="section" id="testing">
+<h3>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="requirements-running-the-tests">
+<h4>Requirements &amp; running the tests<a class="headerlink" href="#requirements-running-the-tests" title="Permalink to this headline">¶</a></h4>
+<p>Partisci itself is written in Go (golang.org). The (whitebox) test suite is written in Python. To run the tests, you&#8217;ll need Python 2.7x and the following modules:</p>
+<blockquote>
+<div><ul class="simple">
+<li>py.test (pytest.org)</li>
+<li>requests (python-requests.org)</li>
+</ul>
+</div></blockquote>
+<p>With partisci running, open a shell to the test directory and run:</p>
+<div class="highlight-python"><pre>$ py.test</pre>
+</div>
+</div>
+</div>
+<span id="document-status"></span><div class="section" id="implementation-status">
+<h3>Implementation Status<a class="headerlink" href="#implementation-status" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="implemented">
+<h4>Implemented<a class="headerlink" href="#implemented" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><ul class="simple">
+<li>Initial documentation</li>
+<li>example Python update module</li>
+<li>initial UDP listener</li>
+<li>implement a benchmark test for update parsing</li>
+<li>barebones REST API with tests</li>
+<li>in-memory version storage and interface</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="planned">
+<h4>Planned<a class="headerlink" href="#planned" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><ul class="simple">
+<li>python client: add start_update_thread(), docs</li>
+<li>write quickstart documentation</li>
+<li>fully implement documented REST API</li>
+<li>add relative URLs queries in API results</li>
+<li>Persistent store for the version data</li>
+<li>Setup build system<ul>
+<li>create source distribution package with pre-built documentation</li>
+<li>post pre-built documentation online</li>
+<li>Windows binaries</li>
+<li>OS/X binaries</li>
+<li>linux binaries</li>
+</ul>
+</li>
+<li>write golang update client</li>
+<li>Add paging to REST results</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="possible">
+<h4>Possible<a class="headerlink" href="#possible" title="Permalink to this headline">¶</a></h4>
+<ul class="simple">
+<li>Store more historical data from updates.<ul>
+<li>Last update time for each app/version/machine. This would give a full version history for each machine.</li>
+</ul>
+</li>
+<li>Store application specific state information.</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
+<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
+</ul>
+</div>
 
-    
-      <h2>Authors</h2>
-      <p>Brian Dorsey (brian@dorseys.org)<br/>      </p>
-    
 
-    
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html#document-api">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="index.html#version-json">Version JSON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#update-clients">Update clients</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#update-timing-recommendations">Update timing recommendations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#example-client-in-python">Example client in Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#rest-api-details">REST API details</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#get-api-v1-partisci">GET /api/v1/_partisci/</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#get-api-v1-app">GET /api/v1/app/</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#document-testing">Testing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="index.html#requirements-running-the-tests">Requirements &amp; running the tests</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#document-status">Implementation Status</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="index.html#implemented">Implemented</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#planned">Planned</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#possible">Possible</a></li>
+</ul>
+</li>
+</ul>
 
-    <h2>Download</h2>
-    <p>
-      You can download this project in either
-      <a href="https://github.com/briandorsey/Partisci/zipball/master">zip</a> or
-      <a href="https://github.com/briandorsey/Partisci/tarball/master">tar formats.
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
     </p>
-    <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
-      by running:
-      <pre>$ git clone git://github.com/briandorsey/Partisci</pre>
-    </p>
-
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li><a href="#">Partisci 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
     <div class="footer">
-      get the source code on GitHub : <a href="https://github.com/briandorsey/Partisci">briandorsey/Partisci</a>
+        &copy; Copyright 2012, Brian Dorsey.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
     </div>
-
-  </div>
-
-</body>
+  </body>
 </html>
