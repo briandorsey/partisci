@@ -8,13 +8,13 @@ Implemented
  * example Python update module
  * initial UDP listener
  * implement a benchmark test for update parsing
+ * barebones REST API with tests
+ * in-memory version storage and interface
 
 Planned
 -------
 
- * barebones REST API with tests
  * python client: add start_update_thread(), docs
- * in-memory version storage and interface
  * write quickstart documentation
  * fully implement documented REST API
  * Persistent store for the version data

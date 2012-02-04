@@ -23,7 +23,7 @@ type OpStats struct {
 }
 
 type UpdateStore interface {
-	GetApps() (vs []version.Version)
+	Apps() (vs []version.Version)
 	Update(v version.Version) (err error)
 }
 
@@ -95,14 +95,14 @@ func ApiPartisci(w http.ResponseWriter, req *http.Request) {
 
 func ApiApp(w http.ResponseWriter, req *http.Request, s UpdateStore) {
 	r := NewDataRes()
-	r.Data = s.GetApps()
+	r.Data = s.Apps()
 	data, err := json.Marshal(r)
 	if err != nil {
 		m := "ERROR: ApiApp: " + err.Error()
 		l.Print(m)
 		errRes := ErrorRes{Error: m}
 		data, _ := json.Marshal(errRes)
-		w.WriteHeader(500)
+		w.WriteHeader(http.StatusInternalServerError)
 		w.Write(data)
 		return
 	}
