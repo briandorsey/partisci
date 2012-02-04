@@ -7,6 +7,7 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"partisci/memstore"
 	"partisci/version"
 	"time"
 )
@@ -24,35 +25,6 @@ type OpStats struct {
 type UpdateStore interface {
 	GetApps() (vs []version.Version)
 	Update(v version.Version) (err error)
-}
-
-type MemoryStore struct {
-	Apps     map[string]version.Version
-	Versions map[string]version.Version
-}
-
-func NewMemoryStore() (m *MemoryStore) {
-	m = new(MemoryStore)
-	m.Apps = make(map[string]version.Version)
-	m.Versions = make(map[string]version.Version)
-	return
-}
-
-func (s *MemoryStore) GetApps() (vs []version.Version) {
-	for _, v := range s.Apps {
-		vs = append(vs, v)
-	}
-	return
-}
-
-func (s *MemoryStore) Update(v version.Version) (err error) {
-	_, ok := s.Apps[v.Id]
-	if !ok {
-		// store a simplified version in the app map
-		appv := version.Version{Name: v.Name, Id: v.Id}
-		s.Apps[v.Id] = appv
-	}
-	return
 }
 
 func handleUpdateUDP(conn net.PacketConn, updates chan<- version.Version) {
@@ -153,7 +125,7 @@ func main() {
 	l.Print("listening on: ", conn.LocalAddr())
 
 	updates := make(chan version.Version)
-	store := NewMemoryStore()
+	store := memstore.NewMemoryStore()
 	go processUpdates(updates, store)
 	go handleUpdateUDP(conn, updates)
 
