@@ -130,7 +130,7 @@ func main() {
 	go handleUpdateUDP(conn, updates)
 
 	http.HandleFunc("/api/v1/_partisci/", ApiPartisci)
-	http.HandleFunc("/api/v1/app/", makeStoreHandler(ApiApp, store))
+	http.HandleFunc("/api/v1/summary/app/", makeStoreHandler(ApiApp, store))
 	http.HandleFunc("/hello", HelloServer)
 	err = http.ListenAndServe(listenAddr, nil)
 	if err != nil {

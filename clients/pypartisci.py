@@ -4,15 +4,7 @@ import socket
 
 __version__ = "0.1demo"
 
-def update_template():
-    return dict(
-        name="",
-        version="",
-        host="",
-        instance=0)
-
-
-def send_update(server, port, name, version, host="", instance=0):
+def send_update(server, port, app, version, host="", instance=0):
     if not host:
         try:
             host = socket.gethostname()
@@ -20,7 +12,7 @@ def send_update(server, port, name, version, host="", instance=0):
             pass
 
     update = dict(
-                name=name,
+                app=app,
                 version=version,
                 host=host,
                 instance=instance)

@@ -8,7 +8,7 @@ import (
 
 type Version struct {
 	Id         string `json:"id"`
-	Name       string `json:"name"`
+	App        string `json:"app"`
 	Version    string `json:"version,omitempty"`
 	Host       string `json:"host,omitempty"`
 	Instance   uint16 `json:"instance,omitempty"`
@@ -26,7 +26,7 @@ func safeRunes(r rune) rune {
 	return '_'
 }
 
-func AppNameToID(app string) (id string) {
+func AppToID(app string) (id string) {
 	id = strings.ToLower(app)
 	id = strings.Map(safeRunes, id)
 	return
@@ -39,6 +39,6 @@ func ParsePacket(host string, b []byte) (v Version, err error) {
 	if err != nil {
 		return v, err
 	}
-	v.Id = AppNameToID(v.Name)
+	v.Id = AppToID(v.App)
 	return
 }

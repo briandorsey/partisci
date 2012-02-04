@@ -21,7 +21,7 @@ def test_get_server_info():
     assert "version" in info
 
 def test_get_app():
-    url = urlparse.urljoin(endpoint, "app/")
+    url = urlparse.urljoin(endpoint, "summary/app/")
     print url
     apps = ["_zz_" + str(i) for i in range(5)]
     print "apps:", apps
@@ -34,6 +34,6 @@ def test_get_app():
     info = json.loads(response.content)
     print info
     assert "data" in info
-    names = set(v["name"] for v in info["data"]) 
+    names = set(v["app"] for v in info["data"])
     for app in apps:
         assert app in names

@@ -24,19 +24,19 @@ func (s *MemoryStore) Apps() (vs []version.Version) {
 }
 
 func (s *MemoryStore) Update(v version.Version) (err error) {
-    key := versionToKey(v)
-    s.Version[key] = v
+	key := versionToKey(v)
+	s.Version[key] = v
 
-    // app map
+	// app map
 	_, ok := s.App[v.Id]
 	if !ok {
 		// store a simplified version in the app map
-		appv := version.Version{Name: v.Name, Id: v.Id}
+		appv := version.Version{App: v.App, Id: v.Id}
 		s.App[v.Id] = appv
 	}
 	return
 }
 
-func versionToKey(v version.Version) string{
-    return v.Id + v.Host
+func versionToKey(v version.Version) string {
+	return v.Id + v.Host
 }
