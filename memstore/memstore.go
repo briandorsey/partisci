@@ -16,11 +16,12 @@ func NewMemoryStore() (m *MemoryStore) {
 	return
 }
 
-func (s *MemoryStore) Apps() (vs []version.Version) {
+func (s *MemoryStore) Apps() []version.Version {
+	vs := make([]version.Version, 0)
 	for _, v := range s.App {
 		vs = append(vs, v)
 	}
-	return
+	return vs
 }
 
 func (s *MemoryStore) Update(v version.Version) (err error) {

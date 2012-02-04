@@ -2,6 +2,8 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
+	"fmt"
 	"io"
 	"log"
 	"net"
@@ -13,10 +15,10 @@ import (
 )
 
 const partisci_version = "0.1"
-const listenAddr = ":7777"
 const updateInterval = 10 * time.Second
 
 var l = log.New(os.Stderr, "", log.Ldate|log.Ltime)
+var port *int = flag.Int("port", 7777, "listening port (both UDP and HTTP server)")
 
 type OpStats struct {
 	updates int64
@@ -116,6 +118,9 @@ func makeStoreHandler(fn func(w http.ResponseWriter, req *http.Request, s Update
 }
 
 func main() {
+	flag.Parse()
+	listenAddr := fmt.Sprintf(":%d", *port)
+
 	l.Print("Starting.")
 
 	conn, err := net.ListenPacket("udp", listenAddr)
