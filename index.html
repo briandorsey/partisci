@@ -106,19 +106,19 @@
 <p>Partisci can answer the following questions:</p>
 <blockquote>
 <div><ul class="simple">
-<li>What hosts is application X installed on?</li>
-<li>Which versions of application X are active?</li>
-<li>Is version Y of application X still active anywhere?</li>
-<li>Which hosts are runinng version Y of application X?</li>
-<li>When did application X last update? (from host Z?)</li>
-<li>What applications are installed on host Z?</li>
+<li>Which hosts is application A installed on?</li>
+<li>Which versions of application A are active?</li>
+<li>Is version V of application A still active anywhere?</li>
+<li>Which hosts are runinng version V of application A?</li>
+<li>When did application A last update? (from host H?)</li>
+<li>What applications are installed on host H?</li>
 </ul>
 </div></blockquote>
 <table border="1" class="docutils">
 <colgroup>
 <col width="8%" />
-<col width="36%" />
-<col width="56%" />
+<col width="43%" />
+<col width="50%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">verb</th>
@@ -132,47 +132,51 @@
 <td>information about this partisci instance</td>
 </tr>
 <tr class="row-odd"><td>GET</td>
-<td>/api/v1/app/</td>
-<td>distinct list of applications</td>
+<td>/api/v1/summary/apps/</td>
+<td>distinct active applications</td>
 </tr>
 <tr class="row-even"><td>&#8212;</td>
 <td>&#8212;</td>
-<td>&#8212; Below items not implemented yet &#8212;</td>
+<td>&#8212; items below not implemented yet &#8212;</td>
 </tr>
 <tr class="row-odd"><td>GET</td>
 <td>/api/v1/</td>
 <td>overview</td>
 </tr>
 <tr class="row-even"><td>GET</td>
-<td>/api/v1/app/X/</td>
-<td>current &#8216;version&#8217; for every Z running X</td>
+<td>/api/v1/version/?app=A</td>
+<td>&#8216;version&#8217;s for every H running A</td>
 </tr>
 <tr class="row-odd"><td>GET</td>
-<td>/api/v1/app/X/version/</td>
+<td>/api/v1/version/?app=A&amp;host=H</td>
+<td>&#8216;version&#8217;s for app A on H</td>
+</tr>
+<tr class="row-even"><td>GET</td>
+<td>/api/v1/version/?app=A&amp;version=V</td>
+<td>&#8216;version&#8217;s for app A, version V</td>
+</tr>
+<tr class="row-odd"><td>GET</td>
+<td>/api/v1/version/?host=H</td>
+<td>&#8216;version&#8217;s for all A on host H</td>
+</tr>
+<tr class="row-even"><td>GET</td>
+<td>/api/v1/summary/versions/</td>
 <td>distinct active versions</td>
 </tr>
-<tr class="row-even"><td>GET</td>
-<td>/api/v1/app/X/version/Y/</td>
-<td>only &#8216;version&#8217;s running version Y</td>
-</tr>
 <tr class="row-odd"><td>GET</td>
-<td>/api/v1/app/X/host/</td>
-<td>distinct active hosts running X</td>
+<td>/api/v1/summary/versions/?app=A</td>
+<td>distinct active versions running A</td>
 </tr>
 <tr class="row-even"><td>GET</td>
-<td>/api/v1/app/X/host/Z/</td>
-<td>current app &#8216;version&#8217; for Z</td>
-</tr>
-<tr class="row-odd"><td>GET</td>
-<td>/api/v1/host/</td>
+<td>/api/v1/summary/hosts/</td>
 <td>distinct active hosts</td>
 </tr>
-<tr class="row-even"><td>GET</td>
-<td>/api/v1/host/Z/</td>
-<td>all active &#8216;version&#8217;s for all X on host Z</td>
+<tr class="row-odd"><td>GET</td>
+<td>/api/v1/summary/hosts/?app=A</td>
+<td>distinct active hosts running A</td>
 </tr>
-<tr class="row-odd"><td>POST</td>
-<td>/api/v1/version/</td>
+<tr class="row-even"><td>POST</td>
+<td>/api/v1/update/</td>
 <td>endpoint for appliction updates</td>
 </tr>
 </tbody>
@@ -181,21 +185,21 @@
 <h4>Version JSON<a class="headerlink" href="#version-json" title="Permalink to this headline">¶</a></h4>
 <p>Version updates have the following JSON structure:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
-  <span class="s">&quot;name&quot;</span> <span class="p">:</span> <span class="s">&quot;Application Name&quot;</span><span class="p">,</span>
+  <span class="s">&quot;app&quot;</span> <span class="p">:</span> <span class="s">&quot;Application Name&quot;</span><span class="p">,</span>
   <span class="s">&quot;version&quot;</span> <span class="p">:</span> <span class="s">&quot;1.2.3dev&quot;</span><span class="p">,</span>
   <span class="s">&quot;host&quot;</span> <span class="p">:</span> <span class="s">&quot;hostname&quot;</span><span class="p">,</span>
   <span class="s">&quot;instance&quot;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>name, version &amp; host are limited to 50 unicode characters &amp; instance is an integer &lt;= 65535 (uint16).</p>
-<p>TODO: name format: underscores, no spaces, etc? Or accept anything, covert it, and use the simplified form on the urls, as an id? Yes, this.</p>
+<p>app, version &amp; host are limited to 50 unicode characters &amp; instance is an integer &lt;= 65535 (uint16).</p>
+<p>TODO: app format: underscores, no spaces, etc? Or accept anything, covert it, and use the simplified form on the urls, as an id? Yes, this.</p>
 <p>When returned from Partisci, the following additional fields will be added:</p>
 <div class="highlight-python"><pre>"app_id" : "application_name"
 "host_ip" : "10.0.0.1"
 "last_update" : 1327940599</pre>
 </div>
-<p>Where host_ip is the IP address of the sending machine as seen by Partisci and last_update is a unix epoch time stamp, rounded to the nearest second. app_id is a simplified form of &#8220;name&#8221; for use in referring to this application in the REST API.</p>
+<p>Where host_ip is the IP address of the sending machine as seen by Partisci and last_update is a unix epoch time stamp, rounded to the nearest second. app_id is a simplified form of &#8220;app&#8221; for use in referring to this application in the REST API.</p>
 </div>
 <div class="section" id="update-clients">
 <h4>Update clients<a class="headerlink" href="#update-clients" title="Permalink to this headline">¶</a></h4>
@@ -227,7 +231,7 @@
 <p>The response contains a distinct list of all known application names and ids. Example:</p>
 <div class="highlight-python"><pre>$curl http://localhost:7777/api/v1/app/
 {"data":[{
-  "name" : "Application Name",
+  "app" : "Application Name",
   "id" : "application_name",
 }]}</pre>
 </div>
@@ -268,9 +272,15 @@
 <h4>Planned<a class="headerlink" href="#planned" title="Permalink to this headline">¶</a></h4>
 <blockquote>
 <div><ul class="simple">
+<li>Name &#8211;&gt; App : rename for consistency</li>
 <li>python client: add start_update_thread(), docs</li>
 <li>write quickstart documentation</li>
 <li>fully implement documented REST API</li>
+<li>implement and test multiple instance support</li>
+<li>implement version timeout and config (only active versions kept)<ul>
+<li>and/or - make this a query parameter?</li>
+</ul>
+</li>
 <li>add relative URLs queries in API results</li>
 <li>Persistent store for the version data</li>
 <li>Setup build system<ul>
