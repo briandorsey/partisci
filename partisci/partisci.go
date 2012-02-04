@@ -22,16 +22,36 @@ type OpStats struct {
 }
 
 type UpdateStore interface {
-	GetApps() (vers []version.Version)
+	GetApps() (vs []version.Version)
+	Update(v version.Version) (err error)
 }
 
 type MemoryStore struct {
-	Versions []version.Version
+	Apps     map[string]version.Version
+	Versions map[string]version.Version
 }
 
-func (s *MemoryStore) GetApps() (vers []version.Version) {
-	v := version.Version{Name: "fake", AppId: "fake"}
-	vers = append(vers, v)
+func NewMemoryStore() (m *MemoryStore) {
+	m = new(MemoryStore)
+	m.Apps = make(map[string]version.Version)
+	m.Versions = make(map[string]version.Version)
+	return
+}
+
+func (s *MemoryStore) GetApps() (vs []version.Version) {
+	for _, v := range s.Apps {
+		vs = append(vs, v)
+	}
+	return
+}
+
+func (s *MemoryStore) Update(v version.Version) (err error) {
+	_, ok := s.Apps[v.Id]
+	if !ok {
+		// store a simplified version in the app map
+		appv := version.Version{Name: v.Name, Id: v.Id}
+		s.Apps[v.Id] = appv
+	}
 	return
 }
 
@@ -53,8 +73,7 @@ func handleUpdateUDP(conn net.PacketConn, updates chan<- version.Version) {
 	}
 }
 
-func processUpdates(updates <-chan version.Version,
-	store UpdateStore) {
+func processUpdates(updates <-chan version.Version, store UpdateStore) {
 	stats := OpStats{}
 	ticker := time.NewTicker(updateInterval)
 	go func() {
@@ -63,9 +82,9 @@ func processUpdates(updates <-chan version.Version,
 			case <-ticker.C:
 				l.Printf("STAT: %v updates in last %v", stats.updates, updateInterval)
 				stats.updates = 0
-			case _ = <-updates:
+			case v := <-updates:
 				stats.updates++
-				//l.Println(v)
+				store.Update(v)
 			}
 		}
 	}()
@@ -134,7 +153,7 @@ func main() {
 	l.Print("listening on: ", conn.LocalAddr())
 
 	updates := make(chan version.Version)
-	store := new(MemoryStore)
+	store := NewMemoryStore()
 	go processUpdates(updates, store)
 	go handleUpdateUDP(conn, updates)
 

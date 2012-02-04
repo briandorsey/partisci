@@ -7,7 +7,7 @@ import (
 )
 
 type Version struct {
-	AppId      string `json:"app_id"`
+	Id         string `json:"id"`
 	Name       string `json:"name"`
 	Version    string `json:"version,omitempty"`
 	Host       string `json:"host,omitempty"`
@@ -17,6 +17,9 @@ type Version struct {
 }
 
 func safeRunes(r rune) rune {
+	if '0' <= r && r <= '9' {
+		return r
+	}
 	if 'a' <= r && r <= 'z' {
 		return r
 	}
@@ -36,7 +39,6 @@ func ParsePacket(host string, b []byte) (v Version, err error) {
 	if err != nil {
 		return v, err
 	}
-	v.AppId = AppNameToID(v.Name)
+	v.Id = AppNameToID(v.Name)
 	return
 }
-
