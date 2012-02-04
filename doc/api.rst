@@ -7,30 +7,31 @@ The REST API also inclues an update resource for situtaions where applications c
 
 Partisci can answer the following questions:
 
- * What hosts is application X installed on?
- * Which versions of application X are active?
- * Is version Y of application X still active anywhere?
- * Which hosts are runinng version Y of application X?
- * When did application X last update? (from host Z?)
- * What applications are installed on host Z?
+ * Which hosts is application A installed on?
+ * Which versions of application A are active?
+ * Is version V of application A still active anywhere?
+ * Which hosts are runinng version V of application A?
+ * When did application A last update? (from host H?)
+ * What applications are installed on host H?
 
 
-======  ==========================  ====
-verb    path                        description
-======  ==========================  ====
-GET     /api/v1/_partisci/          information about this partisci instance
-GET     /api/v1/app/                distinct list of applications
----     ---                         --- Below items not implemented yet ---
-GET     /api/v1/                    overview
-GET     /api/v1/app/X/              current 'version' for every Z running X
-GET     /api/v1/app/X/version/      distinct active versions
-GET     /api/v1/app/X/version/Y/    only 'version's running version Y
-GET     /api/v1/app/X/host/         distinct active hosts running X
-GET     /api/v1/app/X/host/Z/       current app 'version' for Z
-GET     /api/v1/host/               distinct active hosts
-GET     /api/v1/host/Z/             all active 'version's for all X on host Z
-POST    /api/v1/version/            endpoint for appliction updates
-======  ==========================  ====
+======  ==================================  ====
+verb    path                                description
+======  ==================================  ====
+GET     /api/v1/_partisci/                  information about this partisci instance
+GET     /api/v1/summary/apps/               distinct active applications
+---     ---                                 --- items below not implemented yet ---
+GET     /api/v1/                            overview
+GET     /api/v1/version/?app=A              'version's for every H running A
+GET     /api/v1/version/?app=A&host=H       'version's for app A on H
+GET     /api/v1/version/?app=A&version=V    'version's for app A, version V
+GET     /api/v1/version/?host=H             'version's for all A on host H
+GET     /api/v1/summary/versions/           distinct active versions
+GET     /api/v1/summary/versions/?app=A     distinct active versions running A
+GET     /api/v1/summary/hosts/              distinct active hosts
+GET     /api/v1/summary/hosts/?app=A        distinct active hosts running A
+POST    /api/v1/update/                     endpoint for appliction updates
+======  ==================================  ====
 
 Version JSON
 ------------
@@ -38,15 +39,15 @@ Version JSON
 Version updates have the following JSON structure::
 
     {
-      "name" : "Application Name",
+      "app" : "Application Name",
       "version" : "1.2.3dev",
       "host" : "hostname",
       "instance" : 0,
     }
 
-name, version & host are limited to 50 unicode characters & instance is an integer <= 65535 (uint16).
+app, version & host are limited to 50 unicode characters & instance is an integer <= 65535 (uint16).
 
-TODO: name format: underscores, no spaces, etc? Or accept anything, covert it, and use the simplified form on the urls, as an id? Yes, this.
+TODO: app format: underscores, no spaces, etc? Or accept anything, covert it, and use the simplified form on the urls, as an id? Yes, this.
 
 When returned from Partisci, the following additional fields will be added::
 
@@ -54,7 +55,7 @@ When returned from Partisci, the following additional fields will be added::
     "host_ip" : "10.0.0.1"
     "last_update" : 1327940599
 
-Where host_ip is the IP address of the sending machine as seen by Partisci and last_update is a unix epoch time stamp, rounded to the nearest second. app_id is a simplified form of "name" for use in referring to this application in the REST API.
+Where host_ip is the IP address of the sending machine as seen by Partisci and last_update is a unix epoch time stamp, rounded to the nearest second. app_id is a simplified form of "app" for use in referring to this application in the REST API.
 
 Update clients
 --------------
@@ -95,6 +96,6 @@ The response contains a distinct list of all known application names and ids. Ex
 
     $curl http://localhost:7777/api/v1/app/
     {"data":[{
-      "name" : "Application Name",
+      "app" : "Application Name",
       "id" : "application_name",
     }]}

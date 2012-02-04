@@ -14,9 +14,16 @@ Implemented
 Planned
 -------
 
+ * Name --> App : rename for consistency
  * python client: add start_update_thread(), docs
  * write quickstart documentation
  * fully implement documented REST API
+ * implement and test multiple instance support
+ * implement version timeout and config (only active versions kept)
+
+   * and/or - make this a query parameter?
+
+ * add relative URLs queries in API results
  * Persistent store for the version data
  * Setup build system
 
