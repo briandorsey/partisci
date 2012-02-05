@@ -14,6 +14,7 @@ Implemented
 Planned
 -------
 
+ * Version.Id --> Version.AppID (app_id)
  * write quickstart documentation
  * fully implement documented REST API
  * python client: add start_update_thread(), docs

@@ -32,7 +32,11 @@ func (s *MemoryStore) Update(v version.Version) (err error) {
 	_, ok := s.App[v.Id]
 	if !ok {
 		// store a simplified version in the app map
-		appv := version.Version{App: v.App, Id: v.Id}
+		appv := version.Version{
+            App: v.App,
+            Id: v.Id,
+            LastUpdate: v.LastUpdate,
+        }
 		s.App[v.Id] = appv
 	}
 	return

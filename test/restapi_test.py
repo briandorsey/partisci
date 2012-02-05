@@ -1,9 +1,10 @@
 import json
+import os
 import subprocess
 import sys
 import urlparse
 
-sys.path.insert(0, "../clients")
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../clients"))
 import pypartisci
 
 import requests
@@ -36,7 +37,7 @@ class TestPartisci:
         print response.content
         info = json.loads(response.content)
         print info
-        # empty result should still be a list. 
+        # empty result should still be a list.
         assert list() == info["data"]
 
 
@@ -47,9 +48,18 @@ class TestPartisci:
 
         response = requests.get(url)
         print response
-        print response.content
         info = json.loads(response.content)
-        print info
+
+        for v in info["data"]:
+            print v
+            assert "app" in v
+            assert "id" in v
+            assert "last_update" in v
+            assert "version" not in v
+            assert "host" not in v
+            assert "host_ip" not in v
+            assert "instance" not in v
+
         assert "data" in info
         names = set(v["app"] for v in info["data"])
         for app in apps:
