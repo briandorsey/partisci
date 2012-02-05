@@ -222,18 +222,26 @@
 <div class="section" id="get-api-v1-partisci">
 <h4>GET /api/v1/_partisci/<a class="headerlink" href="#get-api-v1-partisci" title="Permalink to this headline">¶</a></h4>
 <p>This call returns basic information about the Partisci instance. Currently, very limited. Example:</p>
-<div class="highlight-python"><pre>$curl http://localhost:7777/api/v1/_partisci/
-{"version":"0.1"}</pre>
+<div class="highlight-text"><div class="highlight"><pre>$ curl -s http://localhost:7777/api/v1/_partisci/ | python -m json.tool
+{
+    &quot;version&quot;: &quot;0.1&quot;
+}
+</pre></div>
 </div>
 </div>
-<div class="section" id="get-api-v1-app">
-<h4>GET /api/v1/app/<a class="headerlink" href="#get-api-v1-app" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="get-api-v1-summary-app">
+<h4>GET /api/v1/summary/app/<a class="headerlink" href="#get-api-v1-summary-app" title="Permalink to this headline">¶</a></h4>
 <p>The response contains a distinct list of all known application names and ids. Example:</p>
-<div class="highlight-python"><pre>$curl http://localhost:7777/api/v1/app/
-{"data":[{
-  "app" : "Application Name",
-  "id" : "application_name",
-}]}</pre>
+<div class="highlight-text"><div class="highlight"><pre>$ curl -s http://localhost:7777/api/v1/summary/app/ | python -m json.tool
+{
+    &quot;data&quot;: [
+        {
+            &quot;app&quot;: &quot;Python Client demo&quot;, 
+            &quot;id&quot;: &quot;python_client_demo&quot;
+        }
+    ]
+}
+</pre></div>
 </div>
 </div>
 </div>
@@ -272,16 +280,17 @@
 <h4>Planned<a class="headerlink" href="#planned" title="Permalink to this headline">¶</a></h4>
 <blockquote>
 <div><ul class="simple">
-<li>Name &#8211;&gt; App : rename for consistency</li>
-<li>python client: add start_update_thread(), docs</li>
 <li>write quickstart documentation</li>
 <li>fully implement documented REST API</li>
-<li>implement and test multiple instance support</li>
+<li>python client: add start_update_thread(), docs</li>
 <li>implement version timeout and config (only active versions kept)<ul>
 <li>and/or - make this a query parameter?</li>
 </ul>
 </li>
+<li>implement and test multiple instance support</li>
 <li>add relative URLs queries in API results</li>
+<li>write golang update client</li>
+<li>create partisci_fuzz tool to synthesize many fake updates</li>
 <li>Persistent store for the version data</li>
 <li>Setup build system<ul>
 <li>create source distribution package with pre-built documentation</li>
@@ -291,7 +300,6 @@
 <li>linux binaries</li>
 </ul>
 </li>
-<li>write golang update client</li>
 <li>Add paging to REST results</li>
 </ul>
 </div></blockquote>
@@ -333,7 +341,7 @@
 <li class="toctree-l2"><a class="reference internal" href="index.html#example-client-in-python">Example client in Python</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#rest-api-details">REST API details</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#get-api-v1-partisci">GET /api/v1/_partisci/</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#get-api-v1-app">GET /api/v1/app/</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#get-api-v1-summary-app">GET /api/v1/summary/app/</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="index.html#document-testing">Testing</a><ul>
