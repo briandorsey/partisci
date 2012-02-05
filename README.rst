@@ -2,7 +2,8 @@
 .. WARNING::
    This project is using readme driven development and has not been implemented yet.
 
-Where is your software installed?  Is version X still in use anywhere?
+ * Where is your software installed?
+ * Is version X still in use anywhere?
 
 Partisci answers these questions by collecting updates from your programs and providing a REST API to access the data.
 
@@ -15,4 +16,6 @@ Partisci can answer these questions:
  * What applications are installed on host Z?
 
 However, Partisci *only* knows about applications which have been modified to send it updates.
+
+Full Documentation is here: http://briandorsey.github.com/Partisci/
 
