@@ -84,18 +84,17 @@ The examples below assume Partisci is running on localhost, port 7777 (default).
 GET /api/v1/_partisci/
 ----------------------
 
-This call returns basic information about the Partisci instance. Currently, very limited. Example::
+This call returns basic information about the Partisci instance. Currently, very limited. Example:
 
-    $curl http://localhost:7777/api/v1/_partisci/
-    {"version":"0.1"}
+.. command-output:: curl -s http://localhost:7777/api/v1/_partisci/ | python -m json.tool
+    :shell:
 
-GET /api/v1/app/
-----------------
 
-The response contains a distinct list of all known application names and ids. Example::
+GET /api/v1/summary/app/
+------------------------
 
-    $curl http://localhost:7777/api/v1/app/
-    {"data":[{
-      "app" : "Application Name",
-      "id" : "application_name",
-    }]}
+The response contains a distinct list of all known application names and ids. Example:
+
+.. command-output:: curl -s http://localhost:7777/api/v1/summary/app/ | python -m json.tool
+    :shell:
+

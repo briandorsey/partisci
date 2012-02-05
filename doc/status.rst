@@ -14,16 +14,17 @@ Implemented
 Planned
 -------
 
- * Name --> App : rename for consistency
- * python client: add start_update_thread(), docs
  * write quickstart documentation
  * fully implement documented REST API
- * implement and test multiple instance support
+ * python client: add start_update_thread(), docs
  * implement version timeout and config (only active versions kept)
 
    * and/or - make this a query parameter?
 
+ * implement and test multiple instance support
  * add relative URLs queries in API results
+ * write golang update client
+ * create partisci_fuzz tool to synthesize many fake updates
  * Persistent store for the version data
  * Setup build system
 
@@ -33,7 +34,6 @@ Planned
    * OS/X binaries
    * linux binaries
 
- * write golang update client
  * Add paging to REST results
 
 Possible
