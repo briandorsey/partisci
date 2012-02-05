@@ -14,10 +14,18 @@ endpoint = "http://%s:%s/api/v1/" % (server, port)
 
 class TestPartisci:
     def setup_class(self):
-        self.server = subprocess.Popen(["partisci", "--port=%s" % port])
+        self.server = subprocess.Popen(["partisci",
+                                        "--port=%s" % port,
+                                        "--danger"])
 
     def teardown_class(self):
         self.server.kill()
+
+    def setup_method(self, method):
+        clear_url = urlparse.urljoin(endpoint, "_danger/clear/")
+        response = requests.post(clear_url)
+        print response.content
+        assert response.ok
 
     def test_get_server_info(self):
         url = urlparse.urljoin(endpoint, "_partisci/")
@@ -29,7 +37,7 @@ class TestPartisci:
         print info
         assert "version" in info
 
-    def test_get_app(self):
+    def test_summary_app(self):
         url = urlparse.urljoin(endpoint, "summary/app/")
         print url
         response = requests.get(url)
@@ -64,3 +72,41 @@ class TestPartisci:
         names = set(v["app"] for v in info["data"])
         for app in apps:
             assert app in names
+
+    def test_summary_host(self):
+        url = urlparse.urljoin(endpoint, "summary/host/")
+        print url
+        response = requests.get(url)
+        print response
+        print response.content
+        info = json.loads(response.content)
+        print info
+        # empty result should still be a list.
+        assert list() == info["data"]
+
+
+        apps = ["_zz_app" + str(i) for i in range(5)]
+        hosts = ["_zz_host" + str(i) for i in range(5)]
+        print "apps:", apps
+        for app in apps:
+            for host in hosts:
+                pypartisci.send_update(server, port, app, "ver", host)
+
+        response = requests.get(url)
+        print response
+        info = json.loads(response.content)
+
+        for v in info["data"]:
+            print v
+            assert "host" in v
+            assert "last_update" in v
+            assert "app" not in v
+            assert "app_id" not in v
+            assert "version" not in v
+            assert "host_ip" not in v
+            assert "instance" not in v
+
+        assert "data" in info
+        names = set(v["host"] for v in info["data"])
+        for host in hosts:
+            assert host in names

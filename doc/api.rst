@@ -15,23 +15,26 @@ Partisci can answer the following questions:
  * What applications are installed on host H?
 
 
-======  ==================================  ====
-verb    path                                description
-======  ==================================  ====
-GET     /api/v1/_partisci/                  information about this partisci instance
-GET     /api/v1/summary/apps/               distinct active applications
----     ---                                 --- items below not implemented yet ---
-GET     /api/v1/                            overview
-GET     /api/v1/version/?app=A              'version's for every H running A
-GET     /api/v1/version/?app=A&host=H       'version's for app A on H
-GET     /api/v1/version/?app=A&version=V    'version's for app A, version V
-GET     /api/v1/version/?host=H             'version's for all A on host H
-GET     /api/v1/summary/versions/           distinct active versions
-GET     /api/v1/summary/versions/?app=A     distinct active versions running A
-GET     /api/v1/summary/hosts/              distinct active hosts
-GET     /api/v1/summary/hosts/?app=A        distinct active hosts running A
-POST    /api/v1/update/                     endpoint for appliction updates
-======  ==================================  ====
+All of the following urls are rooted at ``/api/v1/``. Ex: ``summary/app/`` is at
+``/api/v1/summary/app/``.
+
+======  ==========================  ====
+verb    path                        description
+======  ==========================  ====
+GET     _partisci/                  information about this partisci instance
+GET     summary/app/                distinct active applications
+GET     summary/hosts/              distinct active hosts
+---     ---                         --- items below not implemented yet
+GET                                 overview
+GET     version/?app=A              'version's for every H running A
+GET     version/?app=A&host=H       'version's for app A on H
+GET     version/?app=A&version=V    'version's for app A, version V
+GET     version/?host=H             'version's for all A on host H
+GET     summary/hosts/?app=A        distinct active hosts running A
+POST    update/                     endpoint for appliction updates
+---     ---                         --- only when running in -danger mode
+POST    _danger/clear/              clear the entire version database
+======  ==========================  ====
 
 Version JSON
 ------------
@@ -45,8 +48,8 @@ Version updates have the following JSON structure::
       "instance" : 0,
     }
 
-app, version & host are limited to 50 unicode characters & instance is an
-integer 0-65535 (uint16).
+``app``, ``version`` & ``host`` are limited to 50 unicode characters &
+``instance`` is an integer 0-65535 (uint16).
 
 When returned from Partisci, the following additional fields will be added::
 
@@ -54,14 +57,19 @@ When returned from Partisci, the following additional fields will be added::
     "host_ip" : "10.0.0.1"
     "last_update" : 1327940599
 
-Where host_ip is the IP address of the sending machine as seen by Partisci and last_update is a unix epoch time stamp, rounded to the nearest second. app_id is a simplified form of "app" for use in referring to this application in the REST API.
+Where ``host_ip`` is the IP address of the sending machine as seen by Partisci
+and ``last_update`` is a unix epoch time stamp, rounded to the nearest second.
+``app_id`` is a simplified form of ``app`` for use in referring to the application in the REST API.
+
+All ``version/`` urls return a full version JSON object. The ``summary/`` urls return a subset of the fields.
 
 Update clients
 --------------
 
 Clients should send update packets via UDP. Update packets are raw UTF8 encoded bytes containing the version JSON.
 
-For clients which cannot use UDP, they can post the version JSON to the /version URL.
+For clients which cannot use UDP, they can post the version JSON to the
+``update/`` URL.
 
 Update timing recommendations
 -----------------------------
@@ -92,9 +100,18 @@ This call returns basic information about the Partisci instance. Currently, very
 GET /api/v1/summary/app/
 ------------------------
 
-The response contains a distinct list of all known application names, app_ids,
-last_update for any version of the app.
+The response contains a distinct list of all known application names,
+``app_id``s, ``last_update`` for any version of the app from any host.
 
 .. command-output:: curl -s http://localhost:7777/api/v1/summary/app/ | python -m json.tool
+    :shell:
+
+GET /api/v1/summary/host/
+-------------------------
+
+The response contains a distinct list of all known hosts and the
+``last_update`` for any version and any application.
+
+.. command-output:: curl -s http://localhost:7777/api/v1/summary/host/ | python -m json.tool
     :shell:
 

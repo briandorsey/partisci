@@ -7,8 +7,8 @@ import (
 )
 
 type Version struct {
-	AppId      string `json:"app_id"`
-	App        string `json:"app"`
+	AppId      string `json:"app_id,omitempty"`
+	App        string `json:"app,omitempty"`
 	Version    string `json:"version,omitempty"`
 	Host       string `json:"host,omitempty"`
 	Instance   uint16 `json:"instance,omitempty"`

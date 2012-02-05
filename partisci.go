@@ -19,14 +19,17 @@ const updateInterval = 10 * time.Second
 
 var l = log.New(os.Stderr, "", log.Ldate|log.Ltime)
 var port *int = flag.Int("port", 7777, "listening port (both UDP and HTTP server)")
+var danger *bool = flag.Bool("danger", false, "enable dangerous commands for testing")
 
 type OpStats struct {
 	updates int64
 }
 
 type UpdateStore interface {
-	Apps() (vs []version.Version)
 	Update(v version.Version) (err error)
+	Apps() (vs []version.Version)
+	Hosts() (vs []version.Version)
+	Clear()
 }
 
 func handleUpdateUDP(conn net.PacketConn, updates chan<- version.Version) {
@@ -111,6 +114,37 @@ func ApiApp(w http.ResponseWriter, req *http.Request, s UpdateStore) {
 	w.Write(data)
 }
 
+func ApiHost(w http.ResponseWriter, req *http.Request, s UpdateStore) {
+	r := NewDataRes()
+	r.Data = s.Hosts()
+	data, err := json.Marshal(r)
+	if err != nil {
+		m := "ERROR: ApiHost: " + err.Error()
+		l.Print(m)
+		errRes := ErrorRes{Error: m}
+		data, _ := json.Marshal(errRes)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write(data)
+		return
+	}
+	w.Write(data)
+}
+
+func ApiClear(w http.ResponseWriter, req *http.Request, s UpdateStore) {
+	if req.Method == "POST" {
+		l.Print("WARNING: Version database cleared via testing hook.")
+		s.Clear()
+	} else {
+		m := "ERROR: ApiClear: only accepts POST requests"
+		l.Print(m)
+		errRes := ErrorRes{Error: m}
+		data, _ := json.Marshal(errRes)
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		w.Write(data)
+		return
+	}
+}
+
 func makeStoreHandler(fn func(w http.ResponseWriter, req *http.Request, s UpdateStore), s UpdateStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		fn(w, req, s)
@@ -136,6 +170,10 @@ func main() {
 
 	http.HandleFunc("/api/v1/_partisci/", ApiPartisci)
 	http.HandleFunc("/api/v1/summary/app/", makeStoreHandler(ApiApp, store))
+	http.HandleFunc("/api/v1/summary/host/", makeStoreHandler(ApiHost, store))
+	if *danger {
+		http.HandleFunc("/api/v1/_danger/clear/", makeStoreHandler(ApiClear, store))
+	}
 	http.HandleFunc("/hello", HelloServer)
 	err = http.ListenAndServe(listenAddr, nil)
 	if err != nil {

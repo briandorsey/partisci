@@ -10,5 +10,9 @@ apps = ["Demo App A",
         "Demo App B", 
         "Demo App C"]
 
+hosts = ["host1.example.com",
+         "host2.example.com"]
+
 for app in apps:
-    pypartisci.send_update(server, port, app, "ver")
+    for host in hosts:
+        pypartisci.send_update(server, port, app, "ver", host)
