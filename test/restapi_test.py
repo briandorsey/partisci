@@ -53,7 +53,7 @@ class TestPartisci:
         for v in info["data"]:
             print v
             assert "app" in v
-            assert "id" in v
+            assert "app_id" in v
             assert "last_update" in v
             assert "version" not in v
             assert "host" not in v

@@ -4,14 +4,14 @@ import (
 	"testing"
 )
 
-func TestAppToID(t *testing.T) {
-	if "lower" != AppToID("LoWeR") {
+func TestAppIdToId(t *testing.T) {
+	if "lower" != AppIdToId("LoWeR") {
 		t.Error("ids should be all lowercase")
 	}
-	if "___________" != AppToID("_!@#$%^&*( ") {
+	if "___________" != AppIdToId("_!@#$%^&*( ") {
 		t.Error("non alpha should be converted to underscores")
 	}
-	if "0123456789" != AppToID("0123456789") {
+	if "0123456789" != AppIdToId("0123456789") {
 		t.Error("digits should be preserved")
 	}
 }
@@ -19,7 +19,7 @@ func TestAppToID(t *testing.T) {
 func BenchmarkAppToID(b *testing.B) {
 	s := "Longish Application Name!"
 	for i := 0; i < b.N; i++ {
-		_ = AppToID(s)
+		_ = AppIdToId(s)
 	}
 }
 

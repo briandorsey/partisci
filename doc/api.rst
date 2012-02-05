@@ -45,9 +45,8 @@ Version updates have the following JSON structure::
       "instance" : 0,
     }
 
-app, version & host are limited to 50 unicode characters & instance is an integer <= 65535 (uint16).
-
-TODO: app format: underscores, no spaces, etc? Or accept anything, covert it, and use the simplified form on the urls, as an id? Yes, this.
+app, version & host are limited to 50 unicode characters & instance is an
+integer 0-65535 (uint16).
 
 When returned from Partisci, the following additional fields will be added::
 
@@ -84,7 +83,7 @@ The examples below assume Partisci is running on localhost, port 7777 (default).
 GET /api/v1/_partisci/
 ----------------------
 
-This call returns basic information about the Partisci instance. Currently, very limited. Example:
+This call returns basic information about the Partisci instance. Currently, very limited.
 
 .. command-output:: curl -s http://localhost:7777/api/v1/_partisci/ | python -m json.tool
     :shell:
@@ -93,7 +92,8 @@ This call returns basic information about the Partisci instance. Currently, very
 GET /api/v1/summary/app/
 ------------------------
 
-The response contains a distinct list of all known application names and ids. Example:
+The response contains a distinct list of all known application names, app_ids,
+last_update for any version of the app.
 
 .. command-output:: curl -s http://localhost:7777/api/v1/summary/app/ | python -m json.tool
     :shell:
