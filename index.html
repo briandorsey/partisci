@@ -114,11 +114,13 @@
 <li>What applications are installed on host H?</li>
 </ul>
 </div></blockquote>
+<p>All of the following urls are rooted at <tt class="docutils literal"><span class="pre">/api/v1/</span></tt>. Ex: <tt class="docutils literal"><span class="pre">summary/app/</span></tt> is at
+<tt class="docutils literal"><span class="pre">/api/v1/summary/app/</span></tt>.</p>
 <table border="1" class="docutils">
 <colgroup>
 <col width="8%" />
-<col width="43%" />
-<col width="50%" />
+<col width="36%" />
+<col width="56%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">verb</th>
@@ -128,56 +130,56 @@
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td>GET</td>
-<td>/api/v1/_partisci/</td>
+<td>_partisci/</td>
 <td>information about this partisci instance</td>
 </tr>
 <tr class="row-odd"><td>GET</td>
-<td>/api/v1/summary/apps/</td>
+<td>summary/app/</td>
 <td>distinct active applications</td>
 </tr>
-<tr class="row-even"><td>&#8212;</td>
-<td>&#8212;</td>
-<td>&#8212; items below not implemented yet &#8212;</td>
-</tr>
-<tr class="row-odd"><td>GET</td>
-<td>/api/v1/</td>
-<td>overview</td>
-</tr>
 <tr class="row-even"><td>GET</td>
-<td>/api/v1/version/?app=A</td>
-<td>&#8216;version&#8217;s for every H running A</td>
-</tr>
-<tr class="row-odd"><td>GET</td>
-<td>/api/v1/version/?app=A&amp;host=H</td>
-<td>&#8216;version&#8217;s for app A on H</td>
-</tr>
-<tr class="row-even"><td>GET</td>
-<td>/api/v1/version/?app=A&amp;version=V</td>
-<td>&#8216;version&#8217;s for app A, version V</td>
-</tr>
-<tr class="row-odd"><td>GET</td>
-<td>/api/v1/version/?host=H</td>
-<td>&#8216;version&#8217;s for all A on host H</td>
-</tr>
-<tr class="row-even"><td>GET</td>
-<td>/api/v1/summary/versions/</td>
-<td>distinct active versions</td>
-</tr>
-<tr class="row-odd"><td>GET</td>
-<td>/api/v1/summary/versions/?app=A</td>
-<td>distinct active versions running A</td>
-</tr>
-<tr class="row-even"><td>GET</td>
-<td>/api/v1/summary/hosts/</td>
+<td>summary/hosts/</td>
 <td>distinct active hosts</td>
 </tr>
+<tr class="row-odd"><td>&#8212;</td>
+<td>&#8212;</td>
+<td>&#8212; items below not implemented yet</td>
+</tr>
+<tr class="row-even"><td>GET</td>
+<td>&nbsp;</td>
+<td>overview</td>
+</tr>
 <tr class="row-odd"><td>GET</td>
-<td>/api/v1/summary/hosts/?app=A</td>
+<td>version/?app=A</td>
+<td>&#8216;version&#8217;s for every H running A</td>
+</tr>
+<tr class="row-even"><td>GET</td>
+<td>version/?app=A&amp;host=H</td>
+<td>&#8216;version&#8217;s for app A on H</td>
+</tr>
+<tr class="row-odd"><td>GET</td>
+<td>version/?app=A&amp;version=V</td>
+<td>&#8216;version&#8217;s for app A, version V</td>
+</tr>
+<tr class="row-even"><td>GET</td>
+<td>version/?host=H</td>
+<td>&#8216;version&#8217;s for all A on host H</td>
+</tr>
+<tr class="row-odd"><td>GET</td>
+<td>summary/hosts/?app=A</td>
 <td>distinct active hosts running A</td>
 </tr>
 <tr class="row-even"><td>POST</td>
-<td>/api/v1/update/</td>
+<td>update/</td>
 <td>endpoint for appliction updates</td>
+</tr>
+<tr class="row-odd"><td>&#8212;</td>
+<td>&#8212;</td>
+<td>&#8212; only when running in -danger mode</td>
+</tr>
+<tr class="row-even"><td>POST</td>
+<td>_danger/clear/</td>
+<td>clear the entire version database</td>
 </tr>
 </tbody>
 </table>
@@ -192,19 +194,23 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>app, version &amp; host are limited to 50 unicode characters &amp; instance is an integer &lt;= 65535 (uint16).</p>
-<p>TODO: app format: underscores, no spaces, etc? Or accept anything, covert it, and use the simplified form on the urls, as an id? Yes, this.</p>
+<p><tt class="docutils literal"><span class="pre">app</span></tt>, <tt class="docutils literal"><span class="pre">version</span></tt> &amp; <tt class="docutils literal"><span class="pre">host</span></tt> are limited to 50 unicode characters &amp;
+<tt class="docutils literal"><span class="pre">instance</span></tt> is an integer 0-65535 (uint16).</p>
 <p>When returned from Partisci, the following additional fields will be added:</p>
 <div class="highlight-python"><pre>"app_id" : "application_name"
 "host_ip" : "10.0.0.1"
 "last_update" : 1327940599</pre>
 </div>
-<p>Where host_ip is the IP address of the sending machine as seen by Partisci and last_update is a unix epoch time stamp, rounded to the nearest second. app_id is a simplified form of &#8220;app&#8221; for use in referring to this application in the REST API.</p>
+<p>Where <tt class="docutils literal"><span class="pre">host_ip</span></tt> is the IP address of the sending machine as seen by Partisci
+and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a unix epoch time stamp, rounded to the nearest second.
+<tt class="docutils literal"><span class="pre">app_id</span></tt> is a simplified form of <tt class="docutils literal"><span class="pre">app</span></tt> for use in referring to the application in the REST API.</p>
+<p>All <tt class="docutils literal"><span class="pre">version/</span></tt> urls return a full version JSON object. The <tt class="docutils literal"><span class="pre">summary/</span></tt> urls return a subset of the fields.</p>
 </div>
 <div class="section" id="update-clients">
 <h4>Update clients<a class="headerlink" href="#update-clients" title="Permalink to this headline">¶</a></h4>
 <p>Clients should send update packets via UDP. Update packets are raw UTF8 encoded bytes containing the version JSON.</p>
-<p>For clients which cannot use UDP, they can post the version JSON to the /version URL.</p>
+<p>For clients which cannot use UDP, they can post the version JSON to the
+<tt class="docutils literal"><span class="pre">update/</span></tt> URL.</p>
 </div>
 <div class="section" id="update-timing-recommendations">
 <h4>Update timing recommendations<a class="headerlink" href="#update-timing-recommendations" title="Permalink to this headline">¶</a></h4>
@@ -221,7 +227,7 @@
 </div>
 <div class="section" id="get-api-v1-partisci">
 <h4>GET /api/v1/_partisci/<a class="headerlink" href="#get-api-v1-partisci" title="Permalink to this headline">¶</a></h4>
-<p>This call returns basic information about the Partisci instance. Currently, very limited. Example:</p>
+<p>This call returns basic information about the Partisci instance. Currently, very limited.</p>
 <div class="highlight-text"><div class="highlight"><pre>$ curl -s http://localhost:7777/api/v1/_partisci/ | python -m json.tool
 {
     &quot;version&quot;: &quot;0.1&quot;
@@ -231,13 +237,45 @@
 </div>
 <div class="section" id="get-api-v1-summary-app">
 <h4>GET /api/v1/summary/app/<a class="headerlink" href="#get-api-v1-summary-app" title="Permalink to this headline">¶</a></h4>
-<p>The response contains a distinct list of all known application names and ids. Example:</p>
+<p>The response contains a distinct list of all known application names,
+<tt class="docutils literal"><span class="pre">app_id``s,</span> <span class="pre">``last_update</span></tt> for any version of the app from any host.</p>
 <div class="highlight-text"><div class="highlight"><pre>$ curl -s http://localhost:7777/api/v1/summary/app/ | python -m json.tool
 {
     &quot;data&quot;: [
         {
-            &quot;app&quot;: &quot;Python Client demo&quot;, 
-            &quot;id&quot;: &quot;python_client_demo&quot;
+            &quot;app&quot;: &quot;Demo App C&quot;, 
+            &quot;app_id&quot;: &quot;demo_app_c&quot;, 
+            &quot;last_update&quot;: 1328467109
+        }, 
+        {
+            &quot;app&quot;: &quot;Demo App B&quot;, 
+            &quot;app_id&quot;: &quot;demo_app_b&quot;, 
+            &quot;last_update&quot;: 1328467109
+        }, 
+        {
+            &quot;app&quot;: &quot;Demo App A&quot;, 
+            &quot;app_id&quot;: &quot;demo_app_a&quot;, 
+            &quot;last_update&quot;: 1328467109
+        }
+    ]
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="get-api-v1-summary-host">
+<h4>GET /api/v1/summary/host/<a class="headerlink" href="#get-api-v1-summary-host" title="Permalink to this headline">¶</a></h4>
+<p>The response contains a distinct list of all known hosts and the
+<tt class="docutils literal"><span class="pre">last_update</span></tt> for any version and any application.</p>
+<div class="highlight-text"><div class="highlight"><pre>$ curl -s http://localhost:7777/api/v1/summary/host/ | python -m json.tool
+{
+    &quot;data&quot;: [
+        {
+            &quot;host&quot;: &quot;host1.example.com&quot;, 
+            &quot;last_update&quot;: 1328467109
+        }, 
+        {
+            &quot;host&quot;: &quot;host2.example.com&quot;, 
+            &quot;last_update&quot;: 1328467109
         }
     ]
 }
@@ -256,7 +294,7 @@
 <li>requests (python-requests.org)</li>
 </ul>
 </div></blockquote>
-<p>With partisci running, open a shell to the test directory and run:</p>
+<p>Open a shell to the test directory and run:</p>
 <div class="highlight-python"><pre>$ py.test</pre>
 </div>
 </div>
@@ -280,9 +318,7 @@
 <h4>Planned<a class="headerlink" href="#planned" title="Permalink to this headline">¶</a></h4>
 <blockquote>
 <div><ul class="simple">
-<li>write quickstart documentation</li>
 <li>fully implement documented REST API</li>
-<li>python client: add start_update_thread(), docs</li>
 <li>implement version timeout and config (only active versions kept)<ul>
 <li>and/or - make this a query parameter?</li>
 </ul>
@@ -290,6 +326,7 @@
 <li>implement and test multiple instance support</li>
 <li>add relative URLs queries in API results</li>
 <li>write golang update client</li>
+<li>python client: add start_update_thread(), docs</li>
 <li>create partisci_fuzz tool to synthesize many fake updates</li>
 <li>Persistent store for the version data</li>
 <li>Setup build system<ul>
@@ -300,6 +337,8 @@
 <li>linux binaries</li>
 </ul>
 </li>
+<li>write quickstart documentation</li>
+<li>gzip responses when possible</li>
 <li>Add paging to REST results</li>
 </ul>
 </div></blockquote>
@@ -342,6 +381,7 @@
 <li class="toctree-l2"><a class="reference internal" href="index.html#rest-api-details">REST API details</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#get-api-v1-partisci">GET /api/v1/_partisci/</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#get-api-v1-summary-app">GET /api/v1/summary/app/</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#get-api-v1-summary-host">GET /api/v1/summary/host/</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="index.html#document-testing">Testing</a><ul>
