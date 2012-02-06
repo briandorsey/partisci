@@ -16,6 +16,7 @@ Planned
 
 * fully implement the documented REST API
 * add ``count`` field to summary results
+* support both / terminated and not urls
 * add ``app`` and ``host`` version summaries with counts of each version
 * implement version timeout and config (only active versions kept)
 * implement and test multiple instance support

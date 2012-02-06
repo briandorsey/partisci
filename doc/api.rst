@@ -25,11 +25,11 @@ GET     _partisci/                  information about this partisci instance
 GET     summary/app/                distinct active applications
 GET     summary/hosts/              distinct active hosts
 GET     version/                    every A & H with their most recent ``version``
+GET     version/?app=A              ``version`` for every H running A
 ---     ---                         --- only when running in -danger mode
 POST    _danger/clear/              clear the entire version database
 ---     ---                         --- items below not implemented yet
 GET     /                           overview
-GET     version/?app=A              ``version`` for every H running A
 GET     version/?app=A&host=H       ``version`` for app A on H
 GET     version/?app=A&version=V    ``version`` for app A, version V
 GET     version/?host=H             ``version`` for all A on host H

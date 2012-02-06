@@ -31,6 +31,7 @@ class TestPartisci:
         apps = ["_zz_app" + str(i) for i in range(5)]
         hosts = ["_zz_host" + str(i) for i in range(5)]
         print "apps:", apps
+        print "hosts:", hosts
         for app in apps:
             for host in hosts:
                 pypartisci.send_update(server, port, app, "ver", host)
@@ -144,3 +145,23 @@ class TestPartisci:
             assert app in app_names
         for host in hosts:
             assert host in host_names
+
+    def test_version_app(self):
+        apps, hosts = self.send_basic_updates()
+        url = urlparse.urljoin(endpoint, "summary/app/")
+
+        response = requests.get(url)
+        info = json.loads(response.content)
+
+        # pick the first app_id
+        app_id = info["data"][0]["app_id"]
+        print "Requesting app_id:", app_id
+
+        url = urlparse.urljoin(endpoint, "version/?app=%s" % app_id)
+        print url
+        response = requests.get(url)
+        info = json.loads(response.content)
+
+        for v in info["data"]:
+            print v
+            assert v["app_id"] == app_id

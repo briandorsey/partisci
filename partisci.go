@@ -29,7 +29,7 @@ type UpdateStore interface {
 	Update(v version.Version) (err error)
 	Apps() (vs []version.Version)
 	Hosts() (vs []version.Version)
-	Versions() (vs []version.Version)
+	Versions(app string) (vs []version.Version)
 	Clear()
 }
 
@@ -124,7 +124,8 @@ func ApiHost(w http.ResponseWriter, req *http.Request, s UpdateStore) {
 
 func ApiVersion(w http.ResponseWriter, req *http.Request, s UpdateStore) {
 	r := NewDataRes()
-	r.Data = s.Versions()
+    app := req.FormValue("app")
+	r.Data = s.Versions(app)
 	data, err := json.Marshal(r)
 	if handleError(err, "ApiVersion", w, http.StatusInternalServerError) {
 		return
