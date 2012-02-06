@@ -7,12 +7,12 @@ The REST API also inclues an update resource for situtaions where applications c
 
 Partisci can answer the following questions:
 
- * Which hosts is application A installed on?
- * Which versions of application A are active?
- * Is version V of application A still active anywhere?
- * Which hosts are runinng version V of application A?
- * When did application A last update? (from host H?)
- * What applications are installed on host H?
+* Which hosts is application A installed on?
+* Which versions of application A are active?
+* Is version V of application A still active anywhere?
+* Which hosts are runinng version V of application A?
+* When did application A last update? (from host H?)
+* What applications are installed on host H?
 
 
 All of the following urls are rooted at ``/api/v1/``. Ex: ``summary/app/`` is at
