@@ -124,7 +124,7 @@ func ApiHost(w http.ResponseWriter, req *http.Request, s UpdateStore) {
 
 func ApiVersion(w http.ResponseWriter, req *http.Request, s UpdateStore) {
 	r := NewDataRes()
-    app := req.FormValue("app")
+	app := req.FormValue("app")
 	r.Data = s.Versions(app)
 	data, err := json.Marshal(r)
 	if handleError(err, "ApiVersion", w, http.StatusInternalServerError) {
