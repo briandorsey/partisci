@@ -29,6 +29,7 @@ type UpdateStore interface {
 	Update(v version.Version) (err error)
 	Apps() (vs []version.Version)
 	Hosts() (vs []version.Version)
+	Versions() (vs []version.Version)
 	Clear()
 }
 
@@ -130,6 +131,22 @@ func ApiHost(w http.ResponseWriter, req *http.Request, s UpdateStore) {
 	w.Write(data)
 }
 
+func ApiVersion(w http.ResponseWriter, req *http.Request, s UpdateStore) {
+	r := NewDataRes()
+	r.Data = s.Versions()
+	data, err := json.Marshal(r)
+	if err != nil {
+		m := "ERROR: ApiVersion: " + err.Error()
+		l.Print(m)
+		errRes := ErrorRes{Error: m}
+		data, _ := json.Marshal(errRes)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write(data)
+		return
+	}
+	w.Write(data)
+}
+
 func ApiClear(w http.ResponseWriter, req *http.Request, s UpdateStore) {
 	if req.Method == "POST" {
 		l.Print("WARNING: Version database cleared via testing hook.")
@@ -171,6 +188,7 @@ func main() {
 	http.HandleFunc("/api/v1/_partisci/", ApiPartisci)
 	http.HandleFunc("/api/v1/summary/app/", makeStoreHandler(ApiApp, store))
 	http.HandleFunc("/api/v1/summary/host/", makeStoreHandler(ApiHost, store))
+	http.HandleFunc("/api/v1/version/", makeStoreHandler(ApiVersion, store))
 	if *danger {
 		http.HandleFunc("/api/v1/_danger/clear/", makeStoreHandler(ApiClear, store))
 	}

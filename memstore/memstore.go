@@ -38,6 +38,14 @@ func (s *MemoryStore) Hosts() []version.Version {
 	return vs
 }
 
+func (s *MemoryStore) Versions() []version.Version {
+	vs := make([]version.Version, 0)
+	for _, v := range s.Version {
+		vs = append(vs, v)
+	}
+	return vs
+}
+
 func (s *MemoryStore) Update(v version.Version) (err error) {
 	key := versionToKey(v)
 	s.Version[key] = v

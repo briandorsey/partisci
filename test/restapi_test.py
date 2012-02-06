@@ -63,6 +63,7 @@ class TestPartisci:
         print response
         info = json.loads(response.content)
 
+        assert "data" in info
         for v in info["data"]:
             print v
             assert "app" in v
@@ -73,7 +74,6 @@ class TestPartisci:
             assert "host_ip" not in v
             assert "instance" not in v
 
-        assert "data" in info
         names = set(v["app"] for v in info["data"])
         for app in apps:
             assert app in names
@@ -95,6 +95,7 @@ class TestPartisci:
         print response
         info = json.loads(response.content)
 
+        assert "data" in info
         for v in info["data"]:
             print v
             assert "host" in v
@@ -105,7 +106,41 @@ class TestPartisci:
             assert "host_ip" not in v
             assert "instance" not in v
 
-        assert "data" in info
         names = set(v["host"] for v in info["data"])
         for host in hosts:
             assert host in names
+
+    def test_version(self):
+        url = urlparse.urljoin(endpoint, "version/")
+        print url
+        response = requests.get(url)
+        print response
+        print response.content
+        info = json.loads(response.content)
+        print info
+        # empty result should still be a list.
+        assert list() == info["data"]
+
+        apps, hosts = self.send_basic_updates()
+
+        response = requests.get(url)
+        print response
+        info = json.loads(response.content)
+
+        assert "data" in info
+        for v in info["data"]:
+            print v
+            assert "host" in v
+            assert "last_update" in v
+            assert "app" in v
+            assert "app_id" in v
+            assert "version" in v
+            assert "host_ip" in v
+            #assert "instance" in v
+
+        app_names = set(v["app"] for v in info["data"])
+        host_names = set(v["host"] for v in info["data"])
+        for app in apps:
+            assert app in app_names
+        for host in hosts:
+            assert host in host_names

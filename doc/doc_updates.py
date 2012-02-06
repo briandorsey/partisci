@@ -7,12 +7,11 @@ import pypartisci
 server, port = "localhost", 7777
 
 apps = ["Demo App A",
-        "Demo App B", 
-        "Demo App C"]
+        "Demo App B"] 
 
 hosts = ["host1.example.com",
          "host2.example.com"]
 
 for app in apps:
     for host in hosts:
-        pypartisci.send_update(server, port, app, "ver", host)
+        pypartisci.send_update(server, port, app, "1.0demo", host)

@@ -24,22 +24,22 @@ verb    path                        description
 GET     _partisci/                  information about this partisci instance
 GET     summary/app/                distinct active applications
 GET     summary/hosts/              distinct active hosts
----     ---                         --- items below not implemented yet
-GET                                 overview
-GET     version/?app=A              'version's for every H running A
-GET     version/?app=A&host=H       'version's for app A on H
-GET     version/?app=A&version=V    'version's for app A, version V
-GET     version/?host=H             'version's for all A on host H
-GET     summary/hosts/?app=A        distinct active hosts running A
-POST    update/                     endpoint for appliction updates
+GET     version/                    every A & H with their most recent ``version``
 ---     ---                         --- only when running in -danger mode
 POST    _danger/clear/              clear the entire version database
+---     ---                         --- items below not implemented yet
+GET     /                           overview
+GET     version/?app=A              ``version`` for every H running A
+GET     version/?app=A&host=H       ``version`` for app A on H
+GET     version/?app=A&version=V    ``version`` for app A, version V
+GET     version/?host=H             ``version`` for all A on host H
+POST    update/                     accepts a ``version`` update body
 ======  ==========================  ====
 
 Version JSON
 ------------
 
-Version updates have the following JSON structure::
+A ``version`` update has the following JSON structure::
 
     {
       "app" : "Application Name",
@@ -88,30 +88,42 @@ All response bodies are JSON objects.
 
 The examples below assume Partisci is running on localhost, port 7777 (default).
 
-GET /api/v1/_partisci/
+GET _partisci/
 ----------------------
 
 This call returns basic information about the Partisci instance. Currently, very limited.
 
-.. command-output:: curl -s http://localhost:7777/api/v1/_partisci/ | python -m json.tool
+.. command-output:: curl http://localhost:7777/api/v1/_partisci/ | python -m json.tool
     :shell:
+    :nostderr:
 
 
-GET /api/v1/summary/app/
+GET summary/app/
 ------------------------
 
-The response contains a distinct list of all known application names,
-``app_id``s, ``last_update`` for any version of the app from any host.
+The response contains a distinct list of all known application names, ``app_id``,  and ``last_update`` for any version of the app from any host.
 
-.. command-output:: curl -s http://localhost:7777/api/v1/summary/app/ | python -m json.tool
+.. command-output:: curl http://localhost:7777/api/v1/summary/app/ | python -m json.tool
     :shell:
+    :nostderr:
 
-GET /api/v1/summary/host/
+
+GET summary/host/
 -------------------------
 
-The response contains a distinct list of all known hosts and the
-``last_update`` for any version and any application.
+The response contains a distinct list of all known hosts and ``last_update`` for any version and any application.
 
-.. command-output:: curl -s http://localhost:7777/api/v1/summary/host/ | python -m json.tool
+.. command-output:: curl http://localhost:7777/api/v1/summary/host/ | python -m json.tool
     :shell:
+    :nostderr:
+
+
+GET version/
+-------------------------
+
+The response contains every ``app_id``, ``host``, ``version`` combination known. Only the most recent ``version`` is saved for every ``app_id``, ``host`` pair.
+
+.. command-output:: curl http://localhost:7777/api/v1/version/ | python -m json.tool
+    :shell:
+    :nostderr:
 
