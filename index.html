@@ -48,9 +48,8 @@
 </div>
 <p>Where is your software installed?  Is version X still in use anywhere?</p>
 <p>Partisci answers these questions by collecting updates from your programs and providing a REST API to access the data.</p>
-<dl class="docutils">
-<dt>Partisci can answer these questions:</dt>
-<dd><ul class="first last simple">
+<p>Partisci can answer these questions:</p>
+<ul class="simple">
 <li>What hosts is application X installed on?</li>
 <li>Which versions of application X are active?</li>
 <li>Is version Y of application X still active anywhere?</li>
@@ -58,54 +57,41 @@
 <li>When did application X last update? (from host Z?)</li>
 <li>What applications are installed on host Z?</li>
 </ul>
-</dd>
-</dl>
 <p>However, Partisci <em>only</em> knows about applications which have been modified to send it updates.</p>
 </div>
 <div class="section" id="details">
 <h1>Details<a class="headerlink" href="#details" title="Permalink to this headline">¶</a></h1>
-<dl class="docutils">
-<dt>Some limitations:</dt>
-<dd><ul class="first last simple">
+<p>Some limitations:</p>
+<ul class="simple">
 <li>Applications must be modified to send updates.</li>
 <li>If applications are not running, no information is updated.</li>
 <li>Partisci only logs the most recent data fro each host/app/instance combination. In the future, Partisci may keep more historical data.</li>
 <li>It is intended to be used within an organization to track custom software. It has no features to support publicly released software, or anything your organization can&#8217;t modify.</li>
 </ul>
-</dd>
-</dl>
 <p>Partisci accepts update updates via UDP and HTTP. Sending UDP updates is recommended. When UDP isn&#8217;t easy or possible, use HTTP (for example: network restrictions or browser based apps). Partisci requres each application to be modified to send these updates.</p>
-<dl class="docutils">
-<dt>Updates contain:</dt>
-<dd><ul class="first last simple">
+<p>Updates contain:</p>
+<ul class="simple">
 <li>application name</li>
 <li>version</li>
 <li>hostname</li>
 <li>instance number</li>
 </ul>
-</dd>
-<dt>Partisci also logs:</dt>
-<dd><ul class="first last simple">
+<p>Partisci also logs:</p>
+<ul class="simple">
 <li>client address (as seen by Partisci)</li>
 <li>time the update is recieved</li>
 </ul>
-</dd>
-<dt>Where does the name come from?</dt>
-<dd><ul class="first last simple">
+<p>Where does the name come from?</p>
+<ul class="simple">
 <li>It is a truncated portmanteau from Partially Omniscient. Within its limited domain, Partisci strives to be omniscient.</li>
 </ul>
-</dd>
-</dl>
-<div class="section" id="contents">
-<h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <span id="document-api"></span><div class="section" id="api">
-<h3>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h3>
+<h2>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
 <p>Partisci provides access to the data it collects via a REST API.</p>
 <p>The REST API also inclues an update resource for situtaions where applications cannot update via UDP.</p>
 <p>Partisci can answer the following questions:</p>
-<blockquote>
-<div><ul class="simple">
+<ul class="simple">
 <li>Which hosts is application A installed on?</li>
 <li>Which versions of application A are active?</li>
 <li>Is version V of application A still active anywhere?</li>
@@ -113,7 +99,6 @@
 <li>When did application A last update? (from host H?)</li>
 <li>What applications are installed on host H?</li>
 </ul>
-</div></blockquote>
 <p>All of the following urls are rooted at <tt class="docutils literal"><span class="pre">/api/v1/</span></tt>. Ex: <tt class="docutils literal"><span class="pre">summary/app/</span></tt> is at
 <tt class="docutils literal"><span class="pre">/api/v1/summary/app/</span></tt>.</p>
 <table border="1" class="docutils">
@@ -184,7 +169,7 @@
 </tbody>
 </table>
 <div class="section" id="version-json">
-<h4>Version JSON<a class="headerlink" href="#version-json" title="Permalink to this headline">¶</a></h4>
+<h3>Version JSON<a class="headerlink" href="#version-json" title="Permalink to this headline">¶</a></h3>
 <p>A <tt class="docutils literal"><span class="pre">version</span></tt> update has the following JSON structure:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
   <span class="s">&quot;app&quot;</span> <span class="p">:</span> <span class="s">&quot;Application Name&quot;</span><span class="p">,</span>
@@ -207,26 +192,26 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
 <p>All <tt class="docutils literal"><span class="pre">version/</span></tt> urls return a full version JSON object. The <tt class="docutils literal"><span class="pre">summary/</span></tt> urls return a subset of the fields.</p>
 </div>
 <div class="section" id="update-clients">
-<h4>Update clients<a class="headerlink" href="#update-clients" title="Permalink to this headline">¶</a></h4>
+<h3>Update clients<a class="headerlink" href="#update-clients" title="Permalink to this headline">¶</a></h3>
 <p>Clients should send update packets via UDP. Update packets are raw UTF8 encoded bytes containing the version JSON.</p>
 <p>For clients which cannot use UDP, they can post the version JSON to the
 <tt class="docutils literal"><span class="pre">update/</span></tt> URL.</p>
 </div>
 <div class="section" id="update-timing-recommendations">
-<h4>Update timing recommendations<a class="headerlink" href="#update-timing-recommendations" title="Permalink to this headline">¶</a></h4>
+<h3>Update timing recommendations<a class="headerlink" href="#update-timing-recommendations" title="Permalink to this headline">¶</a></h3>
 <p>Clients should send a version update at every start up. Long running processes should send an update at least once every 24 hours, but not more than every hour.</p>
 </div>
 <div class="section" id="example-client-in-python">
-<h4>Example client in Python<a class="headerlink" href="#example-client-in-python" title="Permalink to this headline">¶</a></h4>
+<h3>Example client in Python<a class="headerlink" href="#example-client-in-python" title="Permalink to this headline">¶</a></h3>
 <p>&lt;TODO&gt;</p>
 </div>
 <div class="section" id="rest-api-details">
-<h4>REST API details<a class="headerlink" href="#rest-api-details" title="Permalink to this headline">¶</a></h4>
+<h3>REST API details<a class="headerlink" href="#rest-api-details" title="Permalink to this headline">¶</a></h3>
 <p>All response bodies are JSON objects.</p>
 <p>The examples below assume Partisci is running on localhost, port 7777 (default).</p>
 </div>
 <div class="section" id="get-partisci">
-<h4>GET _partisci/<a class="headerlink" href="#get-partisci" title="Permalink to this headline">¶</a></h4>
+<h3>GET _partisci/<a class="headerlink" href="#get-partisci" title="Permalink to this headline">¶</a></h3>
 <p>This call returns basic information about the Partisci instance. Currently, very limited.</p>
 <div class="highlight-text"><div class="highlight"><pre>$ curl http://localhost:7777/api/v1/_partisci/ | python -m json.tool
 {
@@ -236,7 +221,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
 </div>
 </div>
 <div class="section" id="get-summary-app">
-<h4>GET summary/app/<a class="headerlink" href="#get-summary-app" title="Permalink to this headline">¶</a></h4>
+<h3>GET summary/app/<a class="headerlink" href="#get-summary-app" title="Permalink to this headline">¶</a></h3>
 <p>The response contains a distinct list of all known application names, <tt class="docutils literal"><span class="pre">app_id</span></tt>,  and <tt class="docutils literal"><span class="pre">last_update</span></tt> for any version of the app from any host.</p>
 <div class="highlight-text"><div class="highlight"><pre>$ curl http://localhost:7777/api/v1/summary/app/ | python -m json.tool
 {
@@ -244,12 +229,12 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
         {
             &quot;app&quot;: &quot;Demo App B&quot;, 
             &quot;app_id&quot;: &quot;demo_app_b&quot;, 
-            &quot;last_update&quot;: 1328505409
+            &quot;last_update&quot;: 1328508473
         }, 
         {
             &quot;app&quot;: &quot;Demo App A&quot;, 
             &quot;app_id&quot;: &quot;demo_app_a&quot;, 
-            &quot;last_update&quot;: 1328505409
+            &quot;last_update&quot;: 1328508473
         }
     ]
 }
@@ -257,18 +242,18 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
 </div>
 </div>
 <div class="section" id="get-summary-host">
-<h4>GET summary/host/<a class="headerlink" href="#get-summary-host" title="Permalink to this headline">¶</a></h4>
+<h3>GET summary/host/<a class="headerlink" href="#get-summary-host" title="Permalink to this headline">¶</a></h3>
 <p>The response contains a distinct list of all known hosts and <tt class="docutils literal"><span class="pre">last_update</span></tt> for any version and any application.</p>
 <div class="highlight-text"><div class="highlight"><pre>$ curl http://localhost:7777/api/v1/summary/host/ | python -m json.tool
 {
     &quot;data&quot;: [
         {
             &quot;host&quot;: &quot;host1.example.com&quot;, 
-            &quot;last_update&quot;: 1328505409
+            &quot;last_update&quot;: 1328508473
         }, 
         {
             &quot;host&quot;: &quot;host2.example.com&quot;, 
-            &quot;last_update&quot;: 1328505409
+            &quot;last_update&quot;: 1328508473
         }
     ]
 }
@@ -276,7 +261,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
 </div>
 </div>
 <div class="section" id="get-version">
-<h4>GET version/<a class="headerlink" href="#get-version" title="Permalink to this headline">¶</a></h4>
+<h3>GET version/<a class="headerlink" href="#get-version" title="Permalink to this headline">¶</a></h3>
 <p>The response contains every <tt class="docutils literal"><span class="pre">app_id</span></tt>, <tt class="docutils literal"><span class="pre">host</span></tt>, <tt class="docutils literal"><span class="pre">version</span></tt> combination known. Only the most recent <tt class="docutils literal"><span class="pre">version</span></tt> is saved for every <tt class="docutils literal"><span class="pre">app_id</span></tt>, <tt class="docutils literal"><span class="pre">host</span></tt> pair.</p>
 <div class="highlight-text"><div class="highlight"><pre>$ curl http://localhost:7777/api/v1/version/ | python -m json.tool
 {
@@ -286,7 +271,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;app_id&quot;: &quot;demo_app_b&quot;, 
             &quot;host&quot;: &quot;host2.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
-            &quot;last_update&quot;: 1328505409, 
+            &quot;last_update&quot;: 1328508473, 
             &quot;version&quot;: &quot;1.0demo&quot;
         }, 
         {
@@ -294,7 +279,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;app_id&quot;: &quot;demo_app_b&quot;, 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
-            &quot;last_update&quot;: 1328505409, 
+            &quot;last_update&quot;: 1328508473, 
             &quot;version&quot;: &quot;1.0demo&quot;
         }, 
         {
@@ -302,7 +287,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;app_id&quot;: &quot;demo_app_a&quot;, 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
-            &quot;last_update&quot;: 1328505409, 
+            &quot;last_update&quot;: 1328508473, 
             &quot;version&quot;: &quot;1.0demo&quot;
         }, 
         {
@@ -310,7 +295,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;app_id&quot;: &quot;demo_app_a&quot;, 
             &quot;host&quot;: &quot;host2.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
-            &quot;last_update&quot;: 1328505409, 
+            &quot;last_update&quot;: 1328508473, 
             &quot;version&quot;: &quot;1.0demo&quot;
         }
     ]
@@ -320,27 +305,24 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
 </div>
 </div>
 <span id="document-testing"></span><div class="section" id="testing">
-<h3>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h3>
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="requirements-running-the-tests">
-<h4>Requirements &amp; running the tests<a class="headerlink" href="#requirements-running-the-tests" title="Permalink to this headline">¶</a></h4>
+<h3>Requirements &amp; running the tests<a class="headerlink" href="#requirements-running-the-tests" title="Permalink to this headline">¶</a></h3>
 <p>Partisci itself is written in Go (golang.org). The (whitebox) test suite is written in Python. To run the tests, you&#8217;ll need Python 2.7x and the following modules:</p>
-<blockquote>
-<div><ul class="simple">
+<ul class="simple">
 <li>py.test (pytest.org)</li>
 <li>requests (python-requests.org)</li>
 </ul>
-</div></blockquote>
 <p>Open a shell to the test directory and run:</p>
 <div class="highlight-python"><pre>$ py.test</pre>
 </div>
 </div>
 </div>
 <span id="document-status"></span><div class="section" id="implementation-status">
-<h3>Implementation Status<a class="headerlink" href="#implementation-status" title="Permalink to this headline">¶</a></h3>
+<h2>Implementation Status<a class="headerlink" href="#implementation-status" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="implemented">
-<h4>Implemented<a class="headerlink" href="#implemented" title="Permalink to this headline">¶</a></h4>
-<blockquote>
-<div><ul class="simple">
+<h3>Implemented<a class="headerlink" href="#implemented" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
 <li>Initial documentation</li>
 <li>example Python update module</li>
 <li>initial UDP listener</li>
@@ -348,47 +330,46 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
 <li>barebones REST API with tests</li>
 <li>in-memory version storage and interface</li>
 </ul>
-</div></blockquote>
 </div>
 <div class="section" id="planned">
-<h4>Planned<a class="headerlink" href="#planned" title="Permalink to this headline">¶</a></h4>
-<blockquote>
-<div><ul class="simple">
-<li>fully implement documented REST API</li>
-<li>implement version timeout and config (only active versions kept)<ul>
-<li>and/or - make this a query parameter?</li>
-</ul>
-</li>
+<h3>Planned<a class="headerlink" href="#planned" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>fully implement the documented REST API</li>
+<li>refactor http handlers - DRY</li>
+<li>implement version timeout and config (only active versions kept)</li>
 <li>implement and test multiple instance support</li>
-<li>add relative URLs queries in API results</li>
+<li>include relative URLs to queries in API results</li>
 <li>write golang update client</li>
 <li>python client: add start_update_thread(), docs</li>
 <li>create partisci_fuzz tool to synthesize many fake updates</li>
-<li>Persistent store for the version data</li>
-<li>Setup build system<ul>
+<li>create a persistent store for the version data</li>
+<li>Setup build system</li>
+</ul>
+<blockquote>
+<div><ul class="simple">
 <li>create source distribution package with pre-built documentation</li>
 <li>post pre-built documentation online</li>
 <li>Windows binaries</li>
 <li>OS/X binaries</li>
 <li>linux binaries</li>
 </ul>
-</li>
-<li>write quickstart documentation</li>
-<li>gzip responses when possible</li>
-<li>Add paging to REST results</li>
-</ul>
 </div></blockquote>
+<ul class="simple">
+<li>write quickstart documentation</li>
+</ul>
 </div>
 <div class="section" id="possible">
-<h4>Possible<a class="headerlink" href="#possible" title="Permalink to this headline">¶</a></h4>
+<h3>Possible<a class="headerlink" href="#possible" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
+<li>gzip responses when possible</li>
+<li>Add paging to REST results</li>
+<li>add <tt class="docutils literal"><span class="pre">since</span></tt> query parameter, which only returns newer <tt class="docutils literal"><span class="pre">version</span></tt> entries</li>
 <li>Store more historical data from updates.<ul>
 <li>Last update time for each app/version/machine. This would give a full version history for each machine.</li>
 </ul>
 </li>
 <li>Store application specific state information.</li>
 </ul>
-</div>
 </div>
 </div>
 </div>
