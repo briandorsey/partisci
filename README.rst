@@ -1,6 +1,6 @@
 
 .. WARNING::
-   This project is using readme driven development and has not been implemented yet.
+   This project is using readme driven development and has not been fully implemented yet.
 
  * Where is your software installed?
  * Is version X still in use anywhere?
