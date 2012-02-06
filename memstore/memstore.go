@@ -38,10 +38,11 @@ func (s *MemoryStore) Hosts() []version.Version {
 	return vs
 }
 
-func (s *MemoryStore) Versions(app string) []version.Version {
+func (s *MemoryStore) Versions(app string, host string) []version.Version {
 	vs := make([]version.Version, 0)
 	for _, v := range s.Version {
-		if len(app) == 0 || app == v.AppId {
+		if (len(app) == 0 || app == v.AppId) &&
+			(len(host) == 0 || host == v.Host) {
 			vs = append(vs, v)
 		}
 	}

@@ -165,3 +165,23 @@ class TestPartisci:
         for v in info["data"]:
             print v
             assert v["app_id"] == app_id
+
+    def test_version_host(self):
+        apps, hosts = self.send_basic_updates()
+        url = urlparse.urljoin(endpoint, "summary/host/")
+
+        response = requests.get(url)
+        info = json.loads(response.content)
+
+        # pick the first host
+        host = info["data"][0]["host"]
+        print "Requesting host:", host
+
+        url = urlparse.urljoin(endpoint, "version/?host=%s" % host)
+        print url
+        response = requests.get(url)
+        info = json.loads(response.content)
+
+        for v in info["data"]:
+            print v
+            assert v["host"] == host
