@@ -18,23 +18,23 @@ Partisci can answer the following questions:
 All of the following urls are rooted at ``/api/v1/``. Ex: ``summary/app/`` is at
 ``/api/v1/summary/app/``.
 
-======  ==========================  ====
-verb    path                        description
-======  ==========================  ====
-GET     _partisci/                  information about this partisci instance
-GET     summary/app/                distinct active applications
-GET     summary/hosts/              distinct active hosts
-GET     version/                    every A & H with their most recent ``version``
-GET     version/?app=A              ``version`` for every H running A
-GET     version/?host=H             ``version`` for every A on host H
----     ---                         --- only when running in -danger mode
-POST    _danger/clear/              clear the entire version database
----     ---                         --- items below not implemented yet
-GET     /                           overview
-GET     version/?app=A&host=H       ``version`` for app A on H
-GET     version/?app=A&version=V    ``version`` for app A, version V
-POST    update/                     accepts a ``version`` update body
-======  ==========================  ====
+======  ===========================  ====
+verb    path                         description
+======  ===========================  ====
+GET     _partisci/                   information about this partisci instance
+GET     summary/app/                 distinct active applications
+GET     summary/hosts/               distinct active hosts
+GET     version/                     every A & H with their most recent ``version``
+GET     version/?app_id=A            ``version`` for every H running A
+GET     version/?host=H              ``version`` for every A on host H
+GET     version/?app_id=A&host=H     ``version`` for app A on H
+---     ---                          --- only when running in -danger mode
+POST    _danger/clear/               clear the entire version database
+---     ---                          --- items below not implemented yet
+GET     /                            overview
+GET     version/?app_id=A&version=V  ``version`` for app A, version V
+POST    update/                      accepts a ``version`` update body
+======  ===========================  ====
 
 Version JSON
 ------------
@@ -93,7 +93,7 @@ GET _partisci/
 
 This call returns basic information about the Partisci instance. Currently, very limited.
 
-.. command-output:: curl http://localhost:7777/api/v1/_partisci/ | python -m json.tool
+.. command-output:: curl 'http://localhost:7777/api/v1/_partisci/' | python -m json.tool
     :shell:
     :nostderr:
 
@@ -103,7 +103,7 @@ GET summary/app/
 
 The response contains a distinct list of all known application names, ``app_id``,  and ``last_update`` for any version of the app from any host.
 
-.. command-output:: curl http://localhost:7777/api/v1/summary/app/ | python -m json.tool
+.. command-output:: curl 'http://localhost:7777/api/v1/summary/app/' | python -m json.tool
     :shell:
     :nostderr:
 
@@ -113,7 +113,7 @@ GET summary/host/
 
 The response contains a distinct list of all known hosts and ``last_update`` for any version and any application.
 
-.. command-output:: curl http://localhost:7777/api/v1/summary/host/ | python -m json.tool
+.. command-output:: curl 'http://localhost:7777/api/v1/summary/host/' | python -m json.tool
     :shell:
     :nostderr:
 
@@ -123,7 +123,24 @@ GET version/
 
 The response contains every ``app_id``, ``host``, ``version`` combination known. Only the most recent ``version`` is saved for every ``app_id``, ``host`` pair.
 
-.. command-output:: curl http://localhost:7777/api/v1/version/ | python -m json.tool
+.. command-output:: curl 'http://localhost:7777/api/v1/version/' | python -m json.tool
     :shell:
     :nostderr:
+
+
+``app_id`` and ``host`` can be used as parameters to filter the results.
+
+.. command-output:: curl 'http://localhost:7777/api/v1/version/?app_id=demo_app_a' | python -m json.tool
+    :shell:
+    :nostderr:
+
+.. command-output:: curl 'http://localhost:7777/api/v1/version/?host=host1.example.com' | python -m json.tool
+    :shell:
+    :nostderr:
+
+.. command-output:: curl 'http://localhost:7777/api/v1/version/?app_id=demo_app_a&host=host1.example.com' | python -m json.tool
+    :shell:
+    :nostderr:
+
+
 

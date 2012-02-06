@@ -157,7 +157,7 @@ class TestPartisci:
         app_id = info["data"][0]["app_id"]
         print "Requesting app_id:", app_id
 
-        url = urlparse.urljoin(endpoint, "version/?app=%s" % app_id)
+        url = urlparse.urljoin(endpoint, "version/?app_id=%s" % app_id)
         print url
         response = requests.get(url)
         info = json.loads(response.content)
@@ -204,7 +204,7 @@ class TestPartisci:
         print "Requesting host:", host
 
         url = urlparse.urljoin(endpoint,
-                               "version/?app=%s&host=%s" % (app_id, host))
+                               "version/?app_id=%s&host=%s" % (app_id, host))
         print url
         response = requests.get(url)
         info = json.loads(response.content)
