@@ -95,7 +95,10 @@ func HelloServer(w http.ResponseWriter, req *http.Request) {
 
 func ApiPartisci(w http.ResponseWriter, req *http.Request) {
 	info := InfoRes{partisci_version}
-	data, _ := json.Marshal(info)
+	data, err := json.Marshal(info)
+	if handleError(err, "ApiPartisci", w, http.StatusInternalServerError) {
+		return
+	}
 	w.Write(data)
 }
 
@@ -103,13 +106,7 @@ func ApiApp(w http.ResponseWriter, req *http.Request, s UpdateStore) {
 	r := NewDataRes()
 	r.Data = s.Apps()
 	data, err := json.Marshal(r)
-	if err != nil {
-		m := "ERROR: ApiApp: " + err.Error()
-		l.Print(m)
-		errRes := ErrorRes{Error: m}
-		data, _ := json.Marshal(errRes)
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write(data)
+	if handleError(err, "ApiApp", w, http.StatusInternalServerError) {
 		return
 	}
 	w.Write(data)
@@ -119,13 +116,7 @@ func ApiHost(w http.ResponseWriter, req *http.Request, s UpdateStore) {
 	r := NewDataRes()
 	r.Data = s.Hosts()
 	data, err := json.Marshal(r)
-	if err != nil {
-		m := "ERROR: ApiHost: " + err.Error()
-		l.Print(m)
-		errRes := ErrorRes{Error: m}
-		data, _ := json.Marshal(errRes)
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write(data)
+	if handleError(err, "ApiHost", w, http.StatusInternalServerError) {
 		return
 	}
 	w.Write(data)
@@ -135,13 +126,7 @@ func ApiVersion(w http.ResponseWriter, req *http.Request, s UpdateStore) {
 	r := NewDataRes()
 	r.Data = s.Versions()
 	data, err := json.Marshal(r)
-	if err != nil {
-		m := "ERROR: ApiVersion: " + err.Error()
-		l.Print(m)
-		errRes := ErrorRes{Error: m}
-		data, _ := json.Marshal(errRes)
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write(data)
+	if handleError(err, "ApiVersion", w, http.StatusInternalServerError) {
 		return
 	}
 	w.Write(data)
@@ -160,6 +145,19 @@ func ApiClear(w http.ResponseWriter, req *http.Request, s UpdateStore) {
 		w.Write(data)
 		return
 	}
+}
+
+func handleError(err error, source string, w http.ResponseWriter, code int) bool {
+	if err != nil {
+		m := fmt.Sprintf("ERROR: %s:\n  %s", source, err.Error())
+		l.Print(m)
+		errRes := ErrorRes{Error: m}
+		data, _ := json.Marshal(errRes)
+		w.WriteHeader(code)
+		w.Write(data)
+		return true
+	}
+	return false
 }
 
 func makeStoreHandler(fn func(w http.ResponseWriter, req *http.Request, s UpdateStore), s UpdateStore) http.HandlerFunc {

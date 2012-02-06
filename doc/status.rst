@@ -15,7 +15,6 @@ Planned
 -------
 
 * fully implement the documented REST API
-* refactor http handlers - DRY
 * add ``count`` field to summary results
 * add ``app`` and ``host`` version summaries with counts of each version
 * implement version timeout and config (only active versions kept)
