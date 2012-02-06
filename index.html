@@ -44,7 +44,7 @@
 <h1>Welcome to Partisci&#8217;s documentation!<a class="headerlink" href="#welcome-to-partisci-s-documentation" title="Permalink to this headline">¶</a></h1>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p class="last">This project is using readme driven development and has not been implemented yet.</p>
+<p class="last">This project is using readme driven development and has not been fully implemented yet.</p>
 </div>
 <p>Where is your software installed?  Is version X still in use anywhere?</p>
 <p>Partisci answers these questions by collecting updates from your programs and providing a REST API to access the data.</p>
@@ -61,8 +61,9 @@
 </dd>
 </dl>
 <p>However, Partisci <em>only</em> knows about applications which have been modified to send it updates.</p>
+</div>
 <div class="section" id="details">
-<h2>Details<a class="headerlink" href="#details" title="Permalink to this headline">¶</a></h2>
+<h1>Details<a class="headerlink" href="#details" title="Permalink to this headline">¶</a></h1>
 <dl class="docutils">
 <dt>Some limitations:</dt>
 <dd><ul class="first last simple">
@@ -95,7 +96,6 @@
 </ul>
 </dd>
 </dl>
-</div>
 <div class="section" id="contents">
 <h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
@@ -119,8 +119,8 @@
 <table border="1" class="docutils">
 <colgroup>
 <col width="8%" />
-<col width="36%" />
-<col width="56%" />
+<col width="33%" />
+<col width="59%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">verb</th>
@@ -141,51 +141,51 @@
 <td>summary/hosts/</td>
 <td>distinct active hosts</td>
 </tr>
-<tr class="row-odd"><td>&#8212;</td>
-<td>&#8212;</td>
-<td>&#8212; items below not implemented yet</td>
-</tr>
-<tr class="row-even"><td>GET</td>
-<td>&nbsp;</td>
-<td>overview</td>
-</tr>
 <tr class="row-odd"><td>GET</td>
-<td>version/?app=A</td>
-<td>&#8216;version&#8217;s for every H running A</td>
+<td>version/</td>
+<td>every A &amp; H with their most recent <tt class="docutils literal"><span class="pre">version</span></tt></td>
 </tr>
-<tr class="row-even"><td>GET</td>
-<td>version/?app=A&amp;host=H</td>
-<td>&#8216;version&#8217;s for app A on H</td>
-</tr>
-<tr class="row-odd"><td>GET</td>
-<td>version/?app=A&amp;version=V</td>
-<td>&#8216;version&#8217;s for app A, version V</td>
-</tr>
-<tr class="row-even"><td>GET</td>
-<td>version/?host=H</td>
-<td>&#8216;version&#8217;s for all A on host H</td>
-</tr>
-<tr class="row-odd"><td>GET</td>
-<td>summary/hosts/?app=A</td>
-<td>distinct active hosts running A</td>
-</tr>
-<tr class="row-even"><td>POST</td>
-<td>update/</td>
-<td>endpoint for appliction updates</td>
-</tr>
-<tr class="row-odd"><td>&#8212;</td>
+<tr class="row-even"><td>&#8212;</td>
 <td>&#8212;</td>
 <td>&#8212; only when running in -danger mode</td>
 </tr>
-<tr class="row-even"><td>POST</td>
+<tr class="row-odd"><td>POST</td>
 <td>_danger/clear/</td>
 <td>clear the entire version database</td>
+</tr>
+<tr class="row-even"><td>&#8212;</td>
+<td>&#8212;</td>
+<td>&#8212; items below not implemented yet</td>
+</tr>
+<tr class="row-odd"><td>GET</td>
+<td>/</td>
+<td>overview</td>
+</tr>
+<tr class="row-even"><td>GET</td>
+<td>version/?app=A</td>
+<td><tt class="docutils literal"><span class="pre">version</span></tt> for every H running A</td>
+</tr>
+<tr class="row-odd"><td>GET</td>
+<td>version/?app=A&amp;host=H</td>
+<td><tt class="docutils literal"><span class="pre">version</span></tt> for app A on H</td>
+</tr>
+<tr class="row-even"><td>GET</td>
+<td>version/?app=A&amp;version=V</td>
+<td><tt class="docutils literal"><span class="pre">version</span></tt> for app A, version V</td>
+</tr>
+<tr class="row-odd"><td>GET</td>
+<td>version/?host=H</td>
+<td><tt class="docutils literal"><span class="pre">version</span></tt> for all A on host H</td>
+</tr>
+<tr class="row-even"><td>POST</td>
+<td>update/</td>
+<td>accepts a <tt class="docutils literal"><span class="pre">version</span></tt> update body</td>
 </tr>
 </tbody>
 </table>
 <div class="section" id="version-json">
 <h4>Version JSON<a class="headerlink" href="#version-json" title="Permalink to this headline">¶</a></h4>
-<p>Version updates have the following JSON structure:</p>
+<p>A <tt class="docutils literal"><span class="pre">version</span></tt> update has the following JSON structure:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
   <span class="s">&quot;app&quot;</span> <span class="p">:</span> <span class="s">&quot;Application Name&quot;</span><span class="p">,</span>
   <span class="s">&quot;version&quot;</span> <span class="p">:</span> <span class="s">&quot;1.2.3dev&quot;</span><span class="p">,</span>
@@ -225,57 +225,93 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
 <p>All response bodies are JSON objects.</p>
 <p>The examples below assume Partisci is running on localhost, port 7777 (default).</p>
 </div>
-<div class="section" id="get-api-v1-partisci">
-<h4>GET /api/v1/_partisci/<a class="headerlink" href="#get-api-v1-partisci" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="get-partisci">
+<h4>GET _partisci/<a class="headerlink" href="#get-partisci" title="Permalink to this headline">¶</a></h4>
 <p>This call returns basic information about the Partisci instance. Currently, very limited.</p>
-<div class="highlight-text"><div class="highlight"><pre>$ curl -s http://localhost:7777/api/v1/_partisci/ | python -m json.tool
+<div class="highlight-text"><div class="highlight"><pre>$ curl http://localhost:7777/api/v1/_partisci/ | python -m json.tool
 {
     &quot;version&quot;: &quot;0.1&quot;
 }
 </pre></div>
 </div>
 </div>
-<div class="section" id="get-api-v1-summary-app">
-<h4>GET /api/v1/summary/app/<a class="headerlink" href="#get-api-v1-summary-app" title="Permalink to this headline">¶</a></h4>
-<p>The response contains a distinct list of all known application names,
-<tt class="docutils literal"><span class="pre">app_id``s,</span> <span class="pre">``last_update</span></tt> for any version of the app from any host.</p>
-<div class="highlight-text"><div class="highlight"><pre>$ curl -s http://localhost:7777/api/v1/summary/app/ | python -m json.tool
+<div class="section" id="get-summary-app">
+<h4>GET summary/app/<a class="headerlink" href="#get-summary-app" title="Permalink to this headline">¶</a></h4>
+<p>The response contains a distinct list of all known application names, <tt class="docutils literal"><span class="pre">app_id</span></tt>,  and <tt class="docutils literal"><span class="pre">last_update</span></tt> for any version of the app from any host.</p>
+<div class="highlight-text"><div class="highlight"><pre>$ curl http://localhost:7777/api/v1/summary/app/ | python -m json.tool
 {
     &quot;data&quot;: [
         {
-            &quot;app&quot;: &quot;Demo App C&quot;, 
-            &quot;app_id&quot;: &quot;demo_app_c&quot;, 
-            &quot;last_update&quot;: 1328467109
-        }, 
-        {
             &quot;app&quot;: &quot;Demo App B&quot;, 
             &quot;app_id&quot;: &quot;demo_app_b&quot;, 
-            &quot;last_update&quot;: 1328467109
+            &quot;last_update&quot;: 1328505409
         }, 
         {
             &quot;app&quot;: &quot;Demo App A&quot;, 
             &quot;app_id&quot;: &quot;demo_app_a&quot;, 
-            &quot;last_update&quot;: 1328467109
+            &quot;last_update&quot;: 1328505409
         }
     ]
 }
 </pre></div>
 </div>
 </div>
-<div class="section" id="get-api-v1-summary-host">
-<h4>GET /api/v1/summary/host/<a class="headerlink" href="#get-api-v1-summary-host" title="Permalink to this headline">¶</a></h4>
-<p>The response contains a distinct list of all known hosts and the
-<tt class="docutils literal"><span class="pre">last_update</span></tt> for any version and any application.</p>
-<div class="highlight-text"><div class="highlight"><pre>$ curl -s http://localhost:7777/api/v1/summary/host/ | python -m json.tool
+<div class="section" id="get-summary-host">
+<h4>GET summary/host/<a class="headerlink" href="#get-summary-host" title="Permalink to this headline">¶</a></h4>
+<p>The response contains a distinct list of all known hosts and <tt class="docutils literal"><span class="pre">last_update</span></tt> for any version and any application.</p>
+<div class="highlight-text"><div class="highlight"><pre>$ curl http://localhost:7777/api/v1/summary/host/ | python -m json.tool
 {
     &quot;data&quot;: [
         {
             &quot;host&quot;: &quot;host1.example.com&quot;, 
-            &quot;last_update&quot;: 1328467109
+            &quot;last_update&quot;: 1328505409
         }, 
         {
             &quot;host&quot;: &quot;host2.example.com&quot;, 
-            &quot;last_update&quot;: 1328467109
+            &quot;last_update&quot;: 1328505409
+        }
+    ]
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="get-version">
+<h4>GET version/<a class="headerlink" href="#get-version" title="Permalink to this headline">¶</a></h4>
+<p>The response contains every <tt class="docutils literal"><span class="pre">app_id</span></tt>, <tt class="docutils literal"><span class="pre">host</span></tt>, <tt class="docutils literal"><span class="pre">version</span></tt> combination known. Only the most recent <tt class="docutils literal"><span class="pre">version</span></tt> is saved for every <tt class="docutils literal"><span class="pre">app_id</span></tt>, <tt class="docutils literal"><span class="pre">host</span></tt> pair.</p>
+<div class="highlight-text"><div class="highlight"><pre>$ curl http://localhost:7777/api/v1/version/ | python -m json.tool
+{
+    &quot;data&quot;: [
+        {
+            &quot;app&quot;: &quot;Demo App B&quot;, 
+            &quot;app_id&quot;: &quot;demo_app_b&quot;, 
+            &quot;host&quot;: &quot;host2.example.com&quot;, 
+            &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
+            &quot;last_update&quot;: 1328505409, 
+            &quot;version&quot;: &quot;1.0demo&quot;
+        }, 
+        {
+            &quot;app&quot;: &quot;Demo App B&quot;, 
+            &quot;app_id&quot;: &quot;demo_app_b&quot;, 
+            &quot;host&quot;: &quot;host1.example.com&quot;, 
+            &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
+            &quot;last_update&quot;: 1328505409, 
+            &quot;version&quot;: &quot;1.0demo&quot;
+        }, 
+        {
+            &quot;app&quot;: &quot;Demo App A&quot;, 
+            &quot;app_id&quot;: &quot;demo_app_a&quot;, 
+            &quot;host&quot;: &quot;host1.example.com&quot;, 
+            &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
+            &quot;last_update&quot;: 1328505409, 
+            &quot;version&quot;: &quot;1.0demo&quot;
+        }, 
+        {
+            &quot;app&quot;: &quot;Demo App A&quot;, 
+            &quot;app_id&quot;: &quot;demo_app_a&quot;, 
+            &quot;host&quot;: &quot;host2.example.com&quot;, 
+            &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
+            &quot;last_update&quot;: 1328505409, 
+            &quot;version&quot;: &quot;1.0demo&quot;
         }
     ]
 }
@@ -379,9 +415,10 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
 <li class="toctree-l2"><a class="reference internal" href="index.html#update-timing-recommendations">Update timing recommendations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#example-client-in-python">Example client in Python</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#rest-api-details">REST API details</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#get-api-v1-partisci">GET /api/v1/_partisci/</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#get-api-v1-summary-app">GET /api/v1/summary/app/</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#get-api-v1-summary-host">GET /api/v1/summary/host/</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#get-partisci">GET _partisci/</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#get-summary-app">GET summary/app/</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#get-summary-host">GET summary/host/</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#get-version">GET version/</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="index.html#document-testing">Testing</a><ul>
