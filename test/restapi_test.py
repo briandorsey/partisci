@@ -27,6 +27,15 @@ class TestPartisci:
         print response.content
         assert response.ok
 
+    def send_basic_updates(self):
+        apps = ["_zz_app" + str(i) for i in range(5)]
+        hosts = ["_zz_host" + str(i) for i in range(5)]
+        print "apps:", apps
+        for app in apps:
+            for host in hosts:
+                pypartisci.send_update(server, port, app, "ver", host)
+        return apps, hosts
+
     def test_get_server_info(self):
         url = urlparse.urljoin(endpoint, "_partisci/")
         print url
@@ -48,11 +57,7 @@ class TestPartisci:
         # empty result should still be a list.
         assert list() == info["data"]
 
-
-        apps = ["_zz_" + str(i) for i in range(5)]
-        print "apps:", apps
-        for app in apps:
-            pypartisci.send_update(server, port, app, "ver")
+        apps, hosts = self.send_basic_updates()
 
         response = requests.get(url)
         print response
@@ -84,13 +89,7 @@ class TestPartisci:
         # empty result should still be a list.
         assert list() == info["data"]
 
-
-        apps = ["_zz_app" + str(i) for i in range(5)]
-        hosts = ["_zz_host" + str(i) for i in range(5)]
-        print "apps:", apps
-        for app in apps:
-            for host in hosts:
-                pypartisci.send_update(server, port, app, "ver", host)
+        apps, hosts = self.send_basic_updates()
 
         response = requests.get(url)
         print response
