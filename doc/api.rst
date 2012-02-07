@@ -128,15 +128,34 @@ The response contains every ``app_id``, ``host``, ``ver`` combination known. Onl
     :nostderr:
 
 
-``app_id`` and ``host`` can be used as parameters to filter the results.
+GET version/?app=A
+-------------------------
+
+``app_id`` can be used as a parameter to filter the results.
 
 .. command-output:: curl 'http://localhost:7777/api/v1/version/?app_id=demo_app_a' | python -m json.tool
     :shell:
     :nostderr:
 
+GET version/?app=A&ver=V
+-------------------------
+
+``ver`` can be added to see a specific ``app`` / ``ver`` combination. Useful to see which hosts are running a version which needs updating.
+
+.. command-output:: curl 'http://localhost:7777/api/v1/version/?app_id=demo_app_a&ver=1.0' | python -m json.tool
+    :shell:
+    :nostderr:
+
+GET version/?host=H
+-------------------------
+
+``host`` can be used as a parameter to filter the results. Either alone inventory all applications:
+
 .. command-output:: curl 'http://localhost:7777/api/v1/version/?host=host1.example.com' | python -m json.tool
     :shell:
     :nostderr:
+
+or for a specific application:
 
 .. command-output:: curl 'http://localhost:7777/api/v1/version/?app_id=demo_app_a&host=host1.example.com' | python -m json.tool
     :shell:
