@@ -24,7 +24,7 @@ func BenchmarkAppToID(b *testing.B) {
 }
 
 func BenchmarkParsePacket(b *testing.B) {
-	s := `{"instance": 0, "host": "hostname", "version": "0.1test", "app": "test"}`
+	s := `{"instance": 0, "host": "hostname", "ver": "0.1test", "app": "test"}`
 	for i := 0; i < b.N; i++ {
 		_, _ = ParsePacket("0.0.0.0", []byte(s))
 	}

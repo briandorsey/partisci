@@ -28,11 +28,11 @@ GET     version/                     every A & H with their most recent ``versio
 GET     version/?app_id=A            ``version`` for every H running A
 GET     version/?host=H              ``version`` for every A on host H
 GET     version/?app_id=A&host=H     ``version`` for app A on H
+GET     version/?app_id=A&ver=V      ``version`` for app A, version V
 ---     ---                          --- only when running in -danger mode
 POST    _danger/clear/               clear the entire version database
 ---     ---                          --- items below not implemented yet
 GET     /                            overview
-GET     version/?app_id=A&version=V  ``version`` for app A, version V
 POST    update/                      accepts a ``version`` update body
 ======  ===========================  ====
 
@@ -43,12 +43,12 @@ A ``version`` update has the following JSON structure::
 
     {
       "app" : "Application Name",
-      "version" : "1.2.3dev",
+      "ver" : "1.2.3dev",
       "host" : "hostname",
       "instance" : 0,
     }
 
-``app``, ``version`` & ``host`` are limited to 50 unicode characters &
+``app``, ``ver`` & ``host`` are limited to 50 unicode characters &
 ``instance`` is an integer 0-65535 (uint16).
 
 When returned from Partisci, the following additional fields will be added::
@@ -121,7 +121,7 @@ The response contains a distinct list of all known hosts and ``last_update`` for
 GET version/
 -------------------------
 
-The response contains every ``app_id``, ``host``, ``version`` combination known. Only the most recent ``version`` is saved for every ``app_id``, ``host`` pair.
+The response contains every ``app_id``, ``host``, ``ver`` combination known. Only the most recent ``version`` is saved for every ``app_id``, ``host`` pair.
 
 .. command-output:: curl 'http://localhost:7777/api/v1/version/' | python -m json.tool
     :shell:

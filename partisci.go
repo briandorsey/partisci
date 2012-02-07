@@ -29,7 +29,7 @@ type UpdateStore interface {
 	Update(v version.Version) (err error)
 	Apps() (vs []version.Version)
 	Hosts() (vs []version.Version)
-	Versions(app_id string, host string) (vs []version.Version)
+	Versions(app_id string, host string, ver string) (vs []version.Version)
 	Clear()
 }
 
@@ -44,7 +44,8 @@ func handleUpdateUDP(conn net.PacketConn, updates chan<- version.Version) {
 		ip := addr.(*net.UDPAddr).IP
 		update, err := version.ParsePacket(ip.String(), b[:n])
 		if err != nil {
-			l.Print("ERROR: handleUpdateUDP: parsePacket:\n  ", err)
+			l.Print("ERROR: handleUpdateUDP: parsePacket:\n  ", err,
+				"\n  packet:", string(b[:n]))
 			continue
 		}
 		updates <- update
@@ -126,7 +127,8 @@ func ApiVersion(w http.ResponseWriter, req *http.Request, s UpdateStore) {
 	r := NewDataRes()
 	app_id := req.FormValue("app_id")
 	host := req.FormValue("host")
-	r.Data = s.Versions(app_id, host)
+	ver := req.FormValue("ver")
+	r.Data = s.Versions(app_id, host, ver)
 	data, err := json.Marshal(r)
 	if handleError(err, "ApiVersion", w, http.StatusInternalServerError) {
 		return
@@ -136,7 +138,7 @@ func ApiVersion(w http.ResponseWriter, req *http.Request, s UpdateStore) {
 
 func ApiClear(w http.ResponseWriter, req *http.Request, s UpdateStore) {
 	if req.Method == "POST" {
-		l.Print("WARNING: Version database cleared via testing hook.")
+		l.Print("WARNING: Version database cleared via _danger/clear/ hook.")
 		s.Clear()
 	} else {
 		m := "ERROR: ApiClear: only accepts POST requests"

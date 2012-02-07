@@ -18,20 +18,24 @@ Planned
 * add ``count`` field to summary results
 * support both / terminated and not urls
 * add ``app`` and ``host`` version summaries with counts of each version
+* include relative URLs to queries in API results
+
+  * overview --> summary
+  * summary --> versions/&with?parameters
+
 * implement version timeout and config (only active versions kept)
 * implement and test multiple instance support
-* include relative URLs to queries in API results
 * write golang update client
 * python client: add start_update_thread(), docs
 * create partisci_fuzz tool to synthesize many fake updates
 * create a persistent store for the version data
 * Setup build system
 
- * create source distribution package with pre-built documentation
- * post pre-built documentation online
- * Windows binaries
- * OS/X binaries
- * linux binaries
+  * create source distribution package with pre-built documentation
+  * post pre-built documentation online
+  * Windows binaries
+  * OS/X binaries
+  * linux binaries
 
 * write quickstart documentation
 

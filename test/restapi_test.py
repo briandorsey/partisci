@@ -1,3 +1,4 @@
+import itertools
 import json
 import os
 import subprocess
@@ -30,11 +31,17 @@ class TestPartisci:
     def send_basic_updates(self):
         apps = ["_zz_app" + str(i) for i in range(5)]
         hosts = ["_zz_host" + str(i) for i in range(5)]
+        versions = ["1", "2", "3", "2", "1"]
         print "apps:", apps
         print "hosts:", hosts
-        for app in apps:
-            for host in hosts:
-                pypartisci.send_update(server, port, app, "ver", host)
+        def do():
+            for app in apps:
+                for i, host in enumerate(hosts):
+                    ver = versions[i]
+                    pypartisci.send_update(server, port, app, ver, host)
+        do()
+        # then again to make sure the server updates, not duplicates
+        do()
         return apps, hosts
 
     def test_get_server_info(self):
@@ -70,7 +77,7 @@ class TestPartisci:
             assert "app" in v
             assert "app_id" in v
             assert "last_update" in v
-            assert "version" not in v
+            assert "ver" not in v
             assert "host" not in v
             assert "host_ip" not in v
             assert "instance" not in v
@@ -103,7 +110,7 @@ class TestPartisci:
             assert "last_update" in v
             assert "app" not in v
             assert "app_id" not in v
-            assert "version" not in v
+            assert "ver" not in v
             assert "host_ip" not in v
             assert "instance" not in v
 
@@ -135,12 +142,14 @@ class TestPartisci:
             assert "last_update" in v
             assert "app" in v
             assert "app_id" in v
-            assert "version" in v
+            assert "ver" in v
             assert "host_ip" in v
             #assert "instance" in v
 
         app_names = set(v["app"] for v in info["data"])
         host_names = set(v["host"] for v in info["data"])
+        print app_names
+        print host_names
         for app in apps:
             assert app in app_names
         for host in hosts:
@@ -212,4 +221,26 @@ class TestPartisci:
         for v in info["data"]:
             print v
             assert v["host"] == host
+            assert v["app_id"] == app_id
+
+    def test_version_app_version(self):
+        apps, hosts = self.send_basic_updates()
+
+        # pick the first app_id
+        url = urlparse.urljoin(endpoint, "summary/app/")
+        response = requests.get(url)
+        info = json.loads(response.content)
+        app_id = info["data"][0]["app_id"]
+        print "Requesting app_id:", app_id
+
+        ver = "1"
+        url = urlparse.urljoin(endpoint,
+                               "version/?app_id=%s&ver=%s" % (app_id, ver))
+        print url
+        response = requests.get(url)
+        info = json.loads(response.content)
+
+        for v in info["data"]:
+            print v
+            assert v["ver"] == ver
             assert v["app_id"] == app_id
