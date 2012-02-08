@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"net"
 	"net/http"
@@ -42,13 +43,13 @@ func handleUpdateUDP(conn net.PacketConn, updates chan<- version.Version) {
 			continue
 		}
 		ip := addr.(*net.UDPAddr).IP
-		update, err := version.ParsePacket(ip.String(), b[:n])
+		v, err := version.ParsePacket(ip.String(), b[:n])
 		if err != nil {
 			l.Print("ERROR: handleUpdateUDP: parsePacket:\n  ", err,
 				"\n  packet:", string(b[:n]))
 			continue
 		}
-		updates <- update
+		updates <- v
 	}
 }
 
@@ -151,6 +152,37 @@ func ApiClear(w http.ResponseWriter, req *http.Request, s UpdateStore) {
 	}
 }
 
+func ApiUpdate(w http.ResponseWriter, req *http.Request,
+	updates chan<- version.Version) {
+	if req.Method != "POST" {
+		m := "ERROR: ApiUpdate: only accepts POST requests"
+		l.Print(m)
+		errRes := ErrorRes{Error: m}
+		data, _ := json.Marshal(errRes)
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		w.Write(data)
+		return
+	}
+	b, err := ioutil.ReadAll(req.Body)
+    l.Print(string(b))
+	if handleError(err, "ApiUpdate: ReadAll", w,
+		http.StatusInternalServerError) {
+		return
+	}
+	host, _, err := net.SplitHostPort(req.RemoteAddr)
+	if err != nil {
+		host = ""
+	}
+	v, err := version.ParsePacket(host, b)
+	if err != nil {
+		handleError(err, "ApiUpdate: parsePacket", w,
+			http.StatusUnsupportedMediaType)
+		l.Print("ERROR: packet:", string(b))
+		return
+	}
+	updates <- v
+}
+
 func handleError(err error, source string, w http.ResponseWriter, code int) bool {
 	if err != nil {
 		m := fmt.Sprintf("ERROR: %s:\n  %s", source, err.Error())
@@ -167,6 +199,15 @@ func handleError(err error, source string, w http.ResponseWriter, code int) bool
 func makeStoreHandler(fn func(w http.ResponseWriter, req *http.Request, s UpdateStore), s UpdateStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		fn(w, req, s)
+	}
+}
+
+func makeUpdateHandler(fn func(w http.ResponseWriter,
+	req *http.Request,
+	updates chan<- version.Version),
+	updates chan<- version.Version) http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		fn(w, req, updates)
 	}
 }
 
@@ -191,6 +232,7 @@ func main() {
 	http.HandleFunc("/api/v1/summary/app/", makeStoreHandler(ApiApp, store))
 	http.HandleFunc("/api/v1/summary/host/", makeStoreHandler(ApiHost, store))
 	http.HandleFunc("/api/v1/version/", makeStoreHandler(ApiVersion, store))
+	http.HandleFunc("/api/v1/update/", makeUpdateHandler(ApiUpdate, updates))
 	if *danger {
 		http.HandleFunc("/api/v1/_danger/clear/", makeStoreHandler(ApiClear, store))
 	}

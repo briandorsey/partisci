@@ -1,4 +1,3 @@
-import itertools
 import json
 import os
 import subprocess
@@ -10,7 +9,7 @@ import pypartisci
 
 import requests
 
-server, port = "localhost", 7788
+server, port = "127.0.0.1", 7788
 endpoint = "http://%s:%s/api/v1/" % (server, port)
 
 class TestPartisci:
@@ -244,3 +243,21 @@ class TestPartisci:
             print v
             assert v["ver"] == ver
             assert v["app_id"] == app_id
+
+    def test_update(self):
+        app = "http_update"
+
+        url = urlparse.urljoin(endpoint, "summary/app/")
+        response = requests.get(url)
+        info = json.loads(response.content)
+        assert len(info["data"]) == 0
+
+        code, data = pypartisci.send_update_http(server, port, app, "1.0")
+        assert code == 200
+        
+        response = requests.get(url)
+        info = json.loads(response.content)
+        data = info["data"]
+        assert len(data) == 1
+        for v in data:
+            assert v["app"] == app

@@ -29,11 +29,11 @@ GET     version/?app_id=A            ``version`` for every H running A
 GET     version/?host=H              ``version`` for every A on host H
 GET     version/?app_id=A&host=H     ``version`` for app A on H
 GET     version/?app_id=A&ver=V      ``version`` for app A, version V
+POST    update/                      accepts a ``version`` update body
 ---     ---                          --- only when running in -danger mode
 POST    _danger/clear/               clear the entire version database
 ---     ---                          --- items below not implemented yet
 GET     /                            overview
-POST    update/                      accepts a ``version`` update body
 ======  ===========================  ====
 
 Version JSON
@@ -162,4 +162,16 @@ or for a specific application:
     :nostderr:
 
 
+POST update/
+-------------------------
+
+Clients can POST a ``version`` update body to this url.
+
+.. command-output:: curl 'http://localhost:7777/api/v1/update/' --data '{"instance": 0, "host": "terminal.example.com", "ver": "1.0", "app": "updatenator"}'
+    :shell:
+    :nostderr:
+
+.. command-output:: curl 'http://localhost:7777/api/v1/version/?app_id=updatenator' | python -m json.tool
+    :shell:
+    :nostderr:
 

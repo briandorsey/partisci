@@ -10,14 +10,15 @@ Implemented
 * implement a benchmark test for update parsing
 * barebones REST API with tests
 * in-memory version storage and interface
+* fully implement the documented REST API
 
 Planned
 -------
 
-* fully implement the documented REST API
 * add ``count`` field to summary results
 * support both / terminated and not urls
 * add ``app`` and ``host`` version summaries with counts of each version
+* add overview API
 * include relative URLs to queries in API results
 
   * overview --> summary
@@ -45,6 +46,7 @@ Possible
 * gzip responses when possible
 * Add paging to REST results
 * add ``since`` query parameter, which only returns newer ``version`` entries
+* store and return app_data with each Version, allowing custom data
 * Store more historical data from updates.
 
   * Last update time for each app/version/machine. This would give a full version history for each machine.
