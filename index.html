@@ -142,6 +142,14 @@
 <td>version/?app_id=A&amp;host=H</td>
 <td><tt class="docutils literal"><span class="pre">version</span></tt> for app A on H</td>
 </tr>
+<tr class="row-odd"><td>GET</td>
+<td>version/?app_id=A&amp;ver=V</td>
+<td><tt class="docutils literal"><span class="pre">version</span></tt> for app A, version V</td>
+</tr>
+<tr class="row-even"><td>POST</td>
+<td>update/</td>
+<td>accepts a <tt class="docutils literal"><span class="pre">version</span></tt> update body</td>
+</tr>
 <tr class="row-odd"><td>&#8212;</td>
 <td>&#8212;</td>
 <td>&#8212; only when running in -danger mode</td>
@@ -158,14 +166,6 @@
 <td>/</td>
 <td>overview</td>
 </tr>
-<tr class="row-odd"><td>GET</td>
-<td>version/?app_id=A&amp;version=V</td>
-<td><tt class="docutils literal"><span class="pre">version</span></tt> for app A, version V</td>
-</tr>
-<tr class="row-even"><td>POST</td>
-<td>update/</td>
-<td>accepts a <tt class="docutils literal"><span class="pre">version</span></tt> update body</td>
-</tr>
 </tbody>
 </table>
 <div class="section" id="version-json">
@@ -173,13 +173,13 @@
 <p>A <tt class="docutils literal"><span class="pre">version</span></tt> update has the following JSON structure:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
   <span class="s">&quot;app&quot;</span> <span class="p">:</span> <span class="s">&quot;Application Name&quot;</span><span class="p">,</span>
-  <span class="s">&quot;version&quot;</span> <span class="p">:</span> <span class="s">&quot;1.2.3dev&quot;</span><span class="p">,</span>
+  <span class="s">&quot;ver&quot;</span> <span class="p">:</span> <span class="s">&quot;1.2.3dev&quot;</span><span class="p">,</span>
   <span class="s">&quot;host&quot;</span> <span class="p">:</span> <span class="s">&quot;hostname&quot;</span><span class="p">,</span>
   <span class="s">&quot;instance&quot;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p><tt class="docutils literal"><span class="pre">app</span></tt>, <tt class="docutils literal"><span class="pre">version</span></tt> &amp; <tt class="docutils literal"><span class="pre">host</span></tt> are limited to 50 unicode characters &amp;
+<p><tt class="docutils literal"><span class="pre">app</span></tt>, <tt class="docutils literal"><span class="pre">ver</span></tt> &amp; <tt class="docutils literal"><span class="pre">host</span></tt> are limited to 50 unicode characters &amp;
 <tt class="docutils literal"><span class="pre">instance</span></tt> is an integer 0-65535 (uint16).</p>
 <p>When returned from Partisci, the following additional fields will be added:</p>
 <div class="highlight-python"><pre>"app_id" : "application_name"
@@ -229,12 +229,12 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
         {
             &quot;app&quot;: &quot;Demo App B&quot;, 
             &quot;app_id&quot;: &quot;demo_app_b&quot;, 
-            &quot;last_update&quot;: 1328545426
+            &quot;last_update&quot;: 1328716300
         }, 
         {
             &quot;app&quot;: &quot;Demo App A&quot;, 
             &quot;app_id&quot;: &quot;demo_app_a&quot;, 
-            &quot;last_update&quot;: 1328545426
+            &quot;last_update&quot;: 1328716300
         }
     ]
 }
@@ -249,11 +249,11 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
     &quot;data&quot;: [
         {
             &quot;host&quot;: &quot;host1.example.com&quot;, 
-            &quot;last_update&quot;: 1328545426
+            &quot;last_update&quot;: 1328716300
         }, 
         {
             &quot;host&quot;: &quot;host2.example.com&quot;, 
-            &quot;last_update&quot;: 1328545426
+            &quot;last_update&quot;: 1328716300
         }
     ]
 }
@@ -262,7 +262,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
 </div>
 <div class="section" id="get-version">
 <h3>GET version/<a class="headerlink" href="#get-version" title="Permalink to this headline">¶</a></h3>
-<p>The response contains every <tt class="docutils literal"><span class="pre">app_id</span></tt>, <tt class="docutils literal"><span class="pre">host</span></tt>, <tt class="docutils literal"><span class="pre">version</span></tt> combination known. Only the most recent <tt class="docutils literal"><span class="pre">version</span></tt> is saved for every <tt class="docutils literal"><span class="pre">app_id</span></tt>, <tt class="docutils literal"><span class="pre">host</span></tt> pair.</p>
+<p>The response contains every <tt class="docutils literal"><span class="pre">app_id</span></tt>, <tt class="docutils literal"><span class="pre">host</span></tt>, <tt class="docutils literal"><span class="pre">ver</span></tt> combination known. Only the most recent <tt class="docutils literal"><span class="pre">version</span></tt> is saved for every <tt class="docutils literal"><span class="pre">app_id</span></tt>, <tt class="docutils literal"><span class="pre">host</span></tt> pair.</p>
 <div class="highlight-text"><div class="highlight"><pre>$ curl &#39;http://localhost:7777/api/v1/version/&#39; | python -m json.tool
 {
     &quot;data&quot;: [
@@ -271,38 +271,41 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;app_id&quot;: &quot;demo_app_b&quot;, 
             &quot;host&quot;: &quot;host2.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
-            &quot;last_update&quot;: 1328545426, 
-            &quot;version&quot;: &quot;1.0demo&quot;
+            &quot;last_update&quot;: 1328716300, 
+            &quot;ver&quot;: &quot;2.0&quot;
         }, 
         {
             &quot;app&quot;: &quot;Demo App B&quot;, 
             &quot;app_id&quot;: &quot;demo_app_b&quot;, 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
-            &quot;last_update&quot;: 1328545426, 
-            &quot;version&quot;: &quot;1.0demo&quot;
+            &quot;last_update&quot;: 1328716300, 
+            &quot;ver&quot;: &quot;1.0&quot;
         }, 
         {
             &quot;app&quot;: &quot;Demo App A&quot;, 
             &quot;app_id&quot;: &quot;demo_app_a&quot;, 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
-            &quot;last_update&quot;: 1328545426, 
-            &quot;version&quot;: &quot;1.0demo&quot;
+            &quot;last_update&quot;: 1328716300, 
+            &quot;ver&quot;: &quot;1.0&quot;
         }, 
         {
             &quot;app&quot;: &quot;Demo App A&quot;, 
             &quot;app_id&quot;: &quot;demo_app_a&quot;, 
             &quot;host&quot;: &quot;host2.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
-            &quot;last_update&quot;: 1328545426, 
-            &quot;version&quot;: &quot;1.0demo&quot;
+            &quot;last_update&quot;: 1328716300, 
+            &quot;ver&quot;: &quot;2.0&quot;
         }
     ]
 }
 </pre></div>
 </div>
-<p><tt class="docutils literal"><span class="pre">app_id</span></tt> and <tt class="docutils literal"><span class="pre">host</span></tt> can be used as parameters to filter the results.</p>
+</div>
+<div class="section" id="get-version-app-a">
+<h3>GET version/?app=A<a class="headerlink" href="#get-version-app-a" title="Permalink to this headline">¶</a></h3>
+<p><tt class="docutils literal"><span class="pre">app_id</span></tt> can be used as a parameter to filter the results.</p>
 <div class="highlight-text"><div class="highlight"><pre>$ curl &#39;http://localhost:7777/api/v1/version/?app_id=demo_app_a&#39; | python -m json.tool
 {
     &quot;data&quot;: [
@@ -311,21 +314,44 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;app_id&quot;: &quot;demo_app_a&quot;, 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
-            &quot;last_update&quot;: 1328545426, 
-            &quot;version&quot;: &quot;1.0demo&quot;
+            &quot;last_update&quot;: 1328716300, 
+            &quot;ver&quot;: &quot;1.0&quot;
         }, 
         {
             &quot;app&quot;: &quot;Demo App A&quot;, 
             &quot;app_id&quot;: &quot;demo_app_a&quot;, 
             &quot;host&quot;: &quot;host2.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
-            &quot;last_update&quot;: 1328545426, 
-            &quot;version&quot;: &quot;1.0demo&quot;
+            &quot;last_update&quot;: 1328716300, 
+            &quot;ver&quot;: &quot;2.0&quot;
         }
     ]
 }
 </pre></div>
 </div>
+</div>
+<div class="section" id="get-version-app-a-ver-v">
+<h3>GET version/?app=A&amp;ver=V<a class="headerlink" href="#get-version-app-a-ver-v" title="Permalink to this headline">¶</a></h3>
+<p><tt class="docutils literal"><span class="pre">ver</span></tt> can be added to see a specific <tt class="docutils literal"><span class="pre">app</span></tt> / <tt class="docutils literal"><span class="pre">ver</span></tt> combination. Useful to see which hosts are running a version which needs updating.</p>
+<div class="highlight-text"><div class="highlight"><pre>$ curl &#39;http://localhost:7777/api/v1/version/?app_id=demo_app_a&amp;ver=1.0&#39; | python -m json.tool
+{
+    &quot;data&quot;: [
+        {
+            &quot;app&quot;: &quot;Demo App A&quot;, 
+            &quot;app_id&quot;: &quot;demo_app_a&quot;, 
+            &quot;host&quot;: &quot;host1.example.com&quot;, 
+            &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
+            &quot;last_update&quot;: 1328716300, 
+            &quot;ver&quot;: &quot;1.0&quot;
+        }
+    ]
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="get-version-host-h">
+<h3>GET version/?host=H<a class="headerlink" href="#get-version-host-h" title="Permalink to this headline">¶</a></h3>
+<p><tt class="docutils literal"><span class="pre">host</span></tt> can be used as a parameter to filter the results. Either alone inventory all applications:</p>
 <div class="highlight-text"><div class="highlight"><pre>$ curl &#39;http://localhost:7777/api/v1/version/?host=host1.example.com&#39; | python -m json.tool
 {
     &quot;data&quot;: [
@@ -334,21 +360,22 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;app_id&quot;: &quot;demo_app_b&quot;, 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
-            &quot;last_update&quot;: 1328545426, 
-            &quot;version&quot;: &quot;1.0demo&quot;
+            &quot;last_update&quot;: 1328716300, 
+            &quot;ver&quot;: &quot;1.0&quot;
         }, 
         {
             &quot;app&quot;: &quot;Demo App A&quot;, 
             &quot;app_id&quot;: &quot;demo_app_a&quot;, 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
-            &quot;last_update&quot;: 1328545426, 
-            &quot;version&quot;: &quot;1.0demo&quot;
+            &quot;last_update&quot;: 1328716300, 
+            &quot;ver&quot;: &quot;1.0&quot;
         }
     ]
 }
 </pre></div>
 </div>
+<p>or for a specific application:</p>
 <div class="highlight-text"><div class="highlight"><pre>$ curl &#39;http://localhost:7777/api/v1/version/?app_id=demo_app_a&amp;host=host1.example.com&#39; | python -m json.tool
 {
     &quot;data&quot;: [
@@ -357,8 +384,30 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;app_id&quot;: &quot;demo_app_a&quot;, 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
-            &quot;last_update&quot;: 1328545426, 
-            &quot;version&quot;: &quot;1.0demo&quot;
+            &quot;last_update&quot;: 1328716300, 
+            &quot;ver&quot;: &quot;1.0&quot;
+        }
+    ]
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="post-update">
+<h3>POST update/<a class="headerlink" href="#post-update" title="Permalink to this headline">¶</a></h3>
+<p>Clients can POST a <tt class="docutils literal"><span class="pre">version</span></tt> update body to this url.</p>
+<div class="highlight-text"><div class="highlight"><pre>$ curl &#39;http://localhost:7777/api/v1/update/&#39; --data &#39;{&quot;instance&quot;: 0, &quot;host&quot;: &quot;terminal.example.com&quot;, &quot;ver&quot;: &quot;1.0&quot;, &quot;app&quot;: &quot;updatenator&quot;}&#39;
+</pre></div>
+</div>
+<div class="highlight-text"><div class="highlight"><pre>$ curl &#39;http://localhost:7777/api/v1/version/?app_id=updatenator&#39; | python -m json.tool
+{
+    &quot;data&quot;: [
+        {
+            &quot;app&quot;: &quot;updatenator&quot;, 
+            &quot;app_id&quot;: &quot;updatenator&quot;, 
+            &quot;host&quot;: &quot;terminal.example.com&quot;, 
+            &quot;host_ip&quot;: &quot;::1&quot;, 
+            &quot;last_update&quot;: 1328716302, 
+            &quot;ver&quot;: &quot;1.0&quot;
         }
     ]
 }
@@ -391,34 +440,35 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
 <li>implement a benchmark test for update parsing</li>
 <li>barebones REST API with tests</li>
 <li>in-memory version storage and interface</li>
+<li>fully implement the documented REST API</li>
 </ul>
 </div>
 <div class="section" id="planned">
 <h3>Planned<a class="headerlink" href="#planned" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>fully implement the documented REST API</li>
 <li>add <tt class="docutils literal"><span class="pre">count</span></tt> field to summary results</li>
 <li>support both / terminated and not urls</li>
 <li>add <tt class="docutils literal"><span class="pre">app</span></tt> and <tt class="docutils literal"><span class="pre">host</span></tt> version summaries with counts of each version</li>
+<li>add overview API</li>
+<li>include relative URLs to queries in API results<ul>
+<li>overview &#8211;&gt; summary</li>
+<li>summary &#8211;&gt; versions/&amp;with?parameters</li>
+</ul>
+</li>
 <li>implement version timeout and config (only active versions kept)</li>
 <li>implement and test multiple instance support</li>
-<li>include relative URLs to queries in API results</li>
 <li>write golang update client</li>
 <li>python client: add start_update_thread(), docs</li>
 <li>create partisci_fuzz tool to synthesize many fake updates</li>
 <li>create a persistent store for the version data</li>
-<li>Setup build system</li>
-</ul>
-<blockquote>
-<div><ul class="simple">
+<li>Setup build system<ul>
 <li>create source distribution package with pre-built documentation</li>
 <li>post pre-built documentation online</li>
 <li>Windows binaries</li>
 <li>OS/X binaries</li>
 <li>linux binaries</li>
 </ul>
-</div></blockquote>
-<ul class="simple">
+</li>
 <li>write quickstart documentation</li>
 </ul>
 </div>
@@ -428,6 +478,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
 <li>gzip responses when possible</li>
 <li>Add paging to REST results</li>
 <li>add <tt class="docutils literal"><span class="pre">since</span></tt> query parameter, which only returns newer <tt class="docutils literal"><span class="pre">version</span></tt> entries</li>
+<li>store and return app_data with each Version, allowing custom data</li>
 <li>Store more historical data from updates.<ul>
 <li>Last update time for each app/version/machine. This would give a full version history for each machine.</li>
 </ul>
@@ -464,6 +515,10 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
 <li class="toctree-l2"><a class="reference internal" href="index.html#get-summary-app">GET summary/app/</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#get-summary-host">GET summary/host/</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#get-version">GET version/</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#get-version-app-a">GET version/?app=A</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#get-version-app-a-ver-v">GET version/?app=A&amp;ver=V</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#get-version-host-h">GET version/?host=H</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#post-update">POST update/</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="index.html#document-testing">Testing</a><ul>
