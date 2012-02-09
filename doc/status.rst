@@ -15,6 +15,7 @@ Implemented
 Planned
 -------
 
+* rewrite api/v1/ HandleFunc as Handle struct
 * support both / terminated and not urls
 * add ``app`` and ``host`` version summaries with counts of each version
 * add overview API

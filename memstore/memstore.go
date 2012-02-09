@@ -2,18 +2,21 @@ package memstore
 
 import (
 	"partisci/version"
+	"time"
 )
 
 type MemoryStore struct {
-	Version map[string]version.Version
-	App     map[string]version.AppSummary
-	Host    map[string]version.Version
+	Version   map[string]version.Version
+	App       map[string]version.AppSummary
+	Host      map[string]version.Version
+	threshold time.Time
 }
 
 func initMemoryStore(m *MemoryStore) {
 	m.Version = make(map[string]version.Version)
 	m.App = make(map[string]version.AppSummary)
 	m.Host = make(map[string]version.Version)
+	m.threshold = time.Now()
 }
 
 func NewMemoryStore() (m *MemoryStore) {
@@ -54,7 +57,9 @@ func (s *MemoryStore) Versions(app_id string,
 func (s *MemoryStore) Update(v version.Version) (err error) {
 	key := versionToKey(v)
 	_, vpresent := s.Version[key]
-	s.Version[key] = v
+	if v.ExactUpdate.After(s.threshold) {
+		s.Version[key] = v
+	}
 
 	// app map
 	as, present := s.App[v.AppId]

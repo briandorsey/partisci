@@ -7,13 +7,14 @@ import (
 )
 
 type Version struct {
-	AppId      string `json:"app_id,omitempty"`
-	App        string `json:"app,omitempty"`
-	Ver        string `json:"ver,omitempty"`
-	Host       string `json:"host,omitempty"`
-	Instance   uint16 `json:"instance,omitempty"`
-	HostIP     string `json:"host_ip,omitempty"`
-	LastUpdate int64  `json:"last_update,omitempty"`
+	AppId       string    `json:"app_id,omitempty"`
+	App         string    `json:"app,omitempty"`
+	Ver         string    `json:"ver,omitempty"`
+	Host        string    `json:"host,omitempty"`
+	Instance    uint16    `json:"instance,omitempty"`
+	HostIP      string    `json:"host_ip,omitempty"`
+	LastUpdate  int64     `json:"last_update,omitempty"`
+	ExactUpdate time.Time `json:"-"`
 }
 
 type AppSummary struct {
@@ -41,7 +42,8 @@ func AppIdToId(app string) (id string) {
 
 func ParsePacket(host string, b []byte) (v Version, err error) {
 	v.HostIP = host
-	v.LastUpdate = time.Now().Unix()
+	v.ExactUpdate = time.Now()
+	v.LastUpdate = v.ExactUpdate.Unix()
 	err = json.Unmarshal(b[:len(b)], &v)
 	if err != nil {
 		return v, err
