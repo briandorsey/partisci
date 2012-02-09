@@ -1,6 +1,7 @@
 import httplib
 import json
 import time
+import random
 import socket
 
 __version__ = "1.0"
@@ -39,8 +40,12 @@ def send_update_http(server, port, app, ver, host="", instance=0):
     return response.status, data
 
 if __name__ == '__main__':
+    versions = ["1.0", "2.0", "3.0"]
+    hosts = ["abc", "def", "ghi"]
     while True:
         print "%-14s Sending update" % time.time()
-        send_update('localhost', 7777, 'Python Client demo', __version__)
-        time.sleep(3)
+        send_update('localhost', 7777, 'Python Client demo', 
+                   random.choice(versions),
+                   random.choice(hosts))
+        time.sleep(2)
 
