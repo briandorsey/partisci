@@ -64,7 +64,7 @@ func (s *MemoryStore) Update(v version.Version) (err error) {
 			as.HostCount++
 		}
 	} else {
-        appv := version.AppSummary{
+		appv := version.AppSummary{
 			App:        v.App,
 			AppId:      v.AppId,
 			LastUpdate: v.LastUpdate,
