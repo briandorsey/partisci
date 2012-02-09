@@ -17,6 +17,13 @@ type Version struct {
 	ExactUpdate time.Time `json:"-"`
 }
 
+func NewVersion() (v *Version) {
+	v = new(Version)
+	v.ExactUpdate = time.Now()
+	v.LastUpdate = v.ExactUpdate.Unix()
+	return
+}
+
 type AppSummary struct {
 	AppId      string `json:"app_id"`
 	App        string `json:"app"`
@@ -41,9 +48,8 @@ func AppIdToId(app string) (id string) {
 }
 
 func ParsePacket(host string, b []byte) (v Version, err error) {
+	v = *NewVersion()
 	v.HostIP = host
-	v.ExactUpdate = time.Now()
-	v.LastUpdate = v.ExactUpdate.Unix()
 	err = json.Unmarshal(b[:len(b)], &v)
 	if err != nil {
 		return v, err
