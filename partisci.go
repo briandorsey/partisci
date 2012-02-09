@@ -28,7 +28,7 @@ type OpStats struct {
 
 type UpdateStore interface {
 	Update(v version.Version) (err error)
-	Apps() (vs []version.Version)
+	Apps() (vs []version.AppSummary)
 	Hosts() (vs []version.Version)
 	Versions(app_id string, host string, ver string) (vs []version.Version)
 	Clear()
@@ -79,12 +79,12 @@ type ErrorRes struct {
 }
 
 type DataRes struct {
-	Data []version.Version `json:"data"`
+	Data []interface{} `json:"data"`
 }
 
 func NewDataRes() (r *DataRes) {
 	r = new(DataRes)
-	r.Data = make([]version.Version, 0)
+	r.Data = make([]interface{}, 0)
 	return r
 }
 
@@ -106,7 +106,10 @@ func ApiPartisci(w http.ResponseWriter, req *http.Request) {
 
 func ApiApp(w http.ResponseWriter, req *http.Request, s UpdateStore) {
 	r := NewDataRes()
-	r.Data = s.Apps()
+	apps := s.Apps()
+	for _, app := range apps {
+		r.Data = append(r.Data, app)
+	}
 	data, err := json.Marshal(r)
 	if handleError(err, "ApiApp", w, http.StatusInternalServerError) {
 		return
@@ -116,7 +119,10 @@ func ApiApp(w http.ResponseWriter, req *http.Request, s UpdateStore) {
 
 func ApiHost(w http.ResponseWriter, req *http.Request, s UpdateStore) {
 	r := NewDataRes()
-	r.Data = s.Hosts()
+	hosts := s.Hosts()
+	for _, host := range hosts {
+		r.Data = append(r.Data, host)
+	}
 	data, err := json.Marshal(r)
 	if handleError(err, "ApiHost", w, http.StatusInternalServerError) {
 		return
@@ -129,7 +135,10 @@ func ApiVersion(w http.ResponseWriter, req *http.Request, s UpdateStore) {
 	app_id := req.FormValue("app_id")
 	host := req.FormValue("host")
 	ver := req.FormValue("ver")
-	r.Data = s.Versions(app_id, host, ver)
+	vers := s.Versions(app_id, host, ver)
+	for _, ver := range vers {
+		r.Data = append(r.Data, ver)
+	}
 	data, err := json.Marshal(r)
 	if handleError(err, "ApiVersion", w, http.StatusInternalServerError) {
 		return
@@ -164,7 +173,7 @@ func ApiUpdate(w http.ResponseWriter, req *http.Request,
 		return
 	}
 	b, err := ioutil.ReadAll(req.Body)
-    l.Print(string(b))
+	l.Print(string(b))
 	if handleError(err, "ApiUpdate: ReadAll", w,
 		http.StatusInternalServerError) {
 		return

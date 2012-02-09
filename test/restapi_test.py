@@ -75,6 +75,8 @@ class TestPartisci:
             print v
             assert "app" in v
             assert "app_id" in v
+            assert "host_count" in v
+            assert v["host_count"] > 0
             assert "last_update" in v
             assert "ver" not in v
             assert "host" not in v
@@ -259,5 +261,6 @@ class TestPartisci:
         info = json.loads(response.content)
         data = info["data"]
         assert len(data) == 1
+        print data
         for v in data:
             assert v["app"] == app

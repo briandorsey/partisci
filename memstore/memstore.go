@@ -6,13 +6,13 @@ import (
 
 type MemoryStore struct {
 	Version map[string]version.Version
-	App     map[string]version.Version
+	App     map[string]version.AppSummary
 	Host    map[string]version.Version
 }
 
 func initMemoryStore(m *MemoryStore) {
 	m.Version = make(map[string]version.Version)
-	m.App = make(map[string]version.Version)
+	m.App = make(map[string]version.AppSummary)
 	m.Host = make(map[string]version.Version)
 }
 
@@ -22,8 +22,8 @@ func NewMemoryStore() (m *MemoryStore) {
 	return
 }
 
-func (s *MemoryStore) Apps() []version.Version {
-	vs := make([]version.Version, 0)
+func (s *MemoryStore) Apps() []version.AppSummary {
+	vs := make([]version.AppSummary, 0)
 	for _, v := range s.App {
 		vs = append(vs, v)
 	}
@@ -53,15 +53,25 @@ func (s *MemoryStore) Versions(app_id string,
 
 func (s *MemoryStore) Update(v version.Version) (err error) {
 	key := versionToKey(v)
+	_, vpresent := s.Version[key]
 	s.Version[key] = v
 
 	// app map
-	appv := version.Version{
-		App:        v.App,
-		AppId:      v.AppId,
-		LastUpdate: v.LastUpdate,
+	as, present := s.App[v.AppId]
+	if present {
+		as.LastUpdate = v.LastUpdate
+		if !vpresent {
+			as.HostCount++
+		}
+	} else {
+        appv := version.AppSummary{
+			App:        v.App,
+			AppId:      v.AppId,
+			LastUpdate: v.LastUpdate,
+			HostCount:  1,
+		}
+		s.App[v.AppId] = appv
 	}
-	s.App[v.AppId] = appv
 
 	// host map
 	hostv := version.Version{

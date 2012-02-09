@@ -16,6 +16,13 @@ type Version struct {
 	LastUpdate int64  `json:"last_update,omitempty"`
 }
 
+type AppSummary struct {
+	AppId      string `json:"app_id"`
+	App        string `json:"app"`
+	LastUpdate int64  `json:"last_update"`
+	HostCount  int32  `json:"host_count"`
+}
+
 func safeRunes(r rune) rune {
 	if '0' <= r && r <= '9' {
 		return r
