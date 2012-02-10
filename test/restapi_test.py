@@ -16,6 +16,7 @@ class TestPartisci:
     def setup_class(self):
         self.server = subprocess.Popen(["partisci",
                                         "--port=%s" % port,
+                                        "--listenip=%s" % server,
                                         "--danger"])
 
     def teardown_class(self):

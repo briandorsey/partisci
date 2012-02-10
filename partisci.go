@@ -20,6 +20,7 @@ const updateInterval = 10 * time.Second
 
 var l = log.New(os.Stderr, "", log.Ldate|log.Ltime)
 var port *int = flag.Int("port", 7777, "listening port (both UDP and HTTP server)")
+var listenip *string = flag.String("listenip", "", "listen only on this IP (defaults to all")
 var danger *bool = flag.Bool("danger", false, "enable dangerous commands for testing")
 
 type OpStats struct {
@@ -130,12 +131,25 @@ func ApiHost(w http.ResponseWriter, req *http.Request, s UpdateStore) {
 	w.Write(data)
 }
 
-func ApiVersion(w http.ResponseWriter, req *http.Request, s UpdateStore) {
+type storeServer struct {
+    store UpdateStore
+}
+
+func (ss storeServer) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+    l.Print(req.URL)
+    switch req.URL.Path {
+    case "/version/":
+        ss.ApiVersion(w, req)
+    }
+    return
+}
+
+func (ss *storeServer) ApiVersion(w http.ResponseWriter, req *http.Request) {
 	r := NewDataRes()
 	app_id := req.FormValue("app_id")
 	host := req.FormValue("host")
 	ver := req.FormValue("ver")
-	vers := s.Versions(app_id, host, ver)
+	vers := ss.store.Versions(app_id, host, ver)
 	for _, ver := range vers {
 		r.Data = append(r.Data, ver)
 	}
@@ -222,7 +236,7 @@ func makeUpdateHandler(fn func(w http.ResponseWriter,
 
 func main() {
 	flag.Parse()
-	listenAddr := fmt.Sprintf(":%d", *port)
+	listenAddr := fmt.Sprintf("%s:%d", *listenip, *port)
 
 	l.Print("Starting.")
 
@@ -234,13 +248,15 @@ func main() {
 
 	updates := make(chan version.Version)
 	store := memstore.NewMemoryStore()
+    ss := storeServer{store}
 	go processUpdates(updates, store)
 	go handleUpdateUDP(conn, updates)
 
+    apiRoot := http.StripPrefix("/api/v1", ss)
 	http.HandleFunc("/api/v1/_partisci/", ApiPartisci)
 	http.HandleFunc("/api/v1/summary/app/", makeStoreHandler(ApiApp, store))
 	http.HandleFunc("/api/v1/summary/host/", makeStoreHandler(ApiHost, store))
-	http.HandleFunc("/api/v1/version/", makeStoreHandler(ApiVersion, store))
+	http.Handle("/api/v1/version/", apiRoot)
 	http.HandleFunc("/api/v1/update/", makeUpdateHandler(ApiUpdate, updates))
 	if *danger {
 		http.HandleFunc("/api/v1/_danger/clear/", makeStoreHandler(ApiClear, store))
