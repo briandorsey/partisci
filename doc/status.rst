@@ -5,26 +5,15 @@ Implemented
 -----------
 
 * Initial documentation
-* example Python update module
-* initial UDP listener
-* implement a benchmark test for update parsing
-* barebones REST API with tests
-* in-memory version storage and interface
-* fully implement the documented REST API
+* Python update module
+* UDP listener
+* in-memory ``Version`` storage
+* REST API
 
 Planned
 -------
 
-* remove 'summary' from URLs
-* support both / terminated and not urls
-* add ``app`` and ``host`` version summaries with counts of each version
-* add overview API
-* include relative URLs to queries in API results
-
-  * overview --> summary
-  * summary --> versions/&with?parameters
-
-* add ``count`` field to host summary results?
+* add wait_for_data(url, count) function to tests for timing coordination
 * implement version timeout and config (only active versions kept)
 * implement and test multiple instance support
 * write golang update client
@@ -40,10 +29,20 @@ Planned
   * linux binaries
 
 * write quickstart documentation
+* profile update loop
+* profile ``Version`` queries
 
 Possible
 --------
 
+* include relative URLs to queries in API results
+
+  * overview --> summary
+  * summary --> versions/&with?parameters
+
+* add overview API
+* add ``count`` field to host summary results?
+* add ``app`` and ``host`` version summaries with counts of each version
 * gzip responses when possible
 * Add paging to REST results
 * add ``since`` query parameter, which only returns newer ``version`` entries
