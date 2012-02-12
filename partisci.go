@@ -96,7 +96,13 @@ func HelloServer(w http.ResponseWriter, req *http.Request) {
 	io.WriteString(w, "hello, world!\n")
 }
 
-func ApiPartisci(w http.ResponseWriter, req *http.Request) {
+type storeServer struct {
+	store  UpdateStore
+    updates chan<- version.Version
+	danger bool
+}
+
+func (ss storeServer) ApiPartisci(w http.ResponseWriter, req *http.Request) {
 	info := InfoRes{partisci_version}
 	data, err := json.Marshal(info)
 	if handleError(err, "ApiPartisci", w, http.StatusInternalServerError) {
@@ -105,43 +111,27 @@ func ApiPartisci(w http.ResponseWriter, req *http.Request) {
 	w.Write(data)
 }
 
-func ApiApp(w http.ResponseWriter, req *http.Request, s UpdateStore) {
-	r := NewDataRes()
-	apps := s.Apps()
-	for _, app := range apps {
-		r.Data = append(r.Data, app)
-	}
-	data, err := json.Marshal(r)
-	if handleError(err, "ApiApp", w, http.StatusInternalServerError) {
-		return
-	}
-	w.Write(data)
-}
-
-func ApiHost(w http.ResponseWriter, req *http.Request, s UpdateStore) {
-	r := NewDataRes()
-	hosts := s.Hosts()
-	for _, host := range hosts {
-		r.Data = append(r.Data, host)
-	}
-	data, err := json.Marshal(r)
-	if handleError(err, "ApiHost", w, http.StatusInternalServerError) {
-		return
-	}
-	w.Write(data)
-}
-
-type storeServer struct {
-    store UpdateStore
-}
-
 func (ss storeServer) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-    l.Print(req.URL)
-    switch req.URL.Path {
-    case "/version/":
-        ss.ApiVersion(w, req)
-    }
-    return
+	switch req.URL.Path {
+	case "_partisci/":
+		ss.ApiPartisci(w, req)
+	case "summary/app/":
+		ss.ApiApp(w, req)
+	case "summary/host/":
+		ss.ApiHost(w, req)
+	case "version/":
+		ss.ApiVersion(w, req)
+	case "update/":
+		ss.ApiUpdate(w, req)
+	case "_danger/clear/":
+		if ss.danger {
+			ss.ApiClear(w, req)
+		}
+    default:
+        l.Print("INFO: 404: ", req.URL)
+        http.Error(w, "404 page not found", http.StatusNotFound)
+	}
+	return
 }
 
 func (ss *storeServer) ApiVersion(w http.ResponseWriter, req *http.Request) {
@@ -160,10 +150,36 @@ func (ss *storeServer) ApiVersion(w http.ResponseWriter, req *http.Request) {
 	w.Write(data)
 }
 
-func ApiClear(w http.ResponseWriter, req *http.Request, s UpdateStore) {
+func (ss storeServer) ApiApp(w http.ResponseWriter, req *http.Request) {
+	r := NewDataRes()
+	apps := ss.store.Apps()
+	for _, app := range apps {
+		r.Data = append(r.Data, app)
+	}
+	data, err := json.Marshal(r)
+	if handleError(err, "ApiApp", w, http.StatusInternalServerError) {
+		return
+	}
+	w.Write(data)
+}
+
+func (ss storeServer) ApiHost(w http.ResponseWriter, req *http.Request) {
+	r := NewDataRes()
+	hosts := ss.store.Hosts()
+	for _, host := range hosts {
+		r.Data = append(r.Data, host)
+	}
+	data, err := json.Marshal(r)
+	if handleError(err, "ApiHost", w, http.StatusInternalServerError) {
+		return
+	}
+	w.Write(data)
+}
+
+func (ss *storeServer) ApiClear(w http.ResponseWriter, req *http.Request) {
 	if req.Method == "POST" {
 		l.Print("WARNING: Version database cleared via _danger/clear/ hook.")
-		s.Clear()
+		ss.store.Clear()
 	} else {
 		m := "ERROR: ApiClear: only accepts POST requests"
 		l.Print(m)
@@ -175,8 +191,7 @@ func ApiClear(w http.ResponseWriter, req *http.Request, s UpdateStore) {
 	}
 }
 
-func ApiUpdate(w http.ResponseWriter, req *http.Request,
-	updates chan<- version.Version) {
+func (ss storeServer) ApiUpdate(w http.ResponseWriter, req *http.Request) {
 	if req.Method != "POST" {
 		m := "ERROR: ApiUpdate: only accepts POST requests"
 		l.Print(m)
@@ -203,7 +218,7 @@ func ApiUpdate(w http.ResponseWriter, req *http.Request,
 		l.Print("ERROR: packet:", string(b))
 		return
 	}
-	updates <- v
+	ss.updates <- v
 }
 
 func handleError(err error, source string, w http.ResponseWriter, code int) bool {
@@ -217,21 +232,6 @@ func handleError(err error, source string, w http.ResponseWriter, code int) bool
 		return true
 	}
 	return false
-}
-
-func makeStoreHandler(fn func(w http.ResponseWriter, req *http.Request, s UpdateStore), s UpdateStore) http.HandlerFunc {
-	return func(w http.ResponseWriter, req *http.Request) {
-		fn(w, req, s)
-	}
-}
-
-func makeUpdateHandler(fn func(w http.ResponseWriter,
-	req *http.Request,
-	updates chan<- version.Version),
-	updates chan<- version.Version) http.HandlerFunc {
-	return func(w http.ResponseWriter, req *http.Request) {
-		fn(w, req, updates)
-	}
 }
 
 func main() {
@@ -248,19 +248,12 @@ func main() {
 
 	updates := make(chan version.Version)
 	store := memstore.NewMemoryStore()
-    ss := storeServer{store}
+	ss := storeServer{store, updates, *danger}
 	go processUpdates(updates, store)
 	go handleUpdateUDP(conn, updates)
 
-    apiRoot := http.StripPrefix("/api/v1", ss)
-	http.HandleFunc("/api/v1/_partisci/", ApiPartisci)
-	http.HandleFunc("/api/v1/summary/app/", makeStoreHandler(ApiApp, store))
-	http.HandleFunc("/api/v1/summary/host/", makeStoreHandler(ApiHost, store))
-	http.Handle("/api/v1/version/", apiRoot)
-	http.HandleFunc("/api/v1/update/", makeUpdateHandler(ApiUpdate, updates))
-	if *danger {
-		http.HandleFunc("/api/v1/_danger/clear/", makeStoreHandler(ApiClear, store))
-	}
+	apiRoot := http.StripPrefix("/api/v1/", ss)
+	http.Handle("/api/v1/", apiRoot)
 	http.HandleFunc("/hello", HelloServer)
 	err = http.ListenAndServe(listenAddr, nil)
 	if err != nil {
