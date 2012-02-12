@@ -55,7 +55,7 @@ class TestPartisci:
         assert "version" in info
 
     def test_summary_app(self):
-        url = urlparse.urljoin(endpoint, "summary/app/")
+        url = urlparse.urljoin(endpoint, "app/")
         print url
         response = requests.get(url)
         print response
@@ -89,7 +89,7 @@ class TestPartisci:
             assert app in names
 
     def test_summary_host(self):
-        url = urlparse.urljoin(endpoint, "summary/host/")
+        url = urlparse.urljoin(endpoint, "host/")
         print url
         response = requests.get(url)
         print response
@@ -159,7 +159,7 @@ class TestPartisci:
 
     def test_version_app(self):
         apps, hosts = self.send_basic_updates()
-        url = urlparse.urljoin(endpoint, "summary/app/")
+        url = urlparse.urljoin(endpoint, "app/")
 
         response = requests.get(url)
         info = json.loads(response.content)
@@ -179,7 +179,7 @@ class TestPartisci:
 
     def test_version_host(self):
         apps, hosts = self.send_basic_updates()
-        url = urlparse.urljoin(endpoint, "summary/host/")
+        url = urlparse.urljoin(endpoint, "host/")
 
         response = requests.get(url)
         info = json.loads(response.content)
@@ -201,14 +201,14 @@ class TestPartisci:
         apps, hosts = self.send_basic_updates()
 
         # pick the first app_id
-        url = urlparse.urljoin(endpoint, "summary/app/")
+        url = urlparse.urljoin(endpoint, "app/")
         response = requests.get(url)
         info = json.loads(response.content)
         app_id = info["data"][0]["app_id"]
         print "Requesting app_id:", app_id
 
         # pick the first host
-        url = urlparse.urljoin(endpoint, "summary/host/")
+        url = urlparse.urljoin(endpoint, "host/")
         response = requests.get(url)
         info = json.loads(response.content)
         host = info["data"][0]["host"]
@@ -229,7 +229,7 @@ class TestPartisci:
         apps, hosts = self.send_basic_updates()
 
         # pick the first app_id
-        url = urlparse.urljoin(endpoint, "summary/app/")
+        url = urlparse.urljoin(endpoint, "app/")
         response = requests.get(url)
         info = json.loads(response.content)
         app_id = info["data"][0]["app_id"]
@@ -250,7 +250,7 @@ class TestPartisci:
     def test_update(self):
         app = "http_update"
 
-        url = urlparse.urljoin(endpoint, "summary/app/")
+        url = urlparse.urljoin(endpoint, "app/")
         response = requests.get(url)
         info = json.loads(response.content)
         assert len(info["data"]) == 0

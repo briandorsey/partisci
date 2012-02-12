@@ -115,9 +115,9 @@ func (ss storeServer) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	switch req.URL.Path {
 	case "_partisci/":
 		ss.ApiPartisci(w, req)
-	case "summary/app/":
+	case "app/":
 		ss.ApiApp(w, req)
-	case "summary/host/":
+	case "host/":
 		ss.ApiHost(w, req)
 	case "version/":
 		ss.ApiVersion(w, req)

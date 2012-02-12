@@ -15,15 +15,15 @@ Partisci can answer the following questions:
 * What applications are installed on host H?
 
 
-All of the following urls are rooted at ``/api/v1/``. Ex: ``summary/app/`` is at
-``/api/v1/summary/app/``.
+All of the following urls are rooted at ``/api/v1/``. Ex: ``app/`` is at
+``/api/v1/app/``.
 
 ======  ===========================  ====
 verb    path                         description
 ======  ===========================  ====
 GET     _partisci/                   information about this partisci instance
-GET     summary/app/                 distinct active applications
-GET     summary/hosts/               distinct active hosts
+GET     app/                         distinct active applications
+GET     host/                        distinct active hosts
 GET     version/                     every A & H with their most recent ``version``
 GET     version/?app_id=A            ``version`` for every H running A
 GET     version/?host=H              ``version`` for every A on host H
@@ -61,7 +61,7 @@ Where ``host_ip`` is the IP address of the sending machine as seen by Partisci
 and ``last_update`` is a unix epoch time stamp, rounded to the nearest second.
 ``app_id`` is a simplified form of ``app`` for use in referring to the application in the REST API.
 
-All ``version/`` urls return a full version JSON object. The ``summary/`` urls return a subset of the fields.
+All ``version/`` urls return a full version JSON object.
 
 Update clients
 --------------
@@ -98,22 +98,22 @@ This call returns basic information about the Partisci instance. Currently, very
     :nostderr:
 
 
-GET summary/app/
+GET app/
 ------------------------
 
 The response contains a distinct list of all known application names, ``app_id``,  and ``last_update`` for any version of the app from any host.
 
-.. command-output:: curl 'http://localhost:7777/api/v1/summary/app/' | python -m json.tool
+.. command-output:: curl 'http://localhost:7777/api/v1/app/' | python -m json.tool
     :shell:
     :nostderr:
 
 
-GET summary/host/
+GET host/
 -------------------------
 
 The response contains a distinct list of all known hosts and ``last_update`` for any version and any application.
 
-.. command-output:: curl 'http://localhost:7777/api/v1/summary/host/' | python -m json.tool
+.. command-output:: curl 'http://localhost:7777/api/v1/host/' | python -m json.tool
     :shell:
     :nostderr:
 
