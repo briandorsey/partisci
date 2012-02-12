@@ -99,8 +99,8 @@
 <li>When did application A last update? (from host H?)</li>
 <li>What applications are installed on host H?</li>
 </ul>
-<p>All of the following urls are rooted at <tt class="docutils literal"><span class="pre">/api/v1/</span></tt>. Ex: <tt class="docutils literal"><span class="pre">summary/app/</span></tt> is at
-<tt class="docutils literal"><span class="pre">/api/v1/summary/app/</span></tt>.</p>
+<p>All of the following urls are rooted at <tt class="docutils literal"><span class="pre">/api/v1/</span></tt>. Ex: <tt class="docutils literal"><span class="pre">app/</span></tt> is at
+<tt class="docutils literal"><span class="pre">/api/v1/app/</span></tt>.</p>
 <table border="1" class="docutils">
 <colgroup>
 <col width="8%" />
@@ -119,11 +119,11 @@
 <td>information about this partisci instance</td>
 </tr>
 <tr class="row-odd"><td>GET</td>
-<td>summary/app/</td>
+<td>app/</td>
 <td>distinct active applications</td>
 </tr>
 <tr class="row-even"><td>GET</td>
-<td>summary/hosts/</td>
+<td>host/</td>
 <td>distinct active hosts</td>
 </tr>
 <tr class="row-odd"><td>GET</td>
@@ -189,7 +189,7 @@
 <p>Where <tt class="docutils literal"><span class="pre">host_ip</span></tt> is the IP address of the sending machine as seen by Partisci
 and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a unix epoch time stamp, rounded to the nearest second.
 <tt class="docutils literal"><span class="pre">app_id</span></tt> is a simplified form of <tt class="docutils literal"><span class="pre">app</span></tt> for use in referring to the application in the REST API.</p>
-<p>All <tt class="docutils literal"><span class="pre">version/</span></tt> urls return a full version JSON object. The <tt class="docutils literal"><span class="pre">summary/</span></tt> urls return a subset of the fields.</p>
+<p>All <tt class="docutils literal"><span class="pre">version/</span></tt> urls return a full version JSON object.</p>
 </div>
 <div class="section" id="update-clients">
 <h3>Update clients<a class="headerlink" href="#update-clients" title="Permalink to this headline">¶</a></h3>
@@ -220,42 +220,42 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
 </pre></div>
 </div>
 </div>
-<div class="section" id="get-summary-app">
-<h3>GET summary/app/<a class="headerlink" href="#get-summary-app" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="get-app">
+<h3>GET app/<a class="headerlink" href="#get-app" title="Permalink to this headline">¶</a></h3>
 <p>The response contains a distinct list of all known application names, <tt class="docutils literal"><span class="pre">app_id</span></tt>,  and <tt class="docutils literal"><span class="pre">last_update</span></tt> for any version of the app from any host.</p>
-<div class="highlight-text"><div class="highlight"><pre>$ curl &#39;http://localhost:7777/api/v1/summary/app/&#39; | python -m json.tool
+<div class="highlight-text"><div class="highlight"><pre>$ curl &#39;http://localhost:7777/api/v1/app/&#39; | python -m json.tool
 {
     &quot;data&quot;: [
         {
             &quot;app&quot;: &quot;Demo App B&quot;, 
             &quot;app_id&quot;: &quot;demo_app_b&quot;, 
             &quot;host_count&quot;: 1, 
-            &quot;last_update&quot;: 1328759470
+            &quot;last_update&quot;: 1329089766
         }, 
         {
             &quot;app&quot;: &quot;Demo App A&quot;, 
             &quot;app_id&quot;: &quot;demo_app_a&quot;, 
             &quot;host_count&quot;: 1, 
-            &quot;last_update&quot;: 1328759470
+            &quot;last_update&quot;: 1329089766
         }
     ]
 }
 </pre></div>
 </div>
 </div>
-<div class="section" id="get-summary-host">
-<h3>GET summary/host/<a class="headerlink" href="#get-summary-host" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="get-host">
+<h3>GET host/<a class="headerlink" href="#get-host" title="Permalink to this headline">¶</a></h3>
 <p>The response contains a distinct list of all known hosts and <tt class="docutils literal"><span class="pre">last_update</span></tt> for any version and any application.</p>
-<div class="highlight-text"><div class="highlight"><pre>$ curl &#39;http://localhost:7777/api/v1/summary/host/&#39; | python -m json.tool
+<div class="highlight-text"><div class="highlight"><pre>$ curl &#39;http://localhost:7777/api/v1/host/&#39; | python -m json.tool
 {
     &quot;data&quot;: [
         {
             &quot;host&quot;: &quot;host1.example.com&quot;, 
-            &quot;last_update&quot;: 1328759470
+            &quot;last_update&quot;: 1329089766
         }, 
         {
             &quot;host&quot;: &quot;host2.example.com&quot;, 
-            &quot;last_update&quot;: 1328759470
+            &quot;last_update&quot;: 1329089766
         }
     ]
 }
@@ -269,11 +269,19 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
 {
     &quot;data&quot;: [
         {
+            &quot;app&quot;: &quot;Demo App A&quot;, 
+            &quot;app_id&quot;: &quot;demo_app_a&quot;, 
+            &quot;host&quot;: &quot;host2.example.com&quot;, 
+            &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
+            &quot;last_update&quot;: 1329089766, 
+            &quot;ver&quot;: &quot;2.0&quot;
+        }, 
+        {
             &quot;app&quot;: &quot;Demo App B&quot;, 
             &quot;app_id&quot;: &quot;demo_app_b&quot;, 
             &quot;host&quot;: &quot;host2.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
-            &quot;last_update&quot;: 1328759470, 
+            &quot;last_update&quot;: 1329089766, 
             &quot;ver&quot;: &quot;2.0&quot;
         }, 
         {
@@ -281,7 +289,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;app_id&quot;: &quot;demo_app_b&quot;, 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
-            &quot;last_update&quot;: 1328759470, 
+            &quot;last_update&quot;: 1329089766, 
             &quot;ver&quot;: &quot;1.0&quot;
         }, 
         {
@@ -289,16 +297,8 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;app_id&quot;: &quot;demo_app_a&quot;, 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
-            &quot;last_update&quot;: 1328759470, 
+            &quot;last_update&quot;: 1329089766, 
             &quot;ver&quot;: &quot;1.0&quot;
-        }, 
-        {
-            &quot;app&quot;: &quot;Demo App A&quot;, 
-            &quot;app_id&quot;: &quot;demo_app_a&quot;, 
-            &quot;host&quot;: &quot;host2.example.com&quot;, 
-            &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
-            &quot;last_update&quot;: 1328759470, 
-            &quot;ver&quot;: &quot;2.0&quot;
         }
     ]
 }
@@ -316,7 +316,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;app_id&quot;: &quot;demo_app_a&quot;, 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
-            &quot;last_update&quot;: 1328759470, 
+            &quot;last_update&quot;: 1329089766, 
             &quot;ver&quot;: &quot;1.0&quot;
         }, 
         {
@@ -324,7 +324,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;app_id&quot;: &quot;demo_app_a&quot;, 
             &quot;host&quot;: &quot;host2.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
-            &quot;last_update&quot;: 1328759470, 
+            &quot;last_update&quot;: 1329089766, 
             &quot;ver&quot;: &quot;2.0&quot;
         }
     ]
@@ -343,7 +343,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;app_id&quot;: &quot;demo_app_a&quot;, 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
-            &quot;last_update&quot;: 1328759470, 
+            &quot;last_update&quot;: 1329089766, 
             &quot;ver&quot;: &quot;1.0&quot;
         }
     ]
@@ -362,7 +362,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;app_id&quot;: &quot;demo_app_b&quot;, 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
-            &quot;last_update&quot;: 1328759470, 
+            &quot;last_update&quot;: 1329089766, 
             &quot;ver&quot;: &quot;1.0&quot;
         }, 
         {
@@ -370,7 +370,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;app_id&quot;: &quot;demo_app_a&quot;, 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
-            &quot;last_update&quot;: 1328759470, 
+            &quot;last_update&quot;: 1329089766, 
             &quot;ver&quot;: &quot;1.0&quot;
         }
     ]
@@ -386,7 +386,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;app_id&quot;: &quot;demo_app_a&quot;, 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
-            &quot;last_update&quot;: 1328759470, 
+            &quot;last_update&quot;: 1329089766, 
             &quot;ver&quot;: &quot;1.0&quot;
         }
     ]
@@ -407,8 +407,8 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;app&quot;: &quot;updatenator&quot;, 
             &quot;app_id&quot;: &quot;updatenator&quot;, 
             &quot;host&quot;: &quot;terminal.example.com&quot;, 
-            &quot;host_ip&quot;: &quot;::1&quot;, 
-            &quot;last_update&quot;: 1328759471, 
+            &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
+            &quot;last_update&quot;: 1329089767, 
             &quot;ver&quot;: &quot;1.0&quot;
         }
     ]
@@ -448,7 +448,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
 <div class="section" id="planned">
 <h3>Planned<a class="headerlink" href="#planned" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>rewrite api/v1/ HandleFunc as Handle struct</li>
+<li>remove &#8216;summary&#8217; from URLs</li>
 <li>support both / terminated and not urls</li>
 <li>add <tt class="docutils literal"><span class="pre">app</span></tt> and <tt class="docutils literal"><span class="pre">host</span></tt> version summaries with counts of each version</li>
 <li>add overview API</li>
@@ -515,8 +515,8 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
 <li class="toctree-l2"><a class="reference internal" href="index.html#example-client-in-python">Example client in Python</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#rest-api-details">REST API details</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#get-partisci">GET _partisci/</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#get-summary-app">GET summary/app/</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#get-summary-host">GET summary/host/</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#get-app">GET app/</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#get-host">GET host/</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#get-version">GET version/</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#get-version-app-a">GET version/?app=A</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#get-version-app-a-ver-v">GET version/?app=A&amp;ver=V</a></li>
