@@ -1,7 +1,9 @@
 import json
 import os
+import pprint
 import subprocess
 import sys
+import time
 import urlparse
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../clients"))
@@ -9,43 +11,66 @@ import pypartisci
 
 import requests
 
-server, port = "127.0.0.1", 7788
-endpoint = "http://%s:%s/api/v1/" % (server, port)
+server = '127.0.0.1'
+port = 7788
+endpoint = "http://127.0.0.1:%s/api/v1/" 
 
 class TestPartisci:
     def setup_class(self):
-        self.server = subprocess.Popen(["partisci",
-                                        "--port=%s" % port,
-                                        "--listenip=%s" % server,
-                                        "--danger"])
-
-    def teardown_class(self):
-        self.server.kill()
+        self.port = port
 
     def setup_method(self, method):
-        clear_url = urlparse.urljoin(endpoint, "_danger/clear/")
-        response = requests.post(clear_url)
-        print response.content
-        assert response.ok
+        self.port += 1
+        self.server = subprocess.Popen(["partisci",
+                                        "--port=%s" % self.port,
+                                        "--listenip=%s" % server,
+                                        "--danger"])
+        url = urlparse.urljoin(endpoint % self.port, "_partisci/")
+        for i in range(100):
+            try:
+                response = requests.get(url)
+                return
+            except requests.ConnectionError:
+                time.sleep(.01)
+                continue
+        raise StandardError("partisci never started: %s" % (
+                    response.text))
 
-    def send_basic_updates(self):
-        apps = ["_zz_app" + str(i) for i in range(5)]
-        hosts = ["_zz_host" + str(i) for i in range(5)]
-        versions = ["1", "2", "3", "2", "1"]
+    def teardown_method(self, method):
+        if self.server:
+            self.server.kill()
+
+    def send_basic_updates(self, prefix):
+        apps = ["_zz_%s_app%s" % (prefix, str(i)) for i in range(5)]
+        hosts = ["_zz_%s_host%s"  % (prefix, str(i)) for i in range(5)]
+        versions = ["1", "2", "3", "2", "1"] * 50
         print "apps:", apps
         print "hosts:", hosts
         def do():
             for app in apps:
                 for i, host in enumerate(hosts):
                     ver = versions[i]
-                    pypartisci.send_update(server, port, app, ver, host)
+                    pypartisci.send_update(server, self.port, app, ver, host)
         do()
         # then again to make sure the server updates, not duplicates
         do()
         return apps, hosts
 
+    def wait_for_data(self, url, count):
+        """Wait for enough data, or raise error"""
+        print "Waiting for len(data) >= %s at: %s" % (count, url)
+        for i in range(50):
+            response = requests.get(url)
+            info = json.loads(response.content)
+            if info and "data" in info:
+                if len(info["data"]) >= count:
+                    return info
+            time.sleep(.1)
+        raise StandardError("Never got enough data. info: %s" % (
+                    pprint.pformat(info)))
+
     def test_get_server_info(self):
-        url = urlparse.urljoin(endpoint, "_partisci/")
+        url = urlparse.urljoin(endpoint % self.port, "_partisci/")
         print url
         response = requests.get(url)
         print response
@@ -55,7 +80,7 @@ class TestPartisci:
         assert "version" in info
 
     def test_summary_app(self):
-        url = urlparse.urljoin(endpoint, "app/")
+        url = urlparse.urljoin(endpoint % self.port, "app/")
         print url
         response = requests.get(url)
         print response
@@ -65,11 +90,9 @@ class TestPartisci:
         # empty result should still be a list.
         assert list() == info["data"]
 
-        apps, hosts = self.send_basic_updates()
+        apps, hosts = self.send_basic_updates("app")
 
-        response = requests.get(url)
-        print response
-        info = json.loads(response.content)
+        info = self.wait_for_data(url, len(apps))
 
         assert "data" in info
         for v in info["data"]:
@@ -89,7 +112,7 @@ class TestPartisci:
             assert app in names
 
     def test_summary_host(self):
-        url = urlparse.urljoin(endpoint, "host/")
+        url = urlparse.urljoin(endpoint % self.port, "host/")
         print url
         response = requests.get(url)
         print response
@@ -99,11 +122,9 @@ class TestPartisci:
         # empty result should still be a list.
         assert list() == info["data"]
 
-        apps, hosts = self.send_basic_updates()
+        apps, hosts = self.send_basic_updates("host")
 
-        response = requests.get(url)
-        print response
-        info = json.loads(response.content)
+        info = self.wait_for_data(url, len(apps))
 
         assert "data" in info
         for v in info["data"]:
@@ -121,7 +142,7 @@ class TestPartisci:
             assert host in names
 
     def test_version(self):
-        url = urlparse.urljoin(endpoint, "version/")
+        url = urlparse.urljoin(endpoint % self.port, "version/")
         print url
         response = requests.get(url)
         print response
@@ -131,11 +152,9 @@ class TestPartisci:
         # empty result should still be a list.
         assert list() == info["data"]
 
-        apps, hosts = self.send_basic_updates()
+        apps, hosts = self.send_basic_updates("version")
 
-        response = requests.get(url)
-        print response
-        info = json.loads(response.content)
+        info = self.wait_for_data(url, len(apps) * len(hosts))
 
         assert "data" in info
         for v in info["data"]:
@@ -158,17 +177,15 @@ class TestPartisci:
             assert host in host_names
 
     def test_version_app(self):
-        apps, hosts = self.send_basic_updates()
-        url = urlparse.urljoin(endpoint, "app/")
-
-        response = requests.get(url)
-        info = json.loads(response.content)
+        apps, hosts = self.send_basic_updates("version_app")
+        url = urlparse.urljoin(endpoint % self.port, "app/")
+        info = self.wait_for_data(url, len(apps))
 
         # pick the first app_id
         app_id = info["data"][0]["app_id"]
         print "Requesting app_id:", app_id
 
-        url = urlparse.urljoin(endpoint, "version/?app_id=%s" % app_id)
+        url = urlparse.urljoin(endpoint % self.port, "version/?app_id=%s" % app_id)
         print url
         response = requests.get(url)
         info = json.loads(response.content)
@@ -178,17 +195,15 @@ class TestPartisci:
             assert v["app_id"] == app_id
 
     def test_version_host(self):
-        apps, hosts = self.send_basic_updates()
-        url = urlparse.urljoin(endpoint, "host/")
-
-        response = requests.get(url)
-        info = json.loads(response.content)
-
+        apps, hosts = self.send_basic_updates("version_host")
+        url = urlparse.urljoin(endpoint % self.port, "host/")
+        info = self.wait_for_data(url, len(hosts))
+        
         # pick the first host
         host = info["data"][0]["host"]
         print "Requesting host:", host
 
-        url = urlparse.urljoin(endpoint, "version/?host=%s" % host)
+        url = urlparse.urljoin(endpoint % self.port, "version/?host=%s" % host)
         print url
         response = requests.get(url)
         info = json.loads(response.content)
@@ -198,23 +213,21 @@ class TestPartisci:
             assert v["host"] == host
 
     def test_version_app_host(self):
-        apps, hosts = self.send_basic_updates()
+        apps, hosts = self.send_basic_updates("version_app_host")
 
         # pick the first app_id
-        url = urlparse.urljoin(endpoint, "app/")
-        response = requests.get(url)
-        info = json.loads(response.content)
+        url = urlparse.urljoin(endpoint % self.port, "app/")
+        info = self.wait_for_data(url, len(apps))
         app_id = info["data"][0]["app_id"]
         print "Requesting app_id:", app_id
 
         # pick the first host
-        url = urlparse.urljoin(endpoint, "host/")
-        response = requests.get(url)
-        info = json.loads(response.content)
+        url = urlparse.urljoin(endpoint % self.port, "host/")
+        info = self.wait_for_data(url, len(hosts))
         host = info["data"][0]["host"]
         print "Requesting host:", host
 
-        url = urlparse.urljoin(endpoint,
+        url = urlparse.urljoin(endpoint % self.port,
                                "version/?app_id=%s&host=%s" % (app_id, host))
         print url
         response = requests.get(url)
@@ -226,17 +239,16 @@ class TestPartisci:
             assert v["app_id"] == app_id
 
     def test_version_app_version(self):
-        apps, hosts = self.send_basic_updates()
+        apps, hosts = self.send_basic_updates("version_app_version")
 
         # pick the first app_id
-        url = urlparse.urljoin(endpoint, "app/")
-        response = requests.get(url)
-        info = json.loads(response.content)
+        url = urlparse.urljoin(endpoint % self.port, "app/")
+        info = self.wait_for_data(url, len(apps))
         app_id = info["data"][0]["app_id"]
         print "Requesting app_id:", app_id
 
         ver = "1"
-        url = urlparse.urljoin(endpoint,
+        url = urlparse.urljoin(endpoint % self.port,
                                "version/?app_id=%s&ver=%s" % (app_id, ver))
         print url
         response = requests.get(url)
@@ -250,12 +262,12 @@ class TestPartisci:
     def test_update(self):
         app = "http_update"
 
-        url = urlparse.urljoin(endpoint, "app/")
+        url = urlparse.urljoin(endpoint % self.port, "app/")
         response = requests.get(url)
         info = json.loads(response.content)
         assert len(info["data"]) == 0
 
-        code, data = pypartisci.send_update_http(server, port, app, "1.0")
+        code, data = pypartisci.send_update_http(server, self.port, app, "1.0")
         assert code == 200
         
         response = requests.get(url)
