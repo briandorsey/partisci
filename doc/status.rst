@@ -13,7 +13,6 @@ Implemented
 Planned
 -------
 
-* add wait_for_data(url, count) function to tests for timing coordination
 * implement version timeout and config (only active versions kept)
 * implement and test multiple instance support
 * write golang update client
