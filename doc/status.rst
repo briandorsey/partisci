@@ -13,7 +13,6 @@ Implemented
 Planned
 -------
 
-* version - always include all fields
 * implement version timeout and config (only active versions kept)
 * write golang update client
 * python client: add start_update_thread(), docs

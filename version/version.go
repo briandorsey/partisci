@@ -7,13 +7,13 @@ import (
 )
 
 type Version struct {
-	AppId       string    `json:"app_id,omitempty"`
-	App         string    `json:"app,omitempty"`
-	Ver         string    `json:"ver,omitempty"`
-	Host        string    `json:"host,omitempty"`
-	Instance    uint16    `json:"instance,omitempty"`
-	HostIP      string    `json:"host_ip,omitempty"`
-	LastUpdate  int64     `json:"last_update,omitempty"`
+	AppId       string    `json:"app_id"`
+	App         string    `json:"app"`
+	Ver         string    `json:"ver"`
+	Host        string    `json:"host"`
+	Instance    uint16    `json:"instance"`
+	HostIP      string    `json:"host_ip"`
+	LastUpdate  int64     `json:"last_update"`
 	ExactUpdate time.Time `json:"-"`
 }
 
@@ -36,7 +36,7 @@ type AppSummary struct {
 }
 
 type HostSummary struct {
-	Host       string `json:"host,omitempty"`
+	Host       string `json:"host"`
 	LastUpdate int64  `json:"last_update"`
 }
 
