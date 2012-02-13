@@ -277,3 +277,24 @@ class TestPartisci:
         print data
         for v in data:
             assert v["app"] == app
+    
+    def test_update_instances(self):
+        url = urlparse.urljoin(endpoint % self.port, "app/")
+        info = self.wait_for_data(url, 0)
+        assert len(info["data"]) == 0
+
+        app = "instance_update"
+        instances = [0, 1, 2, 3]
+        for inst in instances * 3:
+            code, data = pypartisci.send_update_http(
+                server, self.port, app, "1.0", instance=inst)
+
+        url = urlparse.urljoin(endpoint % self.port, "app/")
+        info = self.wait_for_data(url, 1)
+        assert len(info["data"]) == 1
+
+        url = urlparse.urljoin(endpoint % self.port, "version/")
+        info = self.wait_for_data(url, 4)
+        assert len(info["data"]) == len(instances)
+
+

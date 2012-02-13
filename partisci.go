@@ -202,7 +202,6 @@ func (ss storeServer) ApiUpdate(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	b, err := ioutil.ReadAll(req.Body)
-	l.Print(string(b))
 	if handleError(err, "ApiUpdate: ReadAll", w,
 		http.StatusInternalServerError) {
 		return

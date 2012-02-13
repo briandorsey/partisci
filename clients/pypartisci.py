@@ -42,10 +42,12 @@ def send_update_http(server, port, app, ver, host="", instance=0):
 if __name__ == '__main__':
     versions = ["1.0", "2.0", "3.0"]
     hosts = ["abc", "def", "ghi"]
+    instances = [0, 1, 2, 3]
     while True:
         print "%-14s Sending update" % time.time()
         send_update('localhost', 7777, 'Python Client demo', 
-                   random.choice(versions),
-                   random.choice(hosts))
+                    random.choice(versions),
+                    random.choice(hosts),
+                    random.choice(instances))
         time.sleep(2)
 

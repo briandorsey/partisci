@@ -55,7 +55,7 @@ func (s *MemoryStore) Versions(app_id string,
 }
 
 func (s *MemoryStore) Update(v version.Version) (err error) {
-	key := versionToKey(v)
+	key := v.Key()
 	_, vpresent := s.Version[key]
 	if v.ExactUpdate.After(s.threshold) {
 		s.Version[key] = v
@@ -89,8 +89,4 @@ func (s *MemoryStore) Update(v version.Version) (err error) {
 
 func (s *MemoryStore) Clear() {
 	initMemoryStore(s)
-}
-
-func versionToKey(v version.Version) string {
-	return v.AppId + v.Host
 }

@@ -24,6 +24,10 @@ func NewVersion() (v *Version) {
 	return
 }
 
+func (v *Version) Key() string {
+	return v.AppId + v.Host + string(v.Instance)
+}
+
 type AppSummary struct {
 	AppId      string `json:"app_id"`
 	App        string `json:"app"`

@@ -13,11 +13,14 @@ Implemented
 Planned
 -------
 
+* version - always include all fields
+* host summary - use its' own struct
 * implement version timeout and config (only active versions kept)
-* implement and test multiple instance support
 * write golang update client
 * python client: add start_update_thread(), docs
 * create partisci_fuzz tool to synthesize many fake updates
+* test server with MAXGOPROCS > 1
+* test updates with missing keys (and extra keys)
 * create a persistent store for the version data
 * Setup build system
 
