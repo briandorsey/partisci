@@ -30,7 +30,7 @@ type OpStats struct {
 type UpdateStore interface {
 	Update(v version.Version) (err error)
 	Apps() (vs []version.AppSummary)
-	Hosts() (vs []version.Version)
+	Hosts() (vs []version.HostSummary)
 	Versions(app_id string, host string, ver string) (vs []version.Version)
 	Clear()
 }

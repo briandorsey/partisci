@@ -35,6 +35,11 @@ type AppSummary struct {
 	HostCount  int32  `json:"host_count"`
 }
 
+type HostSummary struct {
+	Host       string `json:"host,omitempty"`
+	LastUpdate int64  `json:"last_update"`
+}
+
 func safeRunes(r rune) rune {
 	if '0' <= r && r <= '9' {
 		return r

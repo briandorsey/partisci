@@ -8,14 +8,14 @@ import (
 type MemoryStore struct {
 	Version   map[string]version.Version
 	App       map[string]version.AppSummary
-	Host      map[string]version.Version
+	Host      map[string]version.HostSummary
 	threshold time.Time
 }
 
 func initMemoryStore(m *MemoryStore) {
 	m.Version = make(map[string]version.Version)
 	m.App = make(map[string]version.AppSummary)
-	m.Host = make(map[string]version.Version)
+	m.Host = make(map[string]version.HostSummary)
 	m.threshold = time.Now()
 }
 
@@ -33,8 +33,8 @@ func (s *MemoryStore) Apps() []version.AppSummary {
 	return vs
 }
 
-func (s *MemoryStore) Hosts() []version.Version {
-	vs := make([]version.Version, 0)
+func (s *MemoryStore) Hosts() []version.HostSummary {
+	vs := make([]version.HostSummary, 0)
 	for _, v := range s.Host {
 		vs = append(vs, v)
 	}
@@ -79,7 +79,7 @@ func (s *MemoryStore) Update(v version.Version) (err error) {
 	}
 
 	// host map
-	hostv := version.Version{
+	hostv := version.HostSummary{
 		Host:       v.Host,
 		LastUpdate: v.LastUpdate,
 	}
