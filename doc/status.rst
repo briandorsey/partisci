@@ -13,13 +13,19 @@ Implemented
 Planned
 -------
 
-* implement version timeout and config (only active versions kept)
 * write golang update client
-* python client: add start_update_thread(), docs
+* python client: add docs
 * create partisci_fuzz tool to synthesize many fake updates
 * test server with MAXGOPROCS > 1
 * test updates with missing keys (and extra keys)
 * create a persistent store for the version data
+
+  * goleveldb
+  * redis
+
+* write quickstart documentation
+* doc: starting and running server
+* implement version timeout and config (only active versions kept)
 * Setup build system
 
   * create source distribution package with pre-built documentation
@@ -28,13 +34,13 @@ Planned
   * OS/X binaries
   * linux binaries
 
-* write quickstart documentation
 * profile update loop
 * profile ``Version`` queries
 
 Possible
 --------
 
+* python client: add start_update_thread()
 * include relative URLs to queries in API results
 
   * overview --> summary

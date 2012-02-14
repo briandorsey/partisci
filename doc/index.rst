@@ -58,6 +58,7 @@ Where does the name come from?
 .. toctree::
    :maxdepth: 2
 
+   commands
    api
    testing
    status
