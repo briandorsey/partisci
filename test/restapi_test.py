@@ -21,7 +21,7 @@ class TestPartisci:
 
     def setup_method(self, method):
         self.port += 1
-        self.server = subprocess.Popen(["partisci",
+        self.server = subprocess.Popen(["partiscid",
                                         "--port=%s" % self.port,
                                         "--listenip=%s" % server,
                                         "--danger"])
@@ -37,7 +37,7 @@ class TestPartisci:
                     response.text))
 
     def teardown_method(self, method):
-        if self.server:
+        if hasattr(self, "server") and self.server:
             self.server.kill()
 
     def send_basic_updates(self, prefix):
