@@ -20,7 +20,8 @@ const updateInterval = 10 * time.Second
 
 var l = log.New(os.Stderr, "", log.Ldate|log.Ltime)
 var port *int = flag.Int("port", 7777, "listening port (both UDP and HTTP server)")
-var listenip *string = flag.String("listenip", "", "listen only on this IP (defaults to all")
+var listenip *string = flag.String("listenip", "", "listen only on this IP (defaults to all)")
+var verbose *bool = flag.Bool("v", false, "log more details")
 var danger *bool = flag.Bool("danger", false, "enable dangerous commands for testing")
 
 type OpStats struct {
@@ -66,6 +67,9 @@ func processUpdates(updates <-chan version.Version, store UpdateStore) {
 			case v := <-updates:
 				stats.updates++
 				store.Update(v)
+                if *verbose {
+                    log.Print("UPDATE: ", v)
+                }
 			}
 		}
 	}()
