@@ -34,7 +34,6 @@ def send_update_http(server, port, app, ver, host="", instance=0):
     body = serialize(app, ver, host, instance)
     conn.request("POST", "/api/v1/update/", body)
     response = conn.getresponse()
-    print response.status, response.reason
     data = response.read()
     conn.close()
     return response.status, data
