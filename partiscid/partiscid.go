@@ -67,9 +67,9 @@ func processUpdates(updates <-chan version.Version, store UpdateStore) {
 			case v := <-updates:
 				stats.updates++
 				store.Update(v)
-                if *verbose {
-                    log.Print("UPDATE: ", v)
-                }
+				if *verbose {
+					log.Print("UPDATE: ", v)
+				}
 			}
 		}
 	}()
@@ -101,9 +101,9 @@ func HelloServer(w http.ResponseWriter, req *http.Request) {
 }
 
 type storeServer struct {
-	store  UpdateStore
-    updates chan<- version.Version
-	danger bool
+	store   UpdateStore
+	updates chan<- version.Version
+	danger  bool
 }
 
 func (ss storeServer) ApiPartisci(w http.ResponseWriter, req *http.Request) {
@@ -131,9 +131,9 @@ func (ss storeServer) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		if ss.danger {
 			ss.ApiClear(w, req)
 		}
-    default:
-        l.Print("INFO: 404: ", req.URL)
-        http.Error(w, "404 page not found", http.StatusNotFound)
+	default:
+		l.Print("INFO: 404: ", req.URL)
+		http.Error(w, "404 page not found", http.StatusNotFound)
 	}
 	return
 }
