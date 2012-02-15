@@ -9,23 +9,27 @@ Implemented
 * UDP listener
 * in-memory ``Version`` storage
 * REST API
+* command line update client (and golang client API)
 
 Planned
 -------
 
-* write golang update client
 * python client: add docs
 * create partisci_fuzz tool to synthesize many fake updates
+* add expvar and custom counters/version
 * test server with MAXGOPROCS > 1
+* test updates with missing app, ver, host values (empty strings)
 * test updates with missing keys (and extra keys)
 * create a persistent store for the version data
 
   * goleveldb
   * redis
 
+* code documentation
 * write quickstart documentation
 * doc: starting and running server
 * implement version timeout and config (only active versions kept)
+* test go get & convert to github import paths
 * Setup build system
 
   * create source distribution package with pre-built documentation
