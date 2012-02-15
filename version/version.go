@@ -12,8 +12,8 @@ type Version struct {
 	Ver         string    `json:"ver"`
 	Host        string    `json:"host"`
 	Instance    uint16    `json:"instance"`
-	HostIP      string    `json:"host_ip"`
-	LastUpdate  int64     `json:"last_update"`
+	HostIP      string    `json:"host_ip,omitempty"`
+	LastUpdate  int64     `json:"last_update,omitempty"`
 	ExactUpdate time.Time `json:"-"`
 }
 
