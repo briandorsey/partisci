@@ -86,6 +86,29 @@
 <li>It is a truncated portmanteau from Partially Omniscient. Within its limited domain, Partisci strives to be omniscient.</li>
 </ul>
 <div class="toctree-wrapper compound">
+<span id="document-commands"></span><div class="section" id="commands">
+<h2>Commands<a class="headerlink" href="#commands" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="partiscid">
+<h3>partiscid<a class="headerlink" href="#partiscid" title="Permalink to this headline">¶</a></h3>
+<p><tt class="docutils literal"><span class="pre">partiscid</span></tt> is the server. For a quick test:</p>
+<div class="highlight-python"><pre>$ partiscid -v
+2012/02/14 08:10:02 Starting.
+2012/02/14 08:10:02 listening on: 0.0.0.0:7777
+...</pre>
+</div>
+<p>This will start the server, listening on port 7777, using memory
+to store <tt class="docutils literal"><span class="pre">version</span></tt> updates.</p>
+<p><tt class="docutils literal"><span class="pre">partiscid</span></tt> also supports the following flags:</p>
+<div class="highlight-text"><div class="highlight"><pre>$ partiscid -help
+Usage of partiscid:
+  -danger=false: enable dangerous commands for testing
+  -listenip=&quot;&quot;: listen only on this IP (defaults to all)
+  -port=7777: listening port (both UDP and HTTP server)
+  -v=false: log more details
+</pre></div>
+</div>
+</div>
+</div>
 <span id="document-api"></span><div class="section" id="api">
 <h2>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
 <p>Partisci provides access to the data it collects via a REST API.</p>
@@ -230,13 +253,13 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;app&quot;: &quot;Demo App B&quot;, 
             &quot;app_id&quot;: &quot;demo_app_b&quot;, 
             &quot;host_count&quot;: 1, 
-            &quot;last_update&quot;: 1329233116
+            &quot;last_update&quot;: 1329323604
         }, 
         {
             &quot;app&quot;: &quot;Demo App A&quot;, 
             &quot;app_id&quot;: &quot;demo_app_a&quot;, 
             &quot;host_count&quot;: 1, 
-            &quot;last_update&quot;: 1329233116
+            &quot;last_update&quot;: 1329323604
         }
     ]
 }
@@ -251,11 +274,11 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
     &quot;data&quot;: [
         {
             &quot;host&quot;: &quot;host2.example.com&quot;, 
-            &quot;last_update&quot;: 1329233116
+            &quot;last_update&quot;: 1329323604
         }, 
         {
             &quot;host&quot;: &quot;host1.example.com&quot;, 
-            &quot;last_update&quot;: 1329233116
+            &quot;last_update&quot;: 1329323604
         }
     ]
 }
@@ -274,7 +297,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1329233116, 
+            &quot;last_update&quot;: 1329323604, 
             &quot;ver&quot;: &quot;1.0&quot;
         }, 
         {
@@ -283,7 +306,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;host&quot;: &quot;host2.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1329233116, 
+            &quot;last_update&quot;: 1329323604, 
             &quot;ver&quot;: &quot;2.0&quot;
         }, 
         {
@@ -292,7 +315,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;host&quot;: &quot;host2.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1329233116, 
+            &quot;last_update&quot;: 1329323604, 
             &quot;ver&quot;: &quot;2.0&quot;
         }, 
         {
@@ -301,7 +324,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1329233116, 
+            &quot;last_update&quot;: 1329323604, 
             &quot;ver&quot;: &quot;1.0&quot;
         }
     ]
@@ -321,7 +344,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1329233116, 
+            &quot;last_update&quot;: 1329323604, 
             &quot;ver&quot;: &quot;1.0&quot;
         }, 
         {
@@ -330,7 +353,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;host&quot;: &quot;host2.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1329233116, 
+            &quot;last_update&quot;: 1329323604, 
             &quot;ver&quot;: &quot;2.0&quot;
         }
     ]
@@ -350,7 +373,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1329233116, 
+            &quot;last_update&quot;: 1329323604, 
             &quot;ver&quot;: &quot;1.0&quot;
         }
     ]
@@ -370,7 +393,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1329233116, 
+            &quot;last_update&quot;: 1329323604, 
             &quot;ver&quot;: &quot;1.0&quot;
         }, 
         {
@@ -379,7 +402,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1329233116, 
+            &quot;last_update&quot;: 1329323604, 
             &quot;ver&quot;: &quot;1.0&quot;
         }
     ]
@@ -396,7 +419,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1329233116, 
+            &quot;last_update&quot;: 1329323604, 
             &quot;ver&quot;: &quot;1.0&quot;
         }
     ]
@@ -419,7 +442,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;host&quot;: &quot;terminal.example.com&quot;, 
             &quot;host_ip&quot;: &quot;::1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1329233119, 
+            &quot;last_update&quot;: 1329323606, 
             &quot;ver&quot;: &quot;1.0&quot;
         }
     ]
@@ -452,18 +475,28 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
 <li>UDP listener</li>
 <li>in-memory <tt class="docutils literal"><span class="pre">Version</span></tt> storage</li>
 <li>REST API</li>
+<li>command line update client (and golang client API)</li>
 </ul>
 </div>
 <div class="section" id="planned">
 <h3>Planned<a class="headerlink" href="#planned" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>implement version timeout and config (only active versions kept)</li>
-<li>write golang update client</li>
-<li>python client: add start_update_thread(), docs</li>
+<li>python client: add docs</li>
 <li>create partisci_fuzz tool to synthesize many fake updates</li>
+<li>add expvar and custom counters/version</li>
 <li>test server with MAXGOPROCS &gt; 1</li>
+<li>test updates with missing app, ver, host values (empty strings)</li>
 <li>test updates with missing keys (and extra keys)</li>
-<li>create a persistent store for the version data</li>
+<li>create a persistent store for the version data<ul>
+<li>goleveldb</li>
+<li>redis</li>
+</ul>
+</li>
+<li>code documentation</li>
+<li>write quickstart documentation</li>
+<li>doc: starting and running server</li>
+<li>implement version timeout and config (only active versions kept)</li>
+<li>test go get &amp; convert to github import paths</li>
 <li>Setup build system<ul>
 <li>create source distribution package with pre-built documentation</li>
 <li>post pre-built documentation online</li>
@@ -472,7 +505,6 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
 <li>linux binaries</li>
 </ul>
 </li>
-<li>write quickstart documentation</li>
 <li>profile update loop</li>
 <li>profile <tt class="docutils literal"><span class="pre">Version</span></tt> queries</li>
 </ul>
@@ -480,6 +512,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
 <div class="section" id="possible">
 <h3>Possible<a class="headerlink" href="#possible" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
+<li>python client: add start_update_thread()</li>
 <li>include relative URLs to queries in API results<ul>
 <li>overview &#8211;&gt; summary</li>
 <li>summary &#8211;&gt; versions/&amp;with?parameters</li>
@@ -518,6 +551,10 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
         <div class="sphinxsidebarwrapper">
   <h3><a href="#">Table Of Contents</a></h3>
   <ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html#document-commands">Commands</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="index.html#partiscid">partiscid</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="index.html#document-api">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="index.html#version-json">Version JSON</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#update-clients">Update clients</a></li>
