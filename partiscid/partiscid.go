@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"expvar"
 	"flag"
 	"fmt"
 	"io"
@@ -23,6 +24,11 @@ var port *int = flag.Int("port", 7777, "listening port (both UDP and HTTP server
 var listenip *string = flag.String("listenip", "", "listen only on this IP (defaults to all)")
 var verbose *bool = flag.Bool("v", false, "log more details")
 var danger *bool = flag.Bool("danger", false, "enable dangerous commands for testing")
+
+func init() {
+    ver := expvar.NewString("version")
+    ver.Set(partisci_version)
+}
 
 type OpStats struct {
 	updates int64

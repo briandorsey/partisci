@@ -16,7 +16,6 @@ Planned
 
 * python client: add docs
 * create partisci_fuzz tool to synthesize many fake updates
-* add expvar and custom counters/version
 * test server with MAXGOPROCS > 1
 * test updates with missing app, ver, host values (empty strings)
 * test updates with missing keys (and extra keys)
