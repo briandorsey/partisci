@@ -36,7 +36,7 @@ func init() {
 }
 
 func cmdUpdate(args []string) int {
-	v := version.NewVersion()
+	v := new(version.Version)
 	if len(args) < 2 {
 		flag.Usage()
 		fmt.Fprintf(os.Stderr, "UPDATE requires APP and VERSION\n")
