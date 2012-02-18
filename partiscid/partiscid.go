@@ -26,8 +26,8 @@ var verbose *bool = flag.Bool("v", false, "log more details")
 var danger *bool = flag.Bool("danger", false, "enable dangerous commands for testing")
 
 func init() {
-    ver := expvar.NewString("version")
-    ver.Set(partisci_version)
+	ver := expvar.NewString("version")
+	ver.Set(partisci_version)
 }
 
 type OpStats struct {
