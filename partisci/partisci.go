@@ -73,7 +73,7 @@ func main() {
 	cmd = strings.ToUpper(cmd)
 	if f, ok := commands[cmd]; ok {
 		args := flag.Args()[1:]
-		fmt.Printf("command: %s  %v\n", cmd, args)
+		fmt.Printf("command: %s\n", cmd)
 		f(args)
 	} else {
 		fmt.Println("command not recognized: ", cmd)

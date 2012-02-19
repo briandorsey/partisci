@@ -19,4 +19,22 @@ to store ``version`` updates.
 
 .. command-output:: partiscid -help
     :shell:
+    :returncode: 2
+
+partisci
+-------------------------
+
+``partisci`` is a command line utility to communicate with ``partiscid``.
+
+The main command is ``update``, which sends a single custom update message:
+
+.. command-output:: partisci update "Demo App A" 1.0 host1.example.com 0
+    :shell:
+
+
+``partisci`` also supports the following flags:
+
+.. command-output:: partisci -help
+    :shell:
+    :returncode: 2
 
