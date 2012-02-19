@@ -40,8 +40,8 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="welcome-to-partisci-s-documentation">
-<h1>Welcome to Partisci&#8217;s documentation!<a class="headerlink" href="#welcome-to-partisci-s-documentation" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="partisci-s-documentation">
+<h1>Partisci&#8217;s documentation<a class="headerlink" href="#partisci-s-documentation" title="Permalink to this headline">¶</a></h1>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <p class="last">This project is using readme driven development and has not been fully implemented yet.</p>
@@ -50,14 +50,14 @@
 <p>Partisci answers these questions by collecting updates from your programs and providing a REST API to access the data.</p>
 <p>Partisci can answer these questions:</p>
 <ul class="simple">
-<li>What hosts is application X installed on?</li>
-<li>Which versions of application X are active?</li>
-<li>Is version Y of application X still active anywhere?</li>
-<li>Which hosts are runinng version Y of application X?</li>
-<li>When did application X last update? (from host Z?)</li>
-<li>What applications are installed on host Z?</li>
+<li>What hosts is application A installed on?</li>
+<li>Which versions of application A are active?</li>
+<li>Is version V of application A still active anywhere?</li>
+<li>Which hosts are runinng version V of application A?</li>
+<li>When did application A last update? (from host H?)</li>
+<li>What applications are installed on host H?</li>
 </ul>
-<p>However, Partisci <em>only</em> knows about applications which have been modified to send it updates.</p>
+<p>However, Partisci <em>only</em> knows about applications which send updates. Each application requires a small change to send these updates.</p>
 </div>
 <div class="section" id="details">
 <h1>Details<a class="headerlink" href="#details" title="Permalink to this headline">¶</a></h1>
@@ -277,13 +277,13 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;app&quot;: &quot;Demo App B&quot;, 
             &quot;app_id&quot;: &quot;demo_app_b&quot;, 
             &quot;host_count&quot;: 1, 
-            &quot;last_update&quot;: 1329681222
+            &quot;last_update&quot;: 1329691902
         }, 
         {
             &quot;app&quot;: &quot;Demo App A&quot;, 
             &quot;app_id&quot;: &quot;demo_app_a&quot;, 
             &quot;host_count&quot;: 1, 
-            &quot;last_update&quot;: 1329681222
+            &quot;last_update&quot;: 1329691902
         }
     ]
 }
@@ -298,11 +298,11 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
     &quot;data&quot;: [
         {
             &quot;host&quot;: &quot;host1.example.com&quot;, 
-            &quot;last_update&quot;: 1329681222
+            &quot;last_update&quot;: 1329691902
         }, 
         {
             &quot;host&quot;: &quot;host2.example.com&quot;, 
-            &quot;last_update&quot;: 1329681222
+            &quot;last_update&quot;: 1329691902
         }
     ]
 }
@@ -321,7 +321,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1329681222, 
+            &quot;last_update&quot;: 1329691902, 
             &quot;ver&quot;: &quot;1.0&quot;
         }, 
         {
@@ -330,7 +330,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;host&quot;: &quot;host2.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1329681222, 
+            &quot;last_update&quot;: 1329691902, 
             &quot;ver&quot;: &quot;2.0&quot;
         }, 
         {
@@ -339,7 +339,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;host&quot;: &quot;host2.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1329681222, 
+            &quot;last_update&quot;: 1329691902, 
             &quot;ver&quot;: &quot;2.0&quot;
         }, 
         {
@@ -348,7 +348,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1329681222, 
+            &quot;last_update&quot;: 1329691902, 
             &quot;ver&quot;: &quot;1.0&quot;
         }
     ]
@@ -368,7 +368,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;host&quot;: &quot;host2.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1329681222, 
+            &quot;last_update&quot;: 1329691902, 
             &quot;ver&quot;: &quot;2.0&quot;
         }, 
         {
@@ -377,7 +377,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1329681222, 
+            &quot;last_update&quot;: 1329691902, 
             &quot;ver&quot;: &quot;1.0&quot;
         }
     ]
@@ -397,7 +397,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1329681222, 
+            &quot;last_update&quot;: 1329691902, 
             &quot;ver&quot;: &quot;1.0&quot;
         }
     ]
@@ -417,7 +417,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1329681222, 
+            &quot;last_update&quot;: 1329691902, 
             &quot;ver&quot;: &quot;1.0&quot;
         }, 
         {
@@ -426,7 +426,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1329681222, 
+            &quot;last_update&quot;: 1329691902, 
             &quot;ver&quot;: &quot;1.0&quot;
         }
     ]
@@ -443,7 +443,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1329681222, 
+            &quot;last_update&quot;: 1329691902, 
             &quot;ver&quot;: &quot;1.0&quot;
         }
     ]
@@ -466,7 +466,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;host&quot;: &quot;terminal.example.com&quot;, 
             &quot;host_ip&quot;: &quot;::1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1329681223, 
+            &quot;last_update&quot;: 1329691904, 
             &quot;ver&quot;: &quot;1.0&quot;
         }
     ]
