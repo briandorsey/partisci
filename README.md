@@ -1,7 +1,8 @@
 **WARNING**
-> > This project uses README driven development and is not yet fully implemented. See docs for current status.
+> > This project uses README driven development and is not yet fully implemented. See docs for current status. 
+> > (http://briandorsey.github.com/partisci/index.html#document-status)
 
-# Partisci - partially omnicient version monitoring service
+# Partisci listens to your software and tracks which versions are in use.
 
 * Where is your software installed?
 * Is version 1.2.3 still in use anywhere?
@@ -19,4 +20,4 @@ Partisci can answer these questions:
 
 However, Partisci *only* knows about applications which have been modified to send it updates.
 
-Full documentation here: http://briandorsey.github.com/Partisci/
+Full documentation here: http://briandorsey.github.com/partisci/
