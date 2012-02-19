@@ -1,3 +1,4 @@
+// Package memstore is an in-memory implementation of the UpdateStore interface.
 package memstore
 
 import (

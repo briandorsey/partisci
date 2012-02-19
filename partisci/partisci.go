@@ -1,4 +1,4 @@
-// Command line tool to communicate with partiscid
+// Partisci is a command line utility to communicate with partiscid.
 package main
 
 import (

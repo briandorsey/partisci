@@ -1,3 +1,4 @@
+// Package version provides types and functions for manipulating version data.
 package version
 
 import (

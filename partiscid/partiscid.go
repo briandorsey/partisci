@@ -1,3 +1,4 @@
+// Partiscid is the server executable, it listens for version updates.
 package main
 
 import (
@@ -30,6 +31,7 @@ func init() {
 	ver.Set(partisci_version)
 }
 
+// OpStats contains operational statisics about this server.
 type OpStats struct {
 	updates int64
 }

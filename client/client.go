@@ -1,4 +1,4 @@
-// Package client is a client wrapper for the Partisci API.
+// Package client implements a wrapper for the Partisci API.
 package client
 
 import (
