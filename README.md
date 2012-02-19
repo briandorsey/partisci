@@ -1,8 +1,8 @@
 **WARNING**
-> > This project uses README driven development and is not yet fully implemented. See docs for current status. 
-> > (http://briandorsey.github.com/partisci/index.html#document-status)
 
-# Partisci listens to your software and tracks which versions are in use.
+> > This project uses README driven development and is not yet fully implemented. See docs for the [current status](http://briandorsey.github.com/partisci/index.html#document-status).
+
+# Partisci knows where your software is deployed and what versions are in use.
 
 * Where is your software installed?
 * Is version 1.2.3 still in use anywhere?
@@ -18,6 +18,6 @@ Partisci can answer these questions:
 * When did application A last update? (from host H?)
 * What applications are installed on host H?
 
-However, Partisci *only* knows about applications which have been modified to send it updates.
+However, Partisci *only* knows about applications which send updates. Each application needs a small change to send these updates.
 
 Full documentation here: http://briandorsey.github.com/partisci/

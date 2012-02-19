@@ -1,2 +1,2 @@
-// Partisci listens to your software and tracks which versions are in use.
+// Partisci knows where your software is deployed and what versions are in use.
 package partisci
