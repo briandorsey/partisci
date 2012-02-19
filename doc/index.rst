@@ -1,10 +1,6 @@
-.. Partisci documentation master file, created by
-   sphinx-quickstart on Sun Jan 29 10:39:26 2012.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
 
-Welcome to Partisci's documentation!
-====================================
+Partisci's documentation
+========================
 
 .. WARNING::
    This project is using readme driven development and has not been fully implemented yet.
@@ -15,14 +11,14 @@ Partisci answers these questions by collecting updates from your programs and pr
 
 Partisci can answer these questions:
 
-* What hosts is application X installed on?
-* Which versions of application X are active?
-* Is version Y of application X still active anywhere?
-* Which hosts are runinng version Y of application X?
-* When did application X last update? (from host Z?)
-* What applications are installed on host Z?
+* What hosts is application A installed on?
+* Which versions of application A are active?
+* Is version V of application A still active anywhere?
+* Which hosts are runinng version V of application A?
+* When did application A last update? (from host H?)
+* What applications are installed on host H?
 
-However, Partisci *only* knows about applications which have been modified to send it updates.
+However, Partisci *only* knows about applications which send updates. Each application needs a small change to send these updates.
 
 
 Details
