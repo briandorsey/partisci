@@ -55,7 +55,7 @@ func cmdUpdate(args []string) int {
 		}
 		v.Instance = uint16(i)
 	}
-	err := client.SendUDP(*server, *port, v)
+	err := client.SendUDP(*server, *port, *v)
 	if err != nil {
 		fmt.Println(err)
 		return 1

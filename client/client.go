@@ -8,9 +8,13 @@ import (
 	"partisci/version"
 )
 
-func SendUDP(server string, port int, v *version.Version) (err error) {
+// SendUDP serializes and sends a single Version to a partiscid server via UDP.
+func SendUDP(server string, port int, v version.Version) (err error) {
 	fmt.Printf("sending version update to %v:%v\n", server, port)
-	b, _ := json.Marshal(v)
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
 	fmt.Println(string(b))
 	addr := fmt.Sprintf("%s:%d", server, port)
 
