@@ -1,4 +1,7 @@
 // Partiscid is the server executable, it listens for version updates.
+//
+// For command line usage information, see:
+// http://briandorsey.github.com/partisci/index.html#partiscid
 package main
 
 import (
@@ -35,6 +38,7 @@ type OpStats struct {
 	updates int64
 }
 
+// UpdateStore defines an interface for persisting application version information.
 type UpdateStore interface {
 	Update(v version.Version) (err error)
 	Apps() (vs []version.AppSummary)
@@ -43,6 +47,7 @@ type UpdateStore interface {
 	Clear()
 }
 
+// handleUpdateUDP listens on conn, parses data into Versions and sends them to `updates` chan.
 func handleUpdateUDP(conn net.PacketConn, updates chan<- version.Version) {
 	for {
 		b := make([]byte, 2048)
@@ -62,6 +67,7 @@ func handleUpdateUDP(conn net.PacketConn, updates chan<- version.Version) {
 	}
 }
 
+// processUpdates receives Versions, updates stats and passes to an UpdateStore.
 func processUpdates(updates <-chan version.Version, store UpdateStore) {
 	stats := OpStats{}
 	ticker := time.NewTicker(updateInterval)
@@ -82,14 +88,17 @@ func processUpdates(updates <-chan version.Version, store UpdateStore) {
 	}()
 }
 
+// ErrorRes defines the JSON structure for error responses.
 type ErrorRes struct {
 	Error string `json:"error"`
 }
 
+// DataRes defines the JSON structure for normal responses.
 type DataRes struct {
 	Data []interface{} `json:"data"`
 }
 
+// NewDataRes returns a pointer to an initialzed DataRes.
 func NewDataRes() (r *DataRes) {
 	r = new(DataRes)
 	r.Data = make([]interface{}, 0)
@@ -99,7 +108,8 @@ func NewDataRes() (r *DataRes) {
 type storeServer struct {
 	store   UpdateStore
 	updates chan<- version.Version
-	danger  bool
+	// flag to enable dangerous APIs
+	danger bool
 }
 
 func (ss storeServer) ServeHTTP(w http.ResponseWriter, req *http.Request) {
@@ -171,11 +181,7 @@ func (ss *storeServer) ApiClear(w http.ResponseWriter, req *http.Request) {
 		ss.store.Clear()
 	} else {
 		m := "ERROR: ApiClear: only accepts POST requests"
-		l.Print(m)
-		errRes := ErrorRes{Error: m}
-		data, _ := json.Marshal(errRes)
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		w.Write(data)
+		sendErrorRes(m, w, http.StatusMethodNotAllowed)
 		return
 	}
 }
@@ -183,11 +189,7 @@ func (ss *storeServer) ApiClear(w http.ResponseWriter, req *http.Request) {
 func (ss storeServer) ApiUpdate(w http.ResponseWriter, req *http.Request) {
 	if req.Method != "POST" {
 		m := "ERROR: ApiUpdate: only accepts POST requests"
-		l.Print(m)
-		errRes := ErrorRes{Error: m}
-		data, _ := json.Marshal(errRes)
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		w.Write(data)
+		sendErrorRes(m, w, http.StatusMethodNotAllowed)
 		return
 	}
 	b, err := ioutil.ReadAll(req.Body)
@@ -212,14 +214,18 @@ func (ss storeServer) ApiUpdate(w http.ResponseWriter, req *http.Request) {
 func handleError(err error, source string, w http.ResponseWriter, code int) bool {
 	if err != nil {
 		m := fmt.Sprintf("ERROR: %s:\n  %s", source, err.Error())
-		l.Print(m)
-		errRes := ErrorRes{Error: m}
-		data, _ := json.Marshal(errRes)
-		w.WriteHeader(code)
-		w.Write(data)
+		sendErrorRes(m, w, code)
 		return true
 	}
 	return false
+}
+
+func sendErrorRes(message string, w http.ResponseWriter, code int) {
+	l.Print(message)
+	errRes := ErrorRes{Error: message}
+	data, _ := json.Marshal(errRes)
+	w.WriteHeader(code)
+	w.Write(data)
 }
 
 func main() {
