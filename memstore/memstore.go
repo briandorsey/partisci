@@ -48,10 +48,6 @@ func (s *MemoryStore) Hosts() []version.HostSummary {
 
 // Versions returns full Version structs where their values match app_id, host
 // and ver. Zero length strings are considered a match for all Versions.
-//
-// Example:
-//   // returns all known Version structs
-//   s.Versions("", "", "")
 func (s *MemoryStore) Versions(app_id string,
 	host string, ver string) []version.Version {
 	vs := make([]version.Version, 0)
