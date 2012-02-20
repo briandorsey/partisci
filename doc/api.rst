@@ -21,7 +21,6 @@ All of the following urls are rooted at ``/api/v1/``. Ex: ``app/`` is at
 ======  ===========================  ====
 verb    path                         description
 ======  ===========================  ====
-GET     _partisci/                   information about this partisci instance
 GET     app/                         distinct active applications
 GET     host/                        distinct active hosts
 GET     version/                     every A & H with their most recent ``version``
@@ -88,16 +87,6 @@ REST API details
 All response bodies are JSON objects.
 
 The examples below assume Partisci is running on localhost, port 7777 (default).
-
-GET _partisci/
-----------------------
-
-This call returns basic information about the Partisci instance. Currently, very limited.
-
-.. command-output:: curl 'http://localhost:7777/api/v1/_partisci/' | python -m json.tool
-    :shell:
-    :nostderr:
-
 
 GET app/
 ------------------------

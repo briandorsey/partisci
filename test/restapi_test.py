@@ -70,7 +70,7 @@ class TestPartisci:
                     pprint.pformat(info)))
 
     def test_get_server_info(self):
-        url = urlparse.urljoin(endpoint % self.port, "_partisci/")
+        url = urlparse.urljoin(endpoint % self.port, "/debug/vars")
         print url
         response = requests.get(url)
         print response

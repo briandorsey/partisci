@@ -6,7 +6,6 @@ import (
 	"expvar"
 	"flag"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"log"
 	"net"
@@ -83,10 +82,6 @@ func processUpdates(updates <-chan version.Version, store UpdateStore) {
 	}()
 }
 
-type InfoRes struct {
-	Version string `json:"version"`
-}
-
 type ErrorRes struct {
 	Error string `json:"error"`
 }
@@ -101,32 +96,14 @@ func NewDataRes() (r *DataRes) {
 	return r
 }
 
-// HTTP handlers
-
-// hello world, the web server
-func HelloServer(w http.ResponseWriter, req *http.Request) {
-	io.WriteString(w, "hello, world!\n")
-}
-
 type storeServer struct {
 	store   UpdateStore
 	updates chan<- version.Version
 	danger  bool
 }
 
-func (ss storeServer) ApiPartisci(w http.ResponseWriter, req *http.Request) {
-	info := InfoRes{partisci_version}
-	data, err := json.Marshal(info)
-	if handleError(err, "ApiPartisci", w, http.StatusInternalServerError) {
-		return
-	}
-	w.Write(data)
-}
-
 func (ss storeServer) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	switch req.URL.Path {
-	case "_partisci/":
-		ss.ApiPartisci(w, req)
 	case "app/":
 		ss.ApiApp(w, req)
 	case "host/":
@@ -265,7 +242,6 @@ func main() {
 
 	apiRoot := http.StripPrefix("/api/v1/", ss)
 	http.Handle("/api/v1/", apiRoot)
-	http.HandleFunc("/hello", HelloServer)
 	err = http.ListenAndServe(listenAddr, nil)
 	if err != nil {
 		l.Fatal("ListenAndServe: ", err)
