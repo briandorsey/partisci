@@ -21,7 +21,7 @@ func initMemoryStore(m *MemoryStore) {
 	m.threshold = time.Now()
 }
 
-// NewMemoryStore returns a empty MemoryStore.
+// NewMemoryStore returns a new, initialized MemoryStore.
 func NewMemoryStore() (m *MemoryStore) {
 	m = new(MemoryStore)
 	initMemoryStore(m)
