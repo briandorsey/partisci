@@ -3,6 +3,7 @@ package version
 
 import (
 	"encoding/json"
+	"errors"
 	"strings"
 	"time"
 )
@@ -62,8 +63,15 @@ func ParsePacket(host string, b []byte) (v Version, err error) {
 	v.HostIP = host
 	err = json.Unmarshal(b[:len(b)], &v)
 	if err != nil {
-		return v, err
+		return
 	}
 	v.AppId = AppIdToId(v.App)
+
+	// ensure minimal values were given
+	if len(v.App) == 0 ||
+		len(v.Ver) == 0 {
+		err = errors.New("value for app & ver must be specified")
+		return
+	}
 	return
 }

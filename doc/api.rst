@@ -48,6 +48,8 @@ A ``version`` update has the following JSON structure::
       "instance" : 0,
     }
 
+``app`` and ``ver`` are required. ``instance`` defaults to 0 and host will be inferred from the IP connection if not specified.
+
 ``app``, ``ver`` & ``host`` are limited to 50 unicode characters &
 ``instance`` is an integer 0-65535 (uint16).
 

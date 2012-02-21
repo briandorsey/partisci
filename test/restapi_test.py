@@ -10,6 +10,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../clients"))
 import pypartisci
 
 import requests
+requests.defaults.defaults['verbose'] = sys.stderr
 
 server = '127.0.0.1'
 port = 7788
@@ -26,7 +27,7 @@ class TestPartisci:
                                         "--port=%s" % self.port,
                                         "--listenip=%s" % server,
                                         "--danger"])
-        url = urlparse.urljoin(endpoint % self.port, "_partisci/")
+        url = urlparse.urljoin(endpoint % self.port, "../../debug/vars")
         for i in range(100):
             try:
                 response = requests.get(url)
@@ -281,6 +282,13 @@ class TestPartisci:
         for v in data:
             assert v["app"] == app
 
+        # also, minimal update succeeds
+        url = urlparse.urljoin(endpoint % self.port, "update/")
+        data = {"ver": "ver", "app": "app"}
+        data = json.dumps(data)
+        response = requests.post(url, data=data)
+        assert response.status_code == 200
+
     def test_update_instances(self):
         url = urlparse.urljoin(endpoint % self.port, "app/")
         info = self.wait_for_data(url, 0)
@@ -299,3 +307,38 @@ class TestPartisci:
         url = urlparse.urljoin(endpoint % self.port, "version/")
         info = self.wait_for_data(url, 4)
         assert len(info["data"]) == len(instances)
+
+    def test_bad_updates(self):
+        url = urlparse.urljoin(endpoint % self.port, "update/")
+
+        def helper(data):
+            print data
+            response = requests.post(url, data=data)
+            assert response.status_code == 415
+            info = json.loads(response.content)
+            print info
+            assert "error" in info
+
+        # empty update
+        data = ""
+        helper(data)
+
+        # empty dict
+        data = {}
+        data = json.dumps(data)
+        helper(data)
+
+        # missing ver
+        data = {"app": "app"}
+        data = json.dumps(data)
+        helper(data)
+
+        # missing app
+        data = {"ver": "ver"}
+        data = json.dumps(data)
+        helper(data)
+
+        # good update, but extra gibberish appended.
+        data = {"ver": "ver", "app": "app"}
+        data = json.dumps(data) + "sldkfjs BAD DATA lkjfsdkjfs"
+        helper(data)

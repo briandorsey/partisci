@@ -20,7 +20,7 @@ func ExampleMemoryStore_Versions() {
 
 func ExampleMemoryStore_Update() {
 	v := version.Version{App: "app", Ver: "1.2.3", Host: "example.com"}
-    err := s.Update(v)
+	err := s.Update(v)
 	if err != nil {
 		// handle error
 	}

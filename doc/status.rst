@@ -24,20 +24,19 @@ Planned
   * goleveldb
   * redis
 
-* code documentation
 * write quickstart documentation
-* doc: starting and running server
 * implement version timeout and config (only active versions kept)
 * test go get & convert to github import paths
 * Setup build system
 
   * create source distribution package with pre-built documentation
-  * post pre-built documentation online
   * Windows binaries
   * OS/X binaries
   * linux binaries
 
-* profile update loop
+* tests - switch to REST update? allows single server process?
+* profile update loop (pass pointer to V instead of V?)
+* profile high update load, add buffer to updates chan?
 * profile ``Version`` queries
 
 Possible
