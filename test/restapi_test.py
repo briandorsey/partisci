@@ -13,7 +13,8 @@ import requests
 
 server = '127.0.0.1'
 port = 7788
-endpoint = "http://127.0.0.1:%s/api/v1/" 
+endpoint = "http://127.0.0.1:%s/api/v1/"
+
 
 class TestPartisci:
     def setup_class(self):
@@ -42,10 +43,11 @@ class TestPartisci:
 
     def send_basic_updates(self, prefix):
         apps = ["_zz_%s_app%s" % (prefix, str(i)) for i in range(5)]
-        hosts = ["_zz_%s_host%s"  % (prefix, str(i)) for i in range(5)]
+        hosts = ["_zz_%s_host%s" % (prefix, str(i)) for i in range(5)]
         versions = ["1", "2", "3", "2", "1"] * 50
         print "apps:", apps
         print "hosts:", hosts
+
         def do():
             for app in apps:
                 for i, host in enumerate(hosts):
@@ -185,7 +187,8 @@ class TestPartisci:
         app_id = info["data"][0]["app_id"]
         print "Requesting app_id:", app_id
 
-        url = urlparse.urljoin(endpoint % self.port, "version/?app_id=%s" % app_id)
+        url = urlparse.urljoin(endpoint % self.port,
+                               "version/?app_id=%s" % app_id)
         print url
         response = requests.get(url)
         info = json.loads(response.content)
@@ -198,7 +201,7 @@ class TestPartisci:
         apps, hosts = self.send_basic_updates("version_host")
         url = urlparse.urljoin(endpoint % self.port, "host/")
         info = self.wait_for_data(url, len(hosts))
-        
+
         # pick the first host
         host = info["data"][0]["host"]
         print "Requesting host:", host
@@ -269,7 +272,7 @@ class TestPartisci:
 
         code, data = pypartisci.send_update_http(server, self.port, app, "1.0")
         assert code == 200
-        
+
         response = requests.get(url)
         info = json.loads(response.content)
         data = info["data"]
@@ -277,7 +280,7 @@ class TestPartisci:
         print data
         for v in data:
             assert v["app"] == app
-    
+
     def test_update_instances(self):
         url = urlparse.urljoin(endpoint % self.port, "app/")
         info = self.wait_for_data(url, 0)
@@ -296,5 +299,3 @@ class TestPartisci:
         url = urlparse.urljoin(endpoint % self.port, "version/")
         info = self.wait_for_data(url, 4)
         assert len(info["data"]) == len(instances)
-
-
