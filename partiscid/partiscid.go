@@ -16,6 +16,7 @@ import (
 	"os"
 	"partisci/memstore"
 	"partisci/version"
+	"runtime"
 	"time"
 )
 
@@ -31,6 +32,8 @@ var danger *bool = flag.Bool("danger", false, "enable dangerous commands for tes
 func init() {
 	ver := expvar.NewString("version")
 	ver.Set(partisci_version)
+	gover := expvar.NewString("go_version")
+	gover.Set(runtime.Version())
 }
 
 // OpStats contains operational statisics about this server.

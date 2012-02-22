@@ -14,16 +14,16 @@ Implemented
 Planned
 -------
 
-* test updates with missing app, ver, host values (empty strings)
-* create partisci_fuzz tool to synthesize many fake updates
-* test server with MAXGOPROCS > 1
-* python client: add docs
 * create a persistent store for the version data
 
-  * goleveldb
+  * sqlite
   * redis
+  * goleveldb
 
 * write quickstart documentation
+* python client: add docs
+* create partisci_fuzz tool to synthesize many fake updates
+* test server with MAXGOPROCS > 1
 * implement version timeout and config (only active versions kept)
 * test go get & convert to github import paths
 * Setup build system
