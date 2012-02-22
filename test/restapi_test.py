@@ -20,9 +20,6 @@ endpoint = "http://127.0.0.1:%s/api/v1/"
 class TestPartisci:
     def setup_class(self):
         self.port = port
-
-    def setup_method(self, method):
-        self.port += 1
         self.server = subprocess.Popen(["partiscid",
                                         "--port=%s" % self.port,
                                         "--listenip=%s" % server,
@@ -38,13 +35,19 @@ class TestPartisci:
         raise StandardError("partisci never started: %s" % (
                     response.text))
 
-    def teardown_method(self, method):
+    def teardown_class(self):
         if hasattr(self, "server") and self.server:
             self.server.kill()
 
+    def setup_method(self, method):
+        url = urlparse.urljoin(endpoint % self.port, "_danger/clear/")
+        response = requests.post(url)
+        assert response.ok
+
+
     def send_basic_updates(self, prefix):
-        apps = ["_zz_%s_app%s" % (prefix, str(i)) for i in range(5)]
-        hosts = ["_zz_%s_host%s" % (prefix, str(i)) for i in range(5)]
+        apps = ["_zz_%s_app%s" % (prefix, str(i)) for i in range(3)]
+        hosts = ["_zz_%s_host%s" % (prefix, str(i)) for i in range(3)]
         versions = ["1", "2", "3", "2", "1"] * 50
         print "apps:", apps
         print "hosts:", hosts
@@ -53,9 +56,8 @@ class TestPartisci:
             for app in apps:
                 for i, host in enumerate(hosts):
                     ver = versions[i]
-                    pypartisci.send_update(server, self.port, app, ver, host)
-        do()
-        # then again to make sure the server updates, not duplicates
+                    pypartisci.send_update_http(
+                        server, self.port, app, ver, host)
         do()
         return apps, hosts
 
@@ -67,6 +69,7 @@ class TestPartisci:
             info = json.loads(response.content)
             if info and "data" in info:
                 if len(info["data"]) >= count:
+                    print i
                     return info
             time.sleep(.1)
         raise StandardError("Never got enough data. info: %s" % (

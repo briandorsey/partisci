@@ -22,8 +22,6 @@ Planned
 
 * write quickstart documentation
 * python client: add docs
-* create partisci_fuzz tool to synthesize many fake updates
-* test server with MAXGOPROCS > 1
 * implement version timeout and config (only active versions kept)
 * test go get & convert to github import paths
 * Setup build system
@@ -33,10 +31,11 @@ Planned
   * OS/X binaries
   * linux binaries
 
-* tests - switch to REST update? allows single server process?
 * profile update loop (pass pointer to V instead of V?)
 * profile high update load, add buffer to updates chan?
 * profile ``Version`` queries
+* create partisci_fuzz tool to synthesize many fake updates
+* test server with MAXGOPROCS > 1
 
 Possible
 --------
