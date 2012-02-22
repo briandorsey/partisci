@@ -342,3 +342,13 @@ class TestPartisci:
         data = {"ver": "ver", "app": "app"}
         data = json.dumps(data) + "sldkfjs BAD DATA lkjfsdkjfs"
         helper(data)
+
+        # empty ver
+        data = {"app": "app", "ver": ""}
+        data = json.dumps(data)
+        helper(data)
+
+        # empty app
+        data = {"app": "", "ver": "ver"}
+        data = json.dumps(data)
+        helper(data)

@@ -14,11 +14,10 @@ Implemented
 Planned
 -------
 
-* python client: add docs
+* test updates with missing app, ver, host values (empty strings)
 * create partisci_fuzz tool to synthesize many fake updates
 * test server with MAXGOPROCS > 1
-* test updates with missing app, ver, host values (empty strings)
-* test updates with missing keys (and extra keys)
+* python client: add docs
 * create a persistent store for the version data
 
   * goleveldb
