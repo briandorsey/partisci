@@ -19,16 +19,23 @@ type Version struct {
 	ExactUpdate time.Time `json:"-"`
 }
 
-func NewVersion() (v *Version) {
-	v = new(Version)
-	v.ExactUpdate = time.Now()
-	v.LastUpdate = v.ExactUpdate.Unix()
-	return
-}
-
+// Key returns a suitable unique id for storing in a database.
+// It is calculated using AppId, Host & Instance so later version changes
+// will result in updates.
 func (v *Version) Key() string {
 	return v.AppId + v.Host + string(v.Instance)
 }
+
+// Prepare readies a Version for use by calculating fields.
+// Prepare *must* be called after populating fields and before passing to a store.
+func (v *Version) Prepare() {
+	v.AppId = appIdToId(v.App)
+    if v.LastUpdate == 0 {
+        v.ExactUpdate = time.Now()
+        v.LastUpdate = v.ExactUpdate.Unix()
+    }
+}
+
 
 type AppSummary struct {
 	AppId      string `json:"app_id"`
@@ -52,20 +59,20 @@ func safeRunes(r rune) rune {
 	return '_'
 }
 
-func AppIdToId(app string) (id string) {
+func appIdToId(app string) (id string) {
 	id = strings.ToLower(app)
 	id = strings.Map(safeRunes, id)
 	return
 }
 
 func ParsePacket(host string, b []byte) (v Version, err error) {
-	v = *NewVersion()
+	v = *new(Version)
 	v.HostIP = host
 	err = json.Unmarshal(b[:len(b)], &v)
 	if err != nil {
 		return
 	}
-	v.AppId = AppIdToId(v.App)
+	v.Prepare()
 
 	// ensure minimal values were given
 	if len(v.App) == 0 ||

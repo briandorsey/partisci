@@ -2,55 +2,67 @@ package version
 
 import (
 	"testing"
+        "time"
 )
 
 func TestVersionKey(t *testing.T) {
-	v := NewVersion()
+	v := new(Version)
 	v.App = "app name"
-	v.AppId = AppIdToId(v.App)
 	v.Host = "hostname"
 	v.Instance = 0
+	v.Prepare()
 
 	// same values
-	vs := NewVersion()
+	vs := new(Version)
 	vs.App = "app name"
-	vs.AppId = AppIdToId(v.App)
 	vs.Host = "hostname"
 	vs.Instance = 0
+	vs.Prepare()
 	if v.Key() != vs.Key() {
 		t.Errorf("keys not equal: %v != %v", v.Key(), vs.Key())
 	}
 
 	// only instance varies
-	vi := NewVersion()
+	vi := new(Version)
 	vi.App = "app name"
-	vi.AppId = AppIdToId(v.App)
 	vi.Host = "hostname"
 	vi.Instance = 1
+	vi.Prepare()
 	if v.Key() == vi.Key() {
 		t.Errorf("varied instance, but keys equal: %v == %v", v.Key(), vi.Key())
 	}
+}
 
+func TestVersionPrepare(t *testing.T) {
+    v := Version{App: "app", Ver: "ver"}
+    v.Prepare()
+    zerot := new(time.Time)
+    if v.ExactUpdate == *zerot {
+        t.Errorf("v.Prepare should initialize ExactUpdate if needed:\n%v", v)
+    }
+    if v.LastUpdate == 0 {
+        t.Errorf("v.Prepare should initialize LastUpdate if needed:\n%v", v)
+    }
 }
 
 func TestAppIdToId(t *testing.T) {
-	if "lower" != AppIdToId("LoWeR") {
+	if "lower" != appIdToId("LoWeR") {
 		t.Error("ids should be all lowercase")
 	}
-	if "___________" != AppIdToId("_!@#$%^&*( ") {
+	if "___________" != appIdToId("_!@#$%^&*( ") {
 		t.Error("non alpha should be converted to underscores")
 	}
-	if "0123456789" != AppIdToId("0123456789") {
+	if "0123456789" != appIdToId("0123456789") {
 		t.Error("digits should be preserved")
 	}
 }
 
 func BenchmarkVersionKey(b *testing.B) {
-	v := NewVersion()
+	v := new(Version)
 	v.App = "benchmark version key app name"
-	v.AppId = AppIdToId(v.App)
 	v.Host = "hostname"
 	v.Instance = 0
+	v.Prepare()
 	for i := 0; i < b.N; i++ {
 		_ = v.Key()
 	}
@@ -59,7 +71,7 @@ func BenchmarkVersionKey(b *testing.B) {
 func BenchmarkAppToID(b *testing.B) {
 	s := "Longish Application Name!"
 	for i := 0; i < b.N; i++ {
-		_ = AppIdToId(s)
+		_ = appIdToId(s)
 	}
 }
 
