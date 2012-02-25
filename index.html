@@ -104,9 +104,12 @@ Usage of partiscid:
   -danger=false: enable dangerous commands for testing
   -listenip=&quot;&quot;: listen only on this IP (defaults to all)
   -port=7777: listening port (both UDP and HTTP server)
+  -trim=0: keep Versons until this many seconds have passed, then discard
   -v=false: log more details
 </pre></div>
 </div>
+<p>The <tt class="docutils literal"><span class="pre">-trim</span></tt> option will remove references to any instances which have not
+sent a version update within the number of seconds specified by <tt class="docutils literal"><span class="pre">-trim</span></tt>.</p>
 </div>
 <div class="section" id="partisci">
 <h3>partisci<a class="headerlink" href="#partisci" title="Permalink to this headline">¶</a></h3>
@@ -263,14 +266,14 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
         {
             &quot;app&quot;: &quot;Demo App B&quot;, 
             &quot;app_id&quot;: &quot;demo_app_b&quot;, 
-            &quot;host_count&quot;: 1, 
-            &quot;last_update&quot;: 1329927848
+            &quot;host_count&quot;: 2, 
+            &quot;last_update&quot;: 1330204537
         }, 
         {
             &quot;app&quot;: &quot;Demo App A&quot;, 
             &quot;app_id&quot;: &quot;demo_app_a&quot;, 
-            &quot;host_count&quot;: 1, 
-            &quot;last_update&quot;: 1329927848
+            &quot;host_count&quot;: 2, 
+            &quot;last_update&quot;: 1330204537
         }
     ]
 }
@@ -284,12 +287,14 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
 {
     &quot;data&quot;: [
         {
+            &quot;app_count&quot;: 2, 
             &quot;host&quot;: &quot;host2.example.com&quot;, 
-            &quot;last_update&quot;: 1329927848
+            &quot;last_update&quot;: 1330204537
         }, 
         {
+            &quot;app_count&quot;: 2, 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
-            &quot;last_update&quot;: 1329927848
+            &quot;last_update&quot;: 1330204537
         }
     ]
 }
@@ -303,39 +308,39 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
 {
     &quot;data&quot;: [
         {
+            &quot;app&quot;: &quot;Demo App B&quot;, 
+            &quot;app_id&quot;: &quot;demo_app_b&quot;, 
+            &quot;host&quot;: &quot;host2.example.com&quot;, 
+            &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
+            &quot;instance&quot;: 0, 
+            &quot;last_update&quot;: 1330204537, 
+            &quot;ver&quot;: &quot;2.0&quot;
+        }, 
+        {
             &quot;app&quot;: &quot;Demo App A&quot;, 
             &quot;app_id&quot;: &quot;demo_app_a&quot;, 
+            &quot;host&quot;: &quot;host2.example.com&quot;, 
+            &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
+            &quot;instance&quot;: 0, 
+            &quot;last_update&quot;: 1330204537, 
+            &quot;ver&quot;: &quot;2.0&quot;
+        }, 
+        {
+            &quot;app&quot;: &quot;Demo App B&quot;, 
+            &quot;app_id&quot;: &quot;demo_app_b&quot;, 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1329927848, 
+            &quot;last_update&quot;: 1330204537, 
             &quot;ver&quot;: &quot;1.0&quot;
         }, 
         {
-            &quot;app&quot;: &quot;Demo App B&quot;, 
-            &quot;app_id&quot;: &quot;demo_app_b&quot;, 
-            &quot;host&quot;: &quot;host2.example.com&quot;, 
-            &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
-            &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1329927848, 
-            &quot;ver&quot;: &quot;2.0&quot;
-        }, 
-        {
             &quot;app&quot;: &quot;Demo App A&quot;, 
             &quot;app_id&quot;: &quot;demo_app_a&quot;, 
-            &quot;host&quot;: &quot;host2.example.com&quot;, 
-            &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
-            &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1329927848, 
-            &quot;ver&quot;: &quot;2.0&quot;
-        }, 
-        {
-            &quot;app&quot;: &quot;Demo App B&quot;, 
-            &quot;app_id&quot;: &quot;demo_app_b&quot;, 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1329927848, 
+            &quot;last_update&quot;: 1330204537, 
             &quot;ver&quot;: &quot;1.0&quot;
         }
     ]
@@ -355,7 +360,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1329927848, 
+            &quot;last_update&quot;: 1330204537, 
             &quot;ver&quot;: &quot;1.0&quot;
         }, 
         {
@@ -364,7 +369,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;host&quot;: &quot;host2.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1329927848, 
+            &quot;last_update&quot;: 1330204537, 
             &quot;ver&quot;: &quot;2.0&quot;
         }
     ]
@@ -384,7 +389,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1329927848, 
+            &quot;last_update&quot;: 1330204537, 
             &quot;ver&quot;: &quot;1.0&quot;
         }
     ]
@@ -399,21 +404,21 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
 {
     &quot;data&quot;: [
         {
-            &quot;app&quot;: &quot;Demo App A&quot;, 
-            &quot;app_id&quot;: &quot;demo_app_a&quot;, 
-            &quot;host&quot;: &quot;host1.example.com&quot;, 
-            &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
-            &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1329927848, 
-            &quot;ver&quot;: &quot;1.0&quot;
-        }, 
-        {
             &quot;app&quot;: &quot;Demo App B&quot;, 
             &quot;app_id&quot;: &quot;demo_app_b&quot;, 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1329927848, 
+            &quot;last_update&quot;: 1330204537, 
+            &quot;ver&quot;: &quot;1.0&quot;
+        }, 
+        {
+            &quot;app&quot;: &quot;Demo App A&quot;, 
+            &quot;app_id&quot;: &quot;demo_app_a&quot;, 
+            &quot;host&quot;: &quot;host1.example.com&quot;, 
+            &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
+            &quot;instance&quot;: 0, 
+            &quot;last_update&quot;: 1330204537, 
             &quot;ver&quot;: &quot;1.0&quot;
         }
     ]
@@ -430,7 +435,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1329927848, 
+            &quot;last_update&quot;: 1330204537, 
             &quot;ver&quot;: &quot;1.0&quot;
         }
     ]
@@ -453,7 +458,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;host&quot;: &quot;terminal.example.com&quot;, 
             &quot;host_ip&quot;: &quot;::1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1329927850, 
+            &quot;last_update&quot;: 1330204538, 
             &quot;ver&quot;: &quot;1.0&quot;
         }
     ]
@@ -493,11 +498,13 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
 <li>in-memory <tt class="docutils literal"><span class="pre">Version</span></tt> storage</li>
 <li>REST API</li>
 <li>command line update client (and golang client API)</li>
+<li>optionally only keep recent updates (-trim)</li>
 </ul>
 </div>
 <div class="section" id="planned">
 <h3>Planned<a class="headerlink" href="#planned" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
+<li>implement version timeout and config (only active versions kept)</li>
 <li>create a persistent store for the version data<ul>
 <li>sqlite</li>
 <li>redis</li>
@@ -506,8 +513,9 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
 </li>
 <li>write quickstart documentation</li>
 <li>python client: add docs</li>
-<li>implement version timeout and config (only active versions kept)</li>
+<li>add API support for returning a single AppSummary or HostSummary</li>
 <li>test go get &amp; convert to github import paths</li>
+<li>experiment with cross-compiling windows/linux</li>
 <li>Setup build system<ul>
 <li>create source distribution package with pre-built documentation</li>
 <li>Windows binaries</li>
@@ -532,17 +540,15 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
 </ul>
 </li>
 <li>add overview API</li>
-<li>add <tt class="docutils literal"><span class="pre">count</span></tt> field to host summary results?</li>
 <li>add <tt class="docutils literal"><span class="pre">app</span></tt> and <tt class="docutils literal"><span class="pre">host</span></tt> version summaries with counts of each version</li>
 <li>gzip responses when possible</li>
 <li>Add paging to REST results</li>
 <li>add <tt class="docutils literal"><span class="pre">since</span></tt> query parameter, which only returns newer <tt class="docutils literal"><span class="pre">version</span></tt> entries</li>
-<li>store and return app_data with each Version, allowing custom data</li>
+<li>store and return app_data with each Version, allowing custom application data</li>
 <li>Store more historical data from updates.<ul>
 <li>Last update time for each app/version/machine. This would give a full version history for each machine.</li>
 </ul>
 </li>
-<li>Store application specific state information.</li>
 </ul>
 </div>
 </div>
