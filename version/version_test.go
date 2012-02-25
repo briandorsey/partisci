@@ -2,7 +2,7 @@ package version
 
 import (
 	"testing"
-        "time"
+	"time"
 )
 
 func TestVersionKey(t *testing.T) {
@@ -34,15 +34,15 @@ func TestVersionKey(t *testing.T) {
 }
 
 func TestVersionPrepare(t *testing.T) {
-    v := Version{App: "app", Ver: "ver"}
-    v.Prepare()
-    zerot := new(time.Time)
-    if v.ExactUpdate == *zerot {
-        t.Errorf("v.Prepare should initialize ExactUpdate if needed:\n%v", v)
-    }
-    if v.LastUpdate == 0 {
-        t.Errorf("v.Prepare should initialize LastUpdate if needed:\n%v", v)
-    }
+	v := Version{App: "app", Ver: "ver"}
+	v.Prepare()
+	zerot := new(time.Time)
+	if v.ExactUpdate == *zerot {
+		t.Errorf("v.Prepare should initialize ExactUpdate if needed:\n%v", v)
+	}
+	if v.LastUpdate == 0 {
+		t.Errorf("v.Prepare should initialize LastUpdate if needed:\n%v", v)
+	}
 }
 
 func TestAppIdToId(t *testing.T) {

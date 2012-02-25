@@ -28,6 +28,12 @@ func NewMemoryStore() (m *MemoryStore) {
 	return
 }
 
+// App returns an AppSummary for the given AppId.
+func (s *MemoryStore) App(AppId string) (as version.AppSummary, ok bool) {
+	as, ok = s.app[AppId]
+	return
+}
+
 // Apps returns summary information about each application, based on the known Versions.
 func (s *MemoryStore) Apps() []version.AppSummary {
 	vs := make([]version.AppSummary, 0)
@@ -70,11 +76,11 @@ func (s *MemoryStore) Update(v version.Version) (err error) {
 	}
 
 	// app map
-	as, present := s.app[v.AppId]
-	if present {
+	if as, present := s.app[v.AppId]; present {
 		as.LastUpdate = v.LastUpdate
 		if !vpresent {
 			as.HostCount++
+			s.app[v.AppId] = as
 		}
 	} else {
 		appv := version.AppSummary{
@@ -87,15 +93,48 @@ func (s *MemoryStore) Update(v version.Version) (err error) {
 	}
 
 	// host map
-	hostv := version.HostSummary{
-		Host:       v.Host,
-		LastUpdate: v.LastUpdate,
+	if hs, present := s.host[v.Host]; present {
+		hs.LastUpdate = v.LastUpdate
+		if !vpresent {
+			hs.AppCount++
+			s.host[v.Host] = hs
+		}
+	} else {
+		hostv := version.HostSummary{
+			Host:       v.Host,
+			LastUpdate: v.LastUpdate,
+			AppCount:   1,
+		}
+		s.host[v.Host] = hostv
 	}
-	s.host[v.Host] = hostv
 	return
 }
 
 // Clear empties the MemoryStore.
 func (s *MemoryStore) Clear() {
 	initMemoryStore(s)
+}
+
+// Trim removes old versions.
+func (s *MemoryStore) Trim(t time.Time) {
+	s.threshold = t
+	for k, v := range s.version {
+		if v.ExactUpdate.Before(t) {
+			delete(s.version, k)
+			if as, ok := s.app[v.AppId]; ok {
+				as.HostCount -= 1
+                s.app[v.AppId] = as
+				if as.HostCount < 1 {
+					delete(s.app, v.AppId)
+				}
+			}
+			if hs, ok := s.host[v.Host]; ok {
+				hs.AppCount -= 1
+                s.host[v.Host] = hs
+				if hs.AppCount < 1 {
+					delete(s.host, v.Host)
+				}
+			}
+		}
+	}
 }

@@ -30,12 +30,11 @@ func (v *Version) Key() string {
 // Prepare *must* be called after populating fields and before passing to a store.
 func (v *Version) Prepare() {
 	v.AppId = appIdToId(v.App)
-    if v.LastUpdate == 0 {
-        v.ExactUpdate = time.Now()
-        v.LastUpdate = v.ExactUpdate.Unix()
-    }
+	if v.LastUpdate == 0 {
+		v.ExactUpdate = time.Now()
+		v.LastUpdate = v.ExactUpdate.Unix()
+	}
 }
-
 
 type AppSummary struct {
 	AppId      string `json:"app_id"`
@@ -47,6 +46,7 @@ type AppSummary struct {
 type HostSummary struct {
 	Host       string `json:"host"`
 	LastUpdate int64  `json:"last_update"`
+	AppCount   int32  `json:"app_count"`
 }
 
 func safeRunes(r rune) rune {

@@ -24,6 +24,7 @@ Planned
 * python client: add docs
 * implement version timeout and config (only active versions kept)
 * test go get & convert to github import paths
+* experiment with cross-compiling windows/linux
 * Setup build system
 
   * create source distribution package with pre-built documentation
