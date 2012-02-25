@@ -123,14 +123,14 @@ func (s *MemoryStore) Trim(t time.Time) {
 			delete(s.version, k)
 			if as, ok := s.app[v.AppId]; ok {
 				as.HostCount -= 1
-                s.app[v.AppId] = as
+				s.app[v.AppId] = as
 				if as.HostCount < 1 {
 					delete(s.app, v.AppId)
 				}
 			}
 			if hs, ok := s.host[v.Host]; ok {
 				hs.AppCount -= 1
-                s.host[v.Host] = hs
+				s.host[v.Host] = hs
 				if hs.AppCount < 1 {
 					delete(s.host, v.Host)
 				}

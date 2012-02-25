@@ -33,7 +33,6 @@ func TestAppSummary(t *testing.T) {
 			t.Error("expected HostCount: 2, actual: ", as.HostCount)
 		}
 	}
-
 }
 
 // test Clear() & Update() interactions
@@ -107,11 +106,11 @@ func TestTrim(t *testing.T) {
 		t.Error("after all: version count - expected: 0, actual: ", l)
 	}
 	if l := len(s.Hosts()); l != 0 {
-        t.Error(s.Hosts())
+		t.Error(s.Hosts())
 		t.Error("after all: host count - expected: 0, actual: ", l)
 	}
 	if l := len(s.Apps()); l != 0 {
-        t.Error(s.Apps())
+		t.Error(s.Apps())
 		t.Error("after all: app count - expected: 0, actual: ", l)
 	}
 }
