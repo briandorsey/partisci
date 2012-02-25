@@ -15,6 +15,7 @@ type UpdateStore interface {
 	Hosts() (vs []HostSummary)
 	Versions(app_id string, host string, ver string) (vs []Version)
 	Clear()
+	Trim(t time.Time) (c uint64)
 }
 
 type Version struct {

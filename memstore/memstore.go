@@ -126,10 +126,11 @@ func (s *MemoryStore) Clear() {
 }
 
 // Trim removes old versions.
-func (s *MemoryStore) Trim(t time.Time) {
+func (s *MemoryStore) Trim(t time.Time) (c uint64) {
 	s.threshold = t
 	for k, v := range s.version {
 		if v.ExactUpdate.Before(t) {
+			c++
 			delete(s.version, k)
 			if as, ok := s.app[v.AppId]; ok {
 				as.HostCount -= 1
@@ -147,4 +148,5 @@ func (s *MemoryStore) Trim(t time.Time) {
 			}
 		}
 	}
+	return
 }

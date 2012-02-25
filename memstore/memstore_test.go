@@ -117,7 +117,10 @@ func TestTrim(t *testing.T) {
 	}
 
 	// trim every version before 1 second in the future of one version
-	s.Trim(v2.ExactUpdate.Add(time.Duration(1 * time.Second)))
+	count := s.Trim(v2.ExactUpdate.Add(time.Duration(1 * time.Second)))
+	if count != 2 {
+		t.Error("after: trim should have removed 2 versions")
+	}
 	if l := len(s.Versions("", "", "")); l != 1 {
 		t.Error("after: version count - expected: 1, actual: ", l)
 	}
@@ -129,7 +132,10 @@ func TestTrim(t *testing.T) {
 	}
 
 	// trim every version
-	s.Trim(v2.ExactUpdate.Add(time.Duration(20 * time.Second)))
+	count = s.Trim(v2.ExactUpdate.Add(time.Duration(20 * time.Second)))
+	if count != 1 {
+		t.Error("after all: trim should have removed the last one version")
+	}
 	if l := len(s.Versions("", "", "")); l != 0 {
 		t.Error("after all: version count - expected: 0, actual: ", l)
 	}

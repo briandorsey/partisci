@@ -10,6 +10,7 @@ Implemented
 * in-memory ``Version`` storage
 * REST API
 * command line update client (and golang client API)
+* optionally only keep recent updates (-trim)
 
 Planned
 -------

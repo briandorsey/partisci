@@ -21,6 +21,10 @@ to store ``version`` updates.
     :shell:
     :returncode: 2
 
+The ``-trim`` option will remove references to any instances which have not
+sent a version update within the number of seconds specified by ``-trim``.
+
+
 partisci
 -------------------------
 

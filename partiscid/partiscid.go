@@ -28,6 +28,7 @@ var port *int = flag.Int("port", 7777, "listening port (both UDP and HTTP server
 var listenip *string = flag.String("listenip", "", "listen only on this IP (defaults to all)")
 var verbose *bool = flag.Bool("v", false, "log more details")
 var danger *bool = flag.Bool("danger", false, "enable dangerous commands for testing")
+var trim *int64 = flag.Int64("trim", 0, "keep Versons until this many seconds have passed, then discard")
 
 func init() {
 	ver := expvar.NewString("version")
@@ -58,6 +59,20 @@ func handleUpdateUDP(conn net.PacketConn, updates chan<- version.Version) {
 			continue
 		}
 		updates <- v
+	}
+}
+
+func trimWorker(t int64, store version.UpdateStore) {
+	if t < 1 {
+		return
+	}
+	window := time.Duration(t) * time.Second
+	ticker := time.NewTicker(60 * time.Second)
+	for {
+		<-ticker.C
+		if removed := store.Trim(time.Now().Add(-window)); removed > 0 {
+			l.Printf("TRIM: removed %v old updates", removed)
+		}
 	}
 }
 
@@ -239,6 +254,7 @@ func main() {
 	ss := storeServer{store, updates, *danger}
 	go processUpdates(updates, store)
 	go handleUpdateUDP(conn, updates)
+	go trimWorker(*trim, store)
 
 	apiRoot := http.StripPrefix("/api/v1/", ss)
 	http.Handle("/api/v1/", apiRoot)
