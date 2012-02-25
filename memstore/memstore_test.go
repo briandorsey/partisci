@@ -35,6 +35,34 @@ func TestAppSummary(t *testing.T) {
 	}
 }
 
+func TestHostSummary(t *testing.T) {
+	s := NewMemoryStore()
+
+	v := version.Version{App: "app1", Ver: "ver", Host: "a"}
+	v.Prepare()
+	s.Update(v)
+
+	if _, ok := s.Host("non-existant"); ok {
+		t.Error("got ok for non-existant Host")
+	}
+	if as, ok := s.Host("a"); ok {
+		if as.AppCount != 1 {
+			t.Error("expected AppCount: 1, actual: ", as.AppCount)
+		}
+	} else {
+		t.Error("missing expected AppId")
+	}
+
+	v2 := version.Version{App: "app2", Ver: "ver", Host: "a"}
+	v2.Prepare()
+	s.Update(v2)
+	if as, ok := s.Host("a"); ok {
+		if as.AppCount != 2 {
+			t.Error("expected AppCount: 2, actual: ", as.AppCount)
+		}
+	}
+}
+
 // test Clear() & Update() interactions
 func TestClearUpdate(t *testing.T) {
 	s := NewMemoryStore()

@@ -43,6 +43,12 @@ func (s *MemoryStore) Apps() []version.AppSummary {
 	return vs
 }
 
+// Host returns a HostSummary for the given Host.
+func (s *MemoryStore) Host(Host string) (hs version.HostSummary, ok bool) {
+	hs, ok = s.host[Host]
+	return
+}
+
 // Hosts returns summary information about each host, based on the known Versions.
 func (s *MemoryStore) Hosts() []version.HostSummary {
 	vs := make([]version.HostSummary, 0)
