@@ -23,6 +23,7 @@ Planned
 
 * write quickstart documentation
 * python client: add docs
+* add API support for returning a single AppSummary or HostSummary
 * test go get & convert to github import paths
 * experiment with cross-compiling windows/linux
 * Setup build system
@@ -48,14 +49,12 @@ Possible
   * summary --> versions/&with?parameters
 
 * add overview API
-* add ``count`` field to host summary results?
 * add ``app`` and ``host`` version summaries with counts of each version
 * gzip responses when possible
 * Add paging to REST results
 * add ``since`` query parameter, which only returns newer ``version`` entries
-* store and return app_data with each Version, allowing custom data
+* store and return app_data with each Version, allowing custom application data
 * Store more historical data from updates.
 
   * Last update time for each app/version/machine. This would give a full version history for each machine.
 
-* Store application specific state information.

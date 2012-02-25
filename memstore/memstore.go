@@ -29,6 +29,8 @@ func NewMemoryStore() (m *MemoryStore) {
 }
 
 // App returns an AppSummary for the given AppId.
+// The value of ok follows map indexing conventions: true if AppId is present,
+// false otherwise.
 func (s *MemoryStore) App(AppId string) (as version.AppSummary, ok bool) {
 	as, ok = s.app[AppId]
 	return
@@ -44,6 +46,8 @@ func (s *MemoryStore) Apps() []version.AppSummary {
 }
 
 // Host returns a HostSummary for the given Host.
+// The value of ok follows map indexing conventions: true if Host is present,
+// false otherwise.
 func (s *MemoryStore) Host(Host string) (hs version.HostSummary, ok bool) {
 	hs, ok = s.host[Host]
 	return
