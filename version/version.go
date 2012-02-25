@@ -8,6 +8,15 @@ import (
 	"time"
 )
 
+// UpdateStore defines an interface for persisting application version information.
+type UpdateStore interface {
+	Update(v Version) (err error)
+	Apps() (vs []AppSummary)
+	Hosts() (vs []HostSummary)
+	Versions(app_id string, host string, ver string) (vs []Version)
+	Clear()
+}
+
 type Version struct {
 	AppId       string    `json:"app_id,omitempty"`
 	App         string    `json:"app"`

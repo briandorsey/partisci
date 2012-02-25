@@ -41,15 +41,6 @@ type OpStats struct {
 	updates int64
 }
 
-// UpdateStore defines an interface for persisting application version information.
-type UpdateStore interface {
-	Update(v version.Version) (err error)
-	Apps() (vs []version.AppSummary)
-	Hosts() (vs []version.HostSummary)
-	Versions(app_id string, host string, ver string) (vs []version.Version)
-	Clear()
-}
-
 // handleUpdateUDP listens on conn, parses data into Versions and sends them to `updates` chan.
 func handleUpdateUDP(conn net.PacketConn, updates chan<- version.Version) {
 	for {
@@ -71,7 +62,7 @@ func handleUpdateUDP(conn net.PacketConn, updates chan<- version.Version) {
 }
 
 // processUpdates receives Versions, updates stats and passes to an UpdateStore.
-func processUpdates(updates <-chan version.Version, store UpdateStore) {
+func processUpdates(updates <-chan version.Version, store version.UpdateStore) {
 	stats := OpStats{}
 	ticker := time.NewTicker(updateInterval)
 	go func() {
@@ -109,7 +100,7 @@ func NewDataRes() (r *DataRes) {
 }
 
 type storeServer struct {
-	store   UpdateStore
+	store   version.UpdateStore
 	updates chan<- version.Version
 	// flag to enable dangerous APIs
 	danger bool
