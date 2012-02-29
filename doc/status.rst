@@ -15,12 +15,11 @@ Implemented
 Planned
 -------
 
-* implement version timeout and config (only active versions kept)
 * create a persistent store for the version data
 
   * sqlite
   * redis
-  * goleveldb
+  * X - goleveldb - no on-disk persistence yet
 
 * write quickstart documentation
 * python client: add docs

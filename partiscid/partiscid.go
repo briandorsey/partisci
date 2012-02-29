@@ -15,6 +15,7 @@ import (
 	"net/http"
 	"os"
 	"partisci/memstore"
+	"partisci/store"
 	"partisci/version"
 	"runtime"
 	"time"
@@ -62,7 +63,7 @@ func handleUpdateUDP(conn net.PacketConn, updates chan<- version.Version) {
 	}
 }
 
-func trimWorker(t int64, store version.UpdateStore) {
+func trimWorker(t int64, store store.UpdateStore) {
 	if t < 1 {
 		return
 	}
@@ -77,7 +78,7 @@ func trimWorker(t int64, store version.UpdateStore) {
 }
 
 // processUpdates receives Versions, updates stats and passes to an UpdateStore.
-func processUpdates(updates <-chan version.Version, store version.UpdateStore) {
+func processUpdates(updates <-chan version.Version, store store.UpdateStore) {
 	stats := OpStats{}
 	ticker := time.NewTicker(updateInterval)
 	go func() {
@@ -115,7 +116,7 @@ func NewDataRes() (r *DataRes) {
 }
 
 type storeServer struct {
-	store   version.UpdateStore
+	store   store.UpdateStore
 	updates chan<- version.Version
 	// flag to enable dangerous APIs
 	danger bool
