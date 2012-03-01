@@ -1,4 +1,4 @@
-// Package store defines the interface for version persistence.
+// Package store defines the UpdateStore interface for version persistence.
 //
 // The USTest* functions are tests which should be run by implementations
 // of this interface to ensure compatability.
