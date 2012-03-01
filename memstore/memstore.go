@@ -28,15 +28,11 @@ func NewMemoryStore() (m *MemoryStore) {
 	return
 }
 
-// App returns an AppSummary for the given AppId.
-// The value of ok follows map indexing conventions: true if AppId is present,
-// false otherwise.
 func (s *MemoryStore) App(AppId string) (as version.AppSummary, ok bool) {
 	as, ok = s.app[AppId]
 	return
 }
 
-// Apps returns summary information about each application, based on the known Versions.
 func (s *MemoryStore) Apps() []version.AppSummary {
 	vs := make([]version.AppSummary, 0)
 	for _, v := range s.app {
@@ -45,15 +41,11 @@ func (s *MemoryStore) Apps() []version.AppSummary {
 	return vs
 }
 
-// Host returns a HostSummary for the given Host.
-// The value of ok follows map indexing conventions: true if Host is present,
-// false otherwise.
 func (s *MemoryStore) Host(Host string) (hs version.HostSummary, ok bool) {
 	hs, ok = s.host[Host]
 	return
 }
 
-// Hosts returns summary information about each host, based on the known Versions.
 func (s *MemoryStore) Hosts() []version.HostSummary {
 	vs := make([]version.HostSummary, 0)
 	for _, v := range s.host {
@@ -62,8 +54,6 @@ func (s *MemoryStore) Hosts() []version.HostSummary {
 	return vs
 }
 
-// Versions returns full Version structs where their values match app_id, host
-// and ver. Zero length strings are considered a match for all Versions.
 func (s *MemoryStore) Versions(app_id string,
 	host string, ver string) []version.Version {
 	vs := make([]version.Version, 0)
@@ -77,7 +67,6 @@ func (s *MemoryStore) Versions(app_id string,
 	return vs
 }
 
-// Update stores a Version and updates app and host summaries.
 func (s *MemoryStore) Update(v version.Version) (err error) {
 	key := v.Key()
 	_, vpresent := s.version[key]
@@ -120,12 +109,10 @@ func (s *MemoryStore) Update(v version.Version) (err error) {
 	return
 }
 
-// Clear empties the MemoryStore.
 func (s *MemoryStore) Clear() {
 	initMemoryStore(s)
 }
 
-// Trim removes old versions.
 func (s *MemoryStore) Trim(t time.Time) (c uint64) {
 	s.threshold = t
 	for k, v := range s.version {
