@@ -4,6 +4,7 @@ package version
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"strings"
 	"time"
 )
@@ -23,7 +24,7 @@ type Version struct {
 // It is calculated using AppId, Host & Instance so later version changes
 // will result in updates.
 func (v *Version) Key() string {
-	return v.AppId + v.Host + string(v.Instance)
+	return v.AppId + v.Host + fmt.Sprintf("%d", v.Instance)
 }
 
 // Prepare readies a Version for use by calculating fields.
