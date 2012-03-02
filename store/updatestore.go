@@ -96,6 +96,28 @@ func USTestHostSummary(s UpdateStore, t *testing.T) {
 	}
 }
 
+// test Clear() & Update() interactions
+func USTestClearUpdate(s UpdateStore, t *testing.T) {
+	if len(s.Versions("", "", "")) > 0 {
+		t.Error("Versions should be empty")
+	}
+	v := *new(version.Version)
+	v.Prepare()
+	s.Update(v)
+	if len(s.Versions("", "", "")) != 1 {
+		t.Error(v.ExactUpdate, v.LastUpdate)
+		t.Error("Versions should have one entry")
+	}
+	s.Clear()
+	if len(s.Versions("", "", "")) > 0 {
+		t.Error("Versions should be empty")
+	}
+	s.Update(v)
+	if len(s.Versions("", "", "")) > 0 {
+		t.Error("updates older than threshold should be discarded")
+	}
+}
+
 func USTestTrim(s UpdateStore, t *testing.T) {
 	// setup one version in the future and a few more
 	v1a := version.Version{App: "app1", Ver: "ver", Host: "a"}
