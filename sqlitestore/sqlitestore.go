@@ -4,6 +4,7 @@ package sqlitestore
 
 import (
 	"database/sql"
+	"fmt"
 	_ "github.com/mattn/go-sqlite3"
 	"partisci/version"
 	"time"
@@ -61,12 +62,32 @@ func (s *SQLiteStore) App(AppId string) (as version.AppSummary, ok bool) {
 
 func (s *SQLiteStore) Apps() []version.AppSummary {
 	as := make([]version.AppSummary, 0)
+	rows, err := s.db.Query(`
+        select app_id, max(app), max(last_update), count(host)
+        from version
+        group by app_id`)
+	if err != nil {
+		fmt.Println(err)
+		// TODO: should return error
+		return as
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		a := version.AppSummary{}
+		err = rows.Scan(&a.AppId, &a.App, &a.LastUpdate, &a.HostCount)
+		if err != nil {
+			fmt.Println(err)
+			// TODO: should return error
+		}
+		as = append(as, a)
+	}
 	return as
 }
 
 func (s *SQLiteStore) Host(Host string) (hs version.HostSummary, ok bool) {
 	row := s.db.QueryRow(`
-        select host, max(last_update), count(app)
+        select host, max(last_update), count(app_id)
         from version
         where host = ?
         group by host`, Host)
@@ -79,40 +100,105 @@ func (s *SQLiteStore) Host(Host string) (hs version.HostSummary, ok bool) {
 }
 
 func (s *SQLiteStore) Hosts() []version.HostSummary {
-	vs := make([]version.HostSummary, 0)
-	return vs
+	hs := make([]version.HostSummary, 0)
+	rows, err := s.db.Query(`
+        select host, max(last_update), count(app_id)
+        from version
+        group by host`)
+	if err != nil {
+		fmt.Println(err)
+		// TODO: should return error
+		return hs
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		h := version.HostSummary{}
+		err = rows.Scan(&h.Host, &h.LastUpdate, &h.AppCount)
+		if err != nil {
+			fmt.Println(err)
+			// TODO: should return error
+		}
+		hs = append(hs, h)
+	}
+	return hs
 }
 
 func (s *SQLiteStore) Update(v version.Version) (err error) {
-	tx, err := s.db.Begin()
-	if err != nil {
-		return
-	}
-	stmt, err := tx.Prepare(
+	/*
+	   tx, err := s.db.Begin()
+	   if err != nil {
+	       return
+	   }
+	   stmt, err := tx.Prepare(
+	       `insert into version(key, app_id, app, ver, host, 
+	                   instance, host_ip, last_update, exact_update)
+	       values(?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+	   if err != nil {
+	       return
+	   }
+	   defer stmt.Close()
+
+	   _, err = stmt.Exec(v.Key(), v.AppId, v.App, v.Ver, v.Host,
+	       v.Instance, v.HostIP, v.LastUpdate, v.ExactUpdate.Format(time.RFC3339))
+	   if err != nil {
+	       return
+	   }
+	   err = tx.Commit()
+	   if err != nil {
+	       return
+	   }
+	   return
+	*/
+	_, err = s.db.Exec(
 		`insert into version(key, app_id, app, ver, host, 
                     instance, host_ip, last_update, exact_update)
-        values(?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-	if err != nil {
-		return
-	}
-	defer stmt.Close()
-
-	_, err = stmt.Exec(v.Key(), v.AppId, v.App, v.Ver, v.Host,
-		v.Instance, v.HostIP, v.LastUpdate, v.ExactUpdate.Format(time.RFC3339))
-	if err != nil {
-		return
-	}
-	err = tx.Commit()
-	if err != nil {
-		return
-	}
-	return
+        values(?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+		v.Key(), v.AppId, v.App, v.Ver, v.Host,
+		v.Instance, v.HostIP, v.LastUpdate, v.ExactUpdate.UnixNano())
+	return err
 }
 
 func (s *SQLiteStore) Versions(app_id string,
 	host string, ver string) []version.Version {
-	v := make([]version.Version, 0)
-	return v
+	vs := make([]version.Version, 0)
+	if app_id == "" {
+		app_id = "%"
+	}
+	if host == "" {
+		host = "%"
+	}
+	if ver == "" {
+		ver = "%"
+	}
+	rows, err := s.db.Query(`
+        select app_id, app, ver, host, 
+            instance, host_ip, last_update, exact_update
+        from version
+        where app_id like ?
+            and host like ?
+            and ver like ?;`,
+		app_id, host, ver)
+	if err != nil {
+		fmt.Println(err)
+		// TODO: should return error
+		return vs
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		v := version.Version{}
+		var d int64
+		err = rows.Scan(&v.AppId, &v.App, &v.Ver, &v.Host,
+			&v.Instance, &v.HostIP, &v.LastUpdate, &d)
+		if err != nil {
+			fmt.Println(err)
+			// TODO: should return error
+		}
+		v.ExactUpdate = time.Unix(0, d)
+		vs = append(vs, v)
+	}
+	return vs
 }
 
 func (s *SQLiteStore) Clear() {
@@ -120,7 +206,27 @@ func (s *SQLiteStore) Clear() {
 
 func (s *SQLiteStore) Trim(t time.Time) (c uint64) {
 	c = 0
-	return
+	un := t.UnixNano()
+	r, err := s.db.Exec(`delete from version where exact_update < ?`, un)
+	if err != nil {
+		fmt.Println(err)
+		// TODO: should return error
+		return
+	}
+	ra, err := r.RowsAffected()
+	if err != nil {
+		fmt.Println(err)
+		// TODO: should return error
+		return
+	}
+	fmt.Println(ra)
+	if ra >= 0 {
+		c = uint64(ra)
+	} else {
+		// TODO: should return error
+		return
+	}
+	return c
 }
 
 var sqls = []string{

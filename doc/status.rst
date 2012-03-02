@@ -22,6 +22,8 @@ Planned
   * X - goleveldb - no on-disk persistence yet
 
 * write quickstart documentation
+* tests - keep list of test functions centrally iterate in the store tests
+* UpdateStore interface: at error results to most methods
 * python client: add docs
 * add API support for returning a single AppSummary or HostSummary
 * test go get & convert to github import paths

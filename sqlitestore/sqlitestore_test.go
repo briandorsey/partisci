@@ -19,7 +19,7 @@ func cleanup(path string) {
 			log.Print("cleanup(): ", err)
 		}
 	} else {
-		log.Print("cleanup(): removed file")
+		// log.Print("cleanup(): removed file")
 	}
 }
 
@@ -69,4 +69,14 @@ func TestHostSummary(t *testing.T) {
 		t.Fatal(err)
 	}
 	store.USTestHostSummary(s, t)
+}
+
+func TestTrim(t *testing.T) {
+	path := filepath.Join(os.TempDir(), dbPath)
+	cleanup(path)
+	s, err := NewSQLiteStore(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	store.USTestTrim(s, t)
 }
