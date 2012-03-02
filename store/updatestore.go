@@ -83,7 +83,7 @@ func USTestHostSummary(s UpdateStore, t *testing.T) {
 			t.Error("expected AppCount: 1, actual: ", as.AppCount)
 		}
 	} else {
-		t.Error("missing expected AppId")
+		t.Error("missing expected Host")
 	}
 
 	v2 := version.Version{App: "app2", Ver: "ver", Host: "a"}
@@ -113,44 +113,44 @@ func USTestTrim(s UpdateStore, t *testing.T) {
 
 	// sanity check
 	if l := len(s.Versions("", "", "")); l != 3 {
-		t.Error("before: version count - expected: 2, actual: ", l)
+		t.Fatal("before: version count - expected: 2, actual: ", l)
 	}
 	if l := len(s.Hosts()); l != 2 {
-		t.Error("before: host count - expected: 2, actual: ", l)
+		t.Fatal("before: host count - expected: 2, actual: ", l)
 	}
 	if l := len(s.Apps()); l != 2 {
-		t.Error("before: app count - expected: 2, actual: ", l)
+		t.Fatal("before: app count - expected: 2, actual: ", l)
 	}
 
 	// trim every version before 1 second in the future of one version
 	count := s.Trim(v2.ExactUpdate.Add(time.Duration(1 * time.Second)))
 	if count != 2 {
-		t.Error("after: trim should have removed 2 versions")
+		t.Fatal("after: trim should have removed 2 versions")
 	}
 	if l := len(s.Versions("", "", "")); l != 1 {
-		t.Error("after: version count - expected: 1, actual: ", l)
+		t.Fatal("after: version count - expected: 1, actual: ", l)
 	}
 	if l := len(s.Hosts()); l != 1 {
-		t.Error("after: host count - expected: 1, actual: ", l)
+		t.Fatal("after: host count - expected: 1, actual: ", l)
 	}
 	if l := len(s.Apps()); l != 1 {
-		t.Error("after: app count - expected: 1, actual: ", l)
+		t.Fatal("after: app count - expected: 1, actual: ", l)
 	}
 
 	// trim every version
 	count = s.Trim(v2.ExactUpdate.Add(time.Duration(20 * time.Second)))
 	if count != 1 {
-		t.Error("after all: trim should have removed the last one version")
+		t.Fatal("after all: trim should have removed the last one version")
 	}
 	if l := len(s.Versions("", "", "")); l != 0 {
-		t.Error("after all: version count - expected: 0, actual: ", l)
+		t.Fatal("after all: version count - expected: 0, actual: ", l)
 	}
 	if l := len(s.Hosts()); l != 0 {
-		t.Error(s.Hosts())
-		t.Error("after all: host count - expected: 0, actual: ", l)
+		t.Fatal(s.Hosts())
+		t.Fatal("after all: host count - expected: 0, actual: ", l)
 	}
 	if l := len(s.Apps()); l != 0 {
-		t.Error(s.Apps())
-		t.Error("after all: app count - expected: 0, actual: ", l)
+		t.Fatal(s.Apps())
+		t.Fatal("after all: app count - expected: 0, actual: ", l)
 	}
 }
