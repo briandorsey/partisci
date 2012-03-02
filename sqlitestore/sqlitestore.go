@@ -51,9 +51,9 @@ func (s *SQLiteStore) App(AppId string) (as version.AppSummary, ok bool) {
         from version
         where app_id = ?
         group by app_id`, AppId)
-    err := row.Scan(&as.AppId, &as.App, &as.LastUpdate, &as.HostCount)
+	err := row.Scan(&as.AppId, &as.App, &as.LastUpdate, &as.HostCount)
 	if err != nil {
-        // TODO: should App() & Host() return errors instead of ok?
+		// TODO: should App() & Host() return errors instead of ok?
 		return as, false
 	}
 	return as, true
@@ -65,7 +65,17 @@ func (s *SQLiteStore) Apps() []version.AppSummary {
 }
 
 func (s *SQLiteStore) Host(Host string) (hs version.HostSummary, ok bool) {
-	return
+	row := s.db.QueryRow(`
+        select host, max(last_update), count(app)
+        from version
+        where host = ?
+        group by host`, Host)
+	err := row.Scan(&hs.Host, &hs.LastUpdate, &hs.AppCount)
+	if err != nil {
+		// TODO: should App() & Host() return errors instead of ok?
+		return hs, false
+	}
+	return hs, true
 }
 
 func (s *SQLiteStore) Hosts() []version.HostSummary {
