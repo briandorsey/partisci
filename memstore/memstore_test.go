@@ -1,26 +1,26 @@
 package memstore
 
 import (
-	"partisci/store"
+	"partisci/sharedtest"
 	"testing"
 )
 
 func TestAppSummary(t *testing.T) {
 	s := NewMemoryStore()
-	store.USTestAppSummary(s, t)
+	sharedtest.USTestAppSummary(s, t)
 }
 
 func TestHostSummary(t *testing.T) {
 	s := NewMemoryStore()
-	store.USTestHostSummary(s, t)
+	sharedtest.USTestHostSummary(s, t)
 }
 
 func TestClearUpdate(t *testing.T) {
 	s := NewMemoryStore()
-	store.USTestClearUpdate(s, t)
+	sharedtest.USTestClearUpdate(s, t)
 }
 
 func TestTrim(t *testing.T) {
 	s := NewMemoryStore()
-	store.USTestTrim(s, t)
+	sharedtest.USTestTrim(s, t)
 }

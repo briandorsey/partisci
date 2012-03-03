@@ -3,7 +3,7 @@ package sqlitestore
 import (
 	"log"
 	"os"
-	"partisci/store"
+	"partisci/sharedtest"
 	"path/filepath"
 	"testing"
 )
@@ -58,7 +58,7 @@ func TestAppSummary(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	store.USTestAppSummary(s, t)
+	sharedtest.USTestAppSummary(s, t)
 }
 
 func TestHostSummary(t *testing.T) {
@@ -68,7 +68,7 @@ func TestHostSummary(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	store.USTestHostSummary(s, t)
+	sharedtest.USTestHostSummary(s, t)
 }
 
 func TestClearUpdate(t *testing.T) {
@@ -78,7 +78,7 @@ func TestClearUpdate(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	store.USTestClearUpdate(s, t)
+	sharedtest.USTestClearUpdate(s, t)
 }
 
 func TestTrim(t *testing.T) {
@@ -88,5 +88,5 @@ func TestTrim(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	store.USTestTrim(s, t)
+	sharedtest.USTestTrim(s, t)
 }
