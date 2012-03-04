@@ -39,4 +39,3 @@ type UpdateStore interface {
 	// Trim removes old versions.
 	Trim(t time.Time) (c uint64)
 }
-

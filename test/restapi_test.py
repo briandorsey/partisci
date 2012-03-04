@@ -47,7 +47,6 @@ class TestPartisci(object):
         response = requests.post(url)
         assert response.ok
 
-
     def send_basic_updates(self, prefix):
         apps = ["_zz_%s_app%s" % (prefix, str(i)) for i in range(3)]
         hosts = ["_zz_%s_host%s" % (prefix, str(i)) for i in range(3)]
@@ -360,13 +359,10 @@ class TestPartisci(object):
         helper(data)
 
 
-print tempfile.gettempdir()
 class TestPartisciSQLite(TestPartisci):
     command = ["partiscid",
                 "--port=%s" % port,
                 "--listenip=%s" % server,
-                #"--sqlite=exp.sqlite",
-                "--sqlite=%s" % os.path.join(tempfile.gettempdir(), 
+                "--sqlite=%s" % os.path.join(tempfile.gettempdir(),
                                             "test_partisci.sqlite"),
                 "--danger"]
-

@@ -252,7 +252,7 @@ func main() {
 	}
 	l.Print("listening on: ", conn.LocalAddr())
 
-    var st store.UpdateStore
+	var st store.UpdateStore
 	if *sqlite == "" {
 		st = memstore.NewMemoryStore()
 	} else {

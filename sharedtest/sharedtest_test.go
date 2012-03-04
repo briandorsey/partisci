@@ -5,12 +5,11 @@
 package sharedtest
 
 import (
+	"partisci/store"
 	"partisci/version"
-    "partisci/store"
 	"testing"
 	"time"
 )
-
 
 func USTestAppSummary(s store.UpdateStore, t *testing.T) {
 	v := version.Version{App: "app1", Ver: "ver", Host: "a"}
