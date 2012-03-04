@@ -104,6 +104,7 @@ Usage of partiscid:
   -danger=false: enable dangerous commands for testing
   -listenip=&quot;&quot;: listen only on this IP (defaults to all)
   -port=7777: listening port (both UDP and HTTP server)
+  -sqlite=&quot;&quot;: use SQLite for persistence and store db at this path
   -trim=0: keep Versons until this many seconds have passed, then discard
   -v=false: log more details
 </pre></div>
@@ -267,13 +268,13 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;app&quot;: &quot;Demo App B&quot;, 
             &quot;app_id&quot;: &quot;demo_app_b&quot;, 
             &quot;host_count&quot;: 2, 
-            &quot;last_update&quot;: 1330204537
+            &quot;last_update&quot;: 1330819803
         }, 
         {
             &quot;app&quot;: &quot;Demo App A&quot;, 
             &quot;app_id&quot;: &quot;demo_app_a&quot;, 
             &quot;host_count&quot;: 2, 
-            &quot;last_update&quot;: 1330204537
+            &quot;last_update&quot;: 1330819803
         }
     ]
 }
@@ -288,13 +289,13 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
     &quot;data&quot;: [
         {
             &quot;app_count&quot;: 2, 
-            &quot;host&quot;: &quot;host2.example.com&quot;, 
-            &quot;last_update&quot;: 1330204537
+            &quot;host&quot;: &quot;host1.example.com&quot;, 
+            &quot;last_update&quot;: 1330819803
         }, 
         {
             &quot;app_count&quot;: 2, 
-            &quot;host&quot;: &quot;host1.example.com&quot;, 
-            &quot;last_update&quot;: 1330204537
+            &quot;host&quot;: &quot;host2.example.com&quot;, 
+            &quot;last_update&quot;: 1330819803
         }
     ]
 }
@@ -310,11 +311,11 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
         {
             &quot;app&quot;: &quot;Demo App B&quot;, 
             &quot;app_id&quot;: &quot;demo_app_b&quot;, 
-            &quot;host&quot;: &quot;host2.example.com&quot;, 
+            &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1330204537, 
-            &quot;ver&quot;: &quot;2.0&quot;
+            &quot;last_update&quot;: 1330819803, 
+            &quot;ver&quot;: &quot;1.0&quot;
         }, 
         {
             &quot;app&quot;: &quot;Demo App A&quot;, 
@@ -322,26 +323,26 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;host&quot;: &quot;host2.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1330204537, 
+            &quot;last_update&quot;: 1330819803, 
             &quot;ver&quot;: &quot;2.0&quot;
+        }, 
+        {
+            &quot;app&quot;: &quot;Demo App A&quot;, 
+            &quot;app_id&quot;: &quot;demo_app_a&quot;, 
+            &quot;host&quot;: &quot;host1.example.com&quot;, 
+            &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
+            &quot;instance&quot;: 0, 
+            &quot;last_update&quot;: 1330819803, 
+            &quot;ver&quot;: &quot;1.0&quot;
         }, 
         {
             &quot;app&quot;: &quot;Demo App B&quot;, 
             &quot;app_id&quot;: &quot;demo_app_b&quot;, 
-            &quot;host&quot;: &quot;host1.example.com&quot;, 
+            &quot;host&quot;: &quot;host2.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1330204537, 
-            &quot;ver&quot;: &quot;1.0&quot;
-        }, 
-        {
-            &quot;app&quot;: &quot;Demo App A&quot;, 
-            &quot;app_id&quot;: &quot;demo_app_a&quot;, 
-            &quot;host&quot;: &quot;host1.example.com&quot;, 
-            &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
-            &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1330204537, 
-            &quot;ver&quot;: &quot;1.0&quot;
+            &quot;last_update&quot;: 1330819803, 
+            &quot;ver&quot;: &quot;2.0&quot;
         }
     ]
 }
@@ -357,20 +358,20 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
         {
             &quot;app&quot;: &quot;Demo App A&quot;, 
             &quot;app_id&quot;: &quot;demo_app_a&quot;, 
-            &quot;host&quot;: &quot;host1.example.com&quot;, 
+            &quot;host&quot;: &quot;host2.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1330204537, 
-            &quot;ver&quot;: &quot;1.0&quot;
+            &quot;last_update&quot;: 1330819803, 
+            &quot;ver&quot;: &quot;2.0&quot;
         }, 
         {
             &quot;app&quot;: &quot;Demo App A&quot;, 
             &quot;app_id&quot;: &quot;demo_app_a&quot;, 
-            &quot;host&quot;: &quot;host2.example.com&quot;, 
+            &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1330204537, 
-            &quot;ver&quot;: &quot;2.0&quot;
+            &quot;last_update&quot;: 1330819803, 
+            &quot;ver&quot;: &quot;1.0&quot;
         }
     ]
 }
@@ -389,7 +390,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1330204537, 
+            &quot;last_update&quot;: 1330819803, 
             &quot;ver&quot;: &quot;1.0&quot;
         }
     ]
@@ -409,7 +410,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1330204537, 
+            &quot;last_update&quot;: 1330819803, 
             &quot;ver&quot;: &quot;1.0&quot;
         }, 
         {
@@ -418,7 +419,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1330204537, 
+            &quot;last_update&quot;: 1330819803, 
             &quot;ver&quot;: &quot;1.0&quot;
         }
     ]
@@ -435,7 +436,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1330204537, 
+            &quot;last_update&quot;: 1330819803, 
             &quot;ver&quot;: &quot;1.0&quot;
         }
     ]
@@ -458,7 +459,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;host&quot;: &quot;terminal.example.com&quot;, 
             &quot;host_ip&quot;: &quot;::1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1330204538, 
+            &quot;last_update&quot;: 1330819804, 
             &quot;ver&quot;: &quot;1.0&quot;
         }
     ]
@@ -496,6 +497,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
 <li>Python update module</li>
 <li>UDP listener</li>
 <li>in-memory <tt class="docutils literal"><span class="pre">Version</span></tt> storage</li>
+<li>sqlite backed <tt class="docutils literal"><span class="pre">Version</span></tt> storage (-sqlite)</li>
 <li>REST API</li>
 <li>command line update client (and golang client API)</li>
 <li>optionally only keep recent updates (-trim)</li>
@@ -504,13 +506,8 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
 <div class="section" id="planned">
 <h3>Planned<a class="headerlink" href="#planned" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>implement version timeout and config (only active versions kept)</li>
-<li>create a persistent store for the version data<ul>
-<li>sqlite</li>
-<li>redis</li>
-<li>goleveldb</li>
-</ul>
-</li>
+<li>tests - keep list of test functions centrally, iterate in the store tests</li>
+<li>UpdateStore interface: at error results to most methods</li>
 <li>write quickstart documentation</li>
 <li>python client: add docs</li>
 <li>add API support for returning a single AppSummary or HostSummary</li>
@@ -533,6 +530,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
 <div class="section" id="possible">
 <h3>Possible<a class="headerlink" href="#possible" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
+<li>implement other persistence options: redis, etc</li>
 <li>python client: add start_update_thread()</li>
 <li>include relative URLs to queries in API results<ul>
 <li>overview &#8211;&gt; summary</li>
