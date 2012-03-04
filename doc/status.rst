@@ -8,6 +8,7 @@ Implemented
 * Python update module
 * UDP listener
 * in-memory ``Version`` storage
+* sqlite backed ``Version`` storage (-sqlite)
 * REST API
 * command line update client (and golang client API)
 * optionally only keep recent updates (-trim)
@@ -15,15 +16,9 @@ Implemented
 Planned
 -------
 
-* create a persistent store for the version data
-
-  * sqlite
-  * redis
-  * X - goleveldb - no on-disk persistence yet
-
-* write quickstart documentation
-* tests - keep list of test functions centrally iterate in the store tests
+* tests - keep list of test functions centrally, iterate in the store tests
 * UpdateStore interface: at error results to most methods
+* write quickstart documentation
 * python client: add docs
 * add API support for returning a single AppSummary or HostSummary
 * test go get & convert to github import paths
@@ -44,6 +39,7 @@ Planned
 Possible
 --------
 
+* implement other persistence options: redis, etc
 * python client: add start_update_thread()
 * include relative URLs to queries in API results
 

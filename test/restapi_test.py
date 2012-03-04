@@ -3,6 +3,7 @@ import os
 import pprint
 import subprocess
 import sys
+import tempfile
 import time
 import urlparse
 
@@ -17,13 +18,15 @@ port = 7788
 endpoint = "http://127.0.0.1:%s/api/v1/"
 
 
-class TestPartisci:
+class TestPartisci(object):
+    command = ["partiscid",
+                "--port=%s" % port,
+                "--listenip=%s" % server,
+                "--danger"]
+
     def setup_class(self):
         self.port = port
-        self.server = subprocess.Popen(["partiscid",
-                                        "--port=%s" % self.port,
-                                        "--listenip=%s" % server,
-                                        "--danger"])
+        self.server = subprocess.Popen(self.command)
         url = urlparse.urljoin(endpoint % self.port, "../../debug/vars")
         for i in range(100):
             try:
@@ -355,3 +358,15 @@ class TestPartisci:
         data = {"app": "", "ver": "ver"}
         data = json.dumps(data)
         helper(data)
+
+
+print tempfile.gettempdir()
+class TestPartisciSQLite(TestPartisci):
+    command = ["partiscid",
+                "--port=%s" % port,
+                "--listenip=%s" % server,
+                #"--sqlite=exp.sqlite",
+                "--sqlite=%s" % os.path.join(tempfile.gettempdir(), 
+                                            "test_partisci.sqlite"),
+                "--danger"]
+

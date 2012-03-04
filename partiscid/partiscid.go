@@ -15,6 +15,7 @@ import (
 	"net/http"
 	"os"
 	"partisci/memstore"
+	"partisci/sqlitestore"
 	"partisci/store"
 	"partisci/version"
 	"runtime"
@@ -30,6 +31,7 @@ var listenip *string = flag.String("listenip", "", "listen only on this IP (defa
 var verbose *bool = flag.Bool("v", false, "log more details")
 var danger *bool = flag.Bool("danger", false, "enable dangerous commands for testing")
 var trim *int64 = flag.Int64("trim", 0, "keep Versons until this many seconds have passed, then discard")
+var sqlite *string = flag.String("sqlite", "", "use SQLite for persistence and store db at this path")
 
 func init() {
 	ver := expvar.NewString("version")
@@ -250,12 +252,22 @@ func main() {
 	}
 	l.Print("listening on: ", conn.LocalAddr())
 
+    var st store.UpdateStore
+	if *sqlite == "" {
+		st = memstore.NewMemoryStore()
+	} else {
+		st, err = sqlitestore.NewSQLiteStore(*sqlite)
+		if err != nil {
+			l.Fatalf("Error opening SQLite database at:\n  %v\n  %v",
+				*sqlite, err)
+		}
+	}
+
 	updates := make(chan version.Version)
-	store := memstore.NewMemoryStore()
-	ss := storeServer{store, updates, *danger}
-	go processUpdates(updates, store)
+	ss := storeServer{st, updates, *danger}
+	go processUpdates(updates, st)
 	go handleUpdateUDP(conn, updates)
-	go trimWorker(*trim, store)
+	go trimWorker(*trim, st)
 
 	apiRoot := http.StripPrefix("/api/v1/", ss)
 	http.Handle("/api/v1/", apiRoot)
