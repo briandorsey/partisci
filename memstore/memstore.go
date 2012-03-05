@@ -33,12 +33,12 @@ func (s *MemoryStore) App(AppId string) (as version.AppSummary, ok bool) {
 	return
 }
 
-func (s *MemoryStore) Apps() []version.AppSummary {
-	vs := make([]version.AppSummary, 0)
-	for _, v := range s.app {
-		vs = append(vs, v)
+func (s *MemoryStore) Apps() (as []version.AppSummary, err error) {
+	as = make([]version.AppSummary, 0)
+	for _, a := range s.app {
+		as = append(as, a)
 	}
-	return vs
+	return as, nil
 }
 
 func (s *MemoryStore) Host(Host string) (hs version.HostSummary, ok bool) {
@@ -46,12 +46,12 @@ func (s *MemoryStore) Host(Host string) (hs version.HostSummary, ok bool) {
 	return
 }
 
-func (s *MemoryStore) Hosts() []version.HostSummary {
-	vs := make([]version.HostSummary, 0)
-	for _, v := range s.host {
-		vs = append(vs, v)
+func (s *MemoryStore) Hosts() (hs []version.HostSummary, err error) {
+	hs = make([]version.HostSummary, 0)
+	for _, h := range s.host {
+		hs = append(hs, h)
 	}
-	return vs
+	return hs, nil
 }
 
 func (s *MemoryStore) Versions(app_id string,

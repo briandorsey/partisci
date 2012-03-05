@@ -163,7 +163,10 @@ func (ss *storeServer) ApiVersion(w http.ResponseWriter, req *http.Request) {
 
 func (ss storeServer) ApiApp(w http.ResponseWriter, req *http.Request) {
 	r := NewDataRes()
-	apps := ss.store.Apps()
+	apps, err := ss.store.Apps()
+	if handleError(err, "ApiApp", w, http.StatusInternalServerError) {
+		return
+	}
 	for _, app := range apps {
 		r.Data = append(r.Data, app)
 	}
@@ -176,7 +179,10 @@ func (ss storeServer) ApiApp(w http.ResponseWriter, req *http.Request) {
 
 func (ss storeServer) ApiHost(w http.ResponseWriter, req *http.Request) {
 	r := NewDataRes()
-	hosts := ss.store.Hosts()
+	hosts, err := ss.store.Hosts()
+	if handleError(err, "ApiHost", w, http.StatusInternalServerError) {
+		return
+	}
 	for _, host := range hosts {
 		r.Data = append(r.Data, host)
 	}

@@ -18,7 +18,7 @@ type UpdateStore interface {
 
 	// Apps returns summary information about each application, 
 	// based on the known Versions.
-	Apps() (vs []version.AppSummary)
+	Apps() (vs []version.AppSummary, err error)
 
 	// Host returns a HostSummary for the given Host.
 	// The value of ok follows map indexing conventions: 
@@ -27,7 +27,7 @@ type UpdateStore interface {
 
 	// Hosts returns summary information about each host, 
 	// based on the known Versions.
-	Hosts() (vs []version.HostSummary)
+	Hosts() (vs []version.HostSummary, err error)
 
 	// Versions returns full Version structs where their values match app_id, host
 	// and ver. Zero length strings are considered a match for all Versions.

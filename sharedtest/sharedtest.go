@@ -105,15 +105,15 @@ func USTestTrim(s store.UpdateStore, t *testing.T) {
 		t.Fatal("before: version count - expected: 2, actual: ", l)
 	}
 	if l, err := s.Hosts(); len(l) != 2 {
-        if err != nil {
-            t.Fatal(err)
-        }
+		if err != nil {
+			t.Fatal(err)
+		}
 		t.Fatal("before: host count - expected: 2, actual: ", len(l))
 	}
 	if l, err := s.Apps(); len(l) != 2 {
-        if err != nil {
-            t.Fatal(err)
-        }
+		if err != nil {
+			t.Fatal(err)
+		}
 		t.Fatal("before: app count - expected: 2, actual: ", len(l))
 	}
 
@@ -126,15 +126,15 @@ func USTestTrim(s store.UpdateStore, t *testing.T) {
 		t.Fatal("after: version count - expected: 1, actual: ", l)
 	}
 	if l, err := s.Hosts(); len(l) != 1 {
-        if err != nil {
-            t.Fatal(err)
-        }
+		if err != nil {
+			t.Fatal(err)
+		}
 		t.Fatal("after: host count - expected: 1, actual: ", len(l))
 	}
 	if l, err := s.Apps(); len(l) != 1 {
-        if err != nil {
-            t.Fatal(err)
-        }
+		if err != nil {
+			t.Fatal(err)
+		}
 		t.Fatal("after: app count - expected: 1, actual: ", len(l))
 	}
 
@@ -147,16 +147,16 @@ func USTestTrim(s store.UpdateStore, t *testing.T) {
 		t.Fatal("after all: version count - expected: 0, actual: ", l)
 	}
 	if l, err := s.Hosts(); len(l) != 0 {
-        if err != nil {
-            t.Fatal(err)
-        }
+		if err != nil {
+			t.Fatal(err)
+		}
 		t.Fatal(l)
 		t.Fatal("after all: host count - expected: 0, actual: ", len(l))
 	}
 	if l, err := s.Apps(); len(l) != 0 {
-        if err != nil {
-            t.Fatal(err)
-        }
+		if err != nil {
+			t.Fatal(err)
+		}
 		t.Fatal(l)
 		t.Fatal("after all: app count - expected: 0, actual: ", len(l))
 	}

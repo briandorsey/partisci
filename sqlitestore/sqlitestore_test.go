@@ -30,7 +30,7 @@ func prepStore(t *testing.T) (s *SQLiteStore) {
 	if err != nil {
 		t.Fatal(err)
 	}
-    return s
+	return s
 }
 
 func TestNewSQLiteStore(t *testing.T) {
@@ -62,21 +62,21 @@ func TestNewSQLiteStore(t *testing.T) {
 }
 
 func TestAppSummary(t *testing.T) {
-    s := prepStore(t)
+	s := prepStore(t)
 	sharedtest.USTestAppSummary(s, t)
 }
 
 func TestHostSummary(t *testing.T) {
-    s := prepStore(t)
+	s := prepStore(t)
 	sharedtest.USTestHostSummary(s, t)
 }
 
 func TestClearUpdate(t *testing.T) {
-    s := prepStore(t)
+	s := prepStore(t)
 	sharedtest.USTestClearUpdate(s, t)
 }
 
 func TestTrim(t *testing.T) {
-    s := prepStore(t)
+	s := prepStore(t)
 	sharedtest.USTestTrim(s, t)
 }

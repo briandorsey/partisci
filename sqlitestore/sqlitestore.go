@@ -63,16 +63,14 @@ func (s *SQLiteStore) App(AppId string) (as version.AppSummary, ok bool) {
 	return as, true
 }
 
-func (s *SQLiteStore) Apps() []version.AppSummary {
-	as := make([]version.AppSummary, 0)
+func (s *SQLiteStore) Apps() (as []version.AppSummary, err error) {
+	as = make([]version.AppSummary, 0)
 	rows, err := s.db.Query(`
         select app_id, max(app), max(last_update), count(host)
         from version
         group by app_id;`)
 	if err != nil {
-		fmt.Println(err)
-		// TODO: should return error
-		return as
+		return nil, err
 	}
 	defer rows.Close()
 
@@ -80,12 +78,11 @@ func (s *SQLiteStore) Apps() []version.AppSummary {
 		a := version.AppSummary{}
 		err = rows.Scan(&a.AppId, &a.App, &a.LastUpdate, &a.HostCount)
 		if err != nil {
-			fmt.Println(err)
-			// TODO: should return error
+			return nil, err
 		}
 		as = append(as, a)
 	}
-	return as
+	return as, nil
 }
 
 func (s *SQLiteStore) Host(Host string) (hs version.HostSummary, ok bool) {
@@ -102,16 +99,14 @@ func (s *SQLiteStore) Host(Host string) (hs version.HostSummary, ok bool) {
 	return hs, true
 }
 
-func (s *SQLiteStore) Hosts() []version.HostSummary {
-	hs := make([]version.HostSummary, 0)
+func (s *SQLiteStore) Hosts() (hs []version.HostSummary, err error) {
+	hs = make([]version.HostSummary, 0)
 	rows, err := s.db.Query(`
         select host, max(last_update), count(app_id)
         from version
         group by host;`)
 	if err != nil {
-		fmt.Println(err)
-		// TODO: should return error
-		return hs
+		return nil, err
 	}
 	defer rows.Close()
 
@@ -119,12 +114,11 @@ func (s *SQLiteStore) Hosts() []version.HostSummary {
 		h := version.HostSummary{}
 		err = rows.Scan(&h.Host, &h.LastUpdate, &h.AppCount)
 		if err != nil {
-			fmt.Println(err)
-			// TODO: should return error
+			return nil, err
 		}
 		hs = append(hs, h)
 	}
-	return hs
+	return hs, nil
 }
 
 func (s *SQLiteStore) Update(v version.Version) (err error) {
