@@ -16,10 +16,12 @@ Implemented
 Planned
 -------
 
-* tests - keep list of test functions centrally, iterate in the store tests
-* UpdateStore interface: at error results to most methods
+* UpdateStore interface: add error results to most methods
 * write quickstart documentation
+* add commands to ``partisci`` client for most API calls
 * python client: add docs
+* document API error results
+* review API consistency, eg: app_id -> AppId
 * add API support for returning a single AppSummary or HostSummary
 * test go get & convert to github import paths
 * experiment with cross-compiling windows/linux

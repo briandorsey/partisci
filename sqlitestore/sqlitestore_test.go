@@ -23,6 +23,16 @@ func cleanup(path string) {
 	}
 }
 
+func prepStore(t *testing.T) (s *SQLiteStore) {
+	path := filepath.Join(os.TempDir(), dbPath)
+	cleanup(path)
+	s, err := NewSQLiteStore(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+    return s
+}
+
 func TestNewSQLiteStore(t *testing.T) {
 	path := filepath.Join(os.TempDir(), dbPath)
 	log.Print(path)
@@ -52,41 +62,21 @@ func TestNewSQLiteStore(t *testing.T) {
 }
 
 func TestAppSummary(t *testing.T) {
-	path := filepath.Join(os.TempDir(), dbPath)
-	cleanup(path)
-	s, err := NewSQLiteStore(path)
-	if err != nil {
-		t.Fatal(err)
-	}
+    s := prepStore(t)
 	sharedtest.USTestAppSummary(s, t)
 }
 
 func TestHostSummary(t *testing.T) {
-	path := filepath.Join(os.TempDir(), dbPath)
-	cleanup(path)
-	s, err := NewSQLiteStore(path)
-	if err != nil {
-		t.Fatal(err)
-	}
+    s := prepStore(t)
 	sharedtest.USTestHostSummary(s, t)
 }
 
 func TestClearUpdate(t *testing.T) {
-	path := filepath.Join(os.TempDir(), dbPath)
-	cleanup(path)
-	s, err := NewSQLiteStore(path)
-	if err != nil {
-		t.Fatal(err)
-	}
+    s := prepStore(t)
 	sharedtest.USTestClearUpdate(s, t)
 }
 
 func TestTrim(t *testing.T) {
-	path := filepath.Join(os.TempDir(), dbPath)
-	cleanup(path)
-	s, err := NewSQLiteStore(path)
-	if err != nil {
-		t.Fatal(err)
-	}
+    s := prepStore(t)
 	sharedtest.USTestTrim(s, t)
 }
