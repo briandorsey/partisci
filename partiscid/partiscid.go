@@ -73,8 +73,12 @@ func trimWorker(t int64, store store.UpdateStore) {
 	ticker := time.NewTicker(60 * time.Second)
 	for {
 		<-ticker.C
-		if removed := store.Trim(time.Now().Add(-window)); removed > 0 {
-			l.Printf("TRIM: removed %v old updates", removed)
+		if removed, err := store.Trim(time.Now().Add(-window)); removed > 0 {
+			if err == nil {
+				l.Printf("TRIM: ERROR: %v", err)
+			} else {
+				l.Printf("TRIM: removed %v old updates", removed)
+			}
 		}
 	}
 }
@@ -150,7 +154,10 @@ func (ss *storeServer) ApiVersion(w http.ResponseWriter, req *http.Request) {
 	app_id := req.FormValue("app_id")
 	host := req.FormValue("host")
 	ver := req.FormValue("ver")
-	vers := ss.store.Versions(app_id, host, ver)
+	vers, err := ss.store.Versions(app_id, host, ver)
+	if handleError(err, "ApiVersion", w, http.StatusInternalServerError) {
+		return
+	}
 	for _, ver := range vers {
 		r.Data = append(r.Data, ver)
 	}
@@ -196,7 +203,10 @@ func (ss storeServer) ApiHost(w http.ResponseWriter, req *http.Request) {
 func (ss *storeServer) ApiClear(w http.ResponseWriter, req *http.Request) {
 	if req.Method == "POST" {
 		l.Print("WARNING: Version database cleared via _danger/clear/ hook.")
-		ss.store.Clear()
+		err := ss.store.Clear()
+		if handleError(err, "ApiClear", w, http.StatusInternalServerError) {
+			return
+		}
 	} else {
 		m := "ERROR: ApiClear: only accepts POST requests"
 		sendErrorRes(m, w, http.StatusMethodNotAllowed)

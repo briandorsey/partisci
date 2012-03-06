@@ -12,7 +12,10 @@ func init() {
 
 func ExampleMemoryStore_Versions_all() {
 	// returns all known Version structs
-	vers := s.Versions("", "", "")
+	vers, err := s.Versions("", "", "")
+	if err != nil {
+		// handle error
+	}
 	for v := range vers {
 		fmt.Println(v)
 	}
@@ -20,7 +23,10 @@ func ExampleMemoryStore_Versions_all() {
 
 func ExampleMemoryStore_Versions_appId() {
 	// returns all known Version structs for a specific AppId
-	vers := s.Versions("app1", "", "")
+	vers, err := s.Versions("app1", "", "")
+	if err != nil {
+		// handle error
+	}
 	for v := range vers {
 		fmt.Println(v)
 	}

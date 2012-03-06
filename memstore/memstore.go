@@ -54,9 +54,9 @@ func (s *MemoryStore) Hosts() (hs []version.HostSummary, err error) {
 	return hs, nil
 }
 
-func (s *MemoryStore) Versions(app_id string,
-	host string, ver string) []version.Version {
-	vs := make([]version.Version, 0)
+func (s *MemoryStore) Versions(app_id string, host string, ver string) (
+	vs []version.Version, err error) {
+	vs = make([]version.Version, 0)
 	for _, v := range s.version {
 		if (len(app_id) == 0 || app_id == v.AppId) &&
 			(len(host) == 0 || host == v.Host) &&
@@ -64,7 +64,7 @@ func (s *MemoryStore) Versions(app_id string,
 			vs = append(vs, v)
 		}
 	}
-	return vs
+	return vs, nil
 }
 
 func (s *MemoryStore) Update(v version.Version) (err error) {
@@ -109,11 +109,12 @@ func (s *MemoryStore) Update(v version.Version) (err error) {
 	return
 }
 
-func (s *MemoryStore) Clear() {
+func (s *MemoryStore) Clear() (err error) {
 	initMemoryStore(s)
+	return nil
 }
 
-func (s *MemoryStore) Trim(t time.Time) (c uint64) {
+func (s *MemoryStore) Trim(t time.Time) (c uint64, err error) {
 	s.threshold = t
 	for k, v := range s.version {
 		if v.ExactUpdate.Before(t) {
@@ -135,5 +136,5 @@ func (s *MemoryStore) Trim(t time.Time) (c uint64) {
 			}
 		}
 	}
-	return
+	return c, nil
 }

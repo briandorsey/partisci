@@ -65,22 +65,36 @@ func USTestHostSummary(s store.UpdateStore, t *testing.T) {
 
 // test Clear() & Update() interactions
 func USTestClearUpdate(s store.UpdateStore, t *testing.T) {
-	if len(s.Versions("", "", "")) > 0 {
-		t.Error("Versions should be empty")
+	if vs, err := s.Versions("", "", ""); len(vs) > 0 {
+		if err != nil {
+			t.Fatal(err)
+		}
+		t.Error("Versions should be empty, len was: ", len(vs))
 	}
 	v := *new(version.Version)
 	v.Prepare()
 	s.Update(v)
-	if len(s.Versions("", "", "")) != 1 {
+	if vs, err := s.Versions("", "", ""); len(vs) != 1 {
+		if err != nil {
+			t.Fatal(err)
+		}
 		t.Error(v.ExactUpdate, v.LastUpdate)
-		t.Error("Versions should have one entry")
+		t.Error("Versions should have one entry, len was: ", len(vs))
 	}
-	s.Clear()
-	if len(s.Versions("", "", "")) > 0 {
-		t.Error("Versions should be empty")
+	if err := s.Clear(); err != nil {
+		t.Fatal(err)
+	}
+	if vs, err := s.Versions("", "", ""); len(vs) > 0 {
+		if err != nil {
+			t.Fatal(err)
+		}
+		t.Error("Versions should be empty, len was: ", len(vs))
 	}
 	s.Update(v)
-	if len(s.Versions("", "", "")) > 0 {
+	if vs, err := s.Versions("", "", ""); len(vs) > 0 {
+		if err != nil {
+			t.Fatal(err)
+		}
 		t.Error("updates older than threshold should be discarded")
 	}
 }
@@ -101,8 +115,11 @@ func USTestTrim(s store.UpdateStore, t *testing.T) {
 	s.Update(v2)
 
 	// sanity check
-	if l := len(s.Versions("", "", "")); l != 3 {
-		t.Fatal("before: version count - expected: 2, actual: ", l)
+	if vs, err := s.Versions("", "", ""); len(vs) != 3 {
+		if err != nil {
+			t.Fatal(err)
+		}
+		t.Fatal("before: version count - expected: 2, actual: ", len(vs))
 	}
 	if l, err := s.Hosts(); len(l) != 2 {
 		if err != nil {
@@ -118,12 +135,18 @@ func USTestTrim(s store.UpdateStore, t *testing.T) {
 	}
 
 	// trim every version before 1 second in the future of one version
-	count := s.Trim(v2.ExactUpdate.Add(time.Duration(1 * time.Second)))
+	count, err := s.Trim(v2.ExactUpdate.Add(time.Duration(1 * time.Second)))
+	if err != nil {
+		t.Fatal(err)
+	}
 	if count != 2 {
 		t.Fatal("after: trim should have removed 2 versions")
 	}
-	if l := len(s.Versions("", "", "")); l != 1 {
-		t.Fatal("after: version count - expected: 1, actual: ", l)
+	if vs, err := s.Versions("", "", ""); len(vs) != 1 {
+		if err != nil {
+			t.Fatal(err)
+		}
+		t.Fatal("after: version count - expected: 1, actual: ", len(vs))
 	}
 	if l, err := s.Hosts(); len(l) != 1 {
 		if err != nil {
@@ -139,12 +162,18 @@ func USTestTrim(s store.UpdateStore, t *testing.T) {
 	}
 
 	// trim every version
-	count = s.Trim(v2.ExactUpdate.Add(time.Duration(20 * time.Second)))
+	count, err = s.Trim(v2.ExactUpdate.Add(time.Duration(20 * time.Second)))
+	if err != nil {
+		t.Fatal(err)
+	}
 	if count != 1 {
 		t.Fatal("after all: trim should have removed the last one version")
 	}
-	if l := len(s.Versions("", "", "")); l != 0 {
-		t.Fatal("after all: version count - expected: 0, actual: ", l)
+	if vs, err := s.Versions("", "", ""); len(vs) != 0 {
+		if err != nil {
+			t.Fatal(err)
+		}
+		t.Fatal("after all: version count - expected: 0, actual: ", len(vs))
 	}
 	if l, err := s.Hosts(); len(l) != 0 {
 		if err != nil {

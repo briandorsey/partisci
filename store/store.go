@@ -31,11 +31,12 @@ type UpdateStore interface {
 
 	// Versions returns full Version structs where their values match app_id, host
 	// and ver. Zero length strings are considered a match for all Versions.
-	Versions(app_id string, host string, ver string) (vs []version.Version)
+	Versions(app_id string, host string, ver string) (
+		vs []version.Version, err error)
 
 	// Clear empties the MemoryStore.
-	Clear()
+	Clear() (err error)
 
 	// Trim removes old versions.
-	Trim(t time.Time) (c uint64)
+	Trim(t time.Time) (c uint64, err error)
 }

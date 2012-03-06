@@ -4,6 +4,7 @@ package sqlitestore
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	_ "github.com/mattn/go-sqlite3"
 	"partisci/version"
@@ -134,9 +135,9 @@ func (s *SQLiteStore) Update(v version.Version) (err error) {
 	return err
 }
 
-func (s *SQLiteStore) Versions(app_id string,
-	host string, ver string) []version.Version {
-	vs := make([]version.Version, 0)
+func (s *SQLiteStore) Versions(app_id string, host string, ver string) (
+	vs []version.Version, err error) {
+	vs = make([]version.Version, 0)
 	if app_id == "" {
 		app_id = "%"
 	}
@@ -155,9 +156,7 @@ func (s *SQLiteStore) Versions(app_id string,
             and ver like ?;`,
 		app_id, host, ver)
 	if err != nil {
-		fmt.Println(err)
-		// TODO: should return error
-		return vs
+		return nil, err
 	}
 	defer rows.Close()
 
@@ -167,48 +166,41 @@ func (s *SQLiteStore) Versions(app_id string,
 		err = rows.Scan(&v.AppId, &v.App, &v.Ver, &v.Host,
 			&v.Instance, &v.HostIP, &v.LastUpdate, &d)
 		if err != nil {
-			fmt.Println(err)
-			// TODO: should return error
+			return nil, err
 		}
 		v.ExactUpdate = time.Unix(0, d)
 		vs = append(vs, v)
 	}
-	return vs
+	return vs, nil
 }
 
-func (s *SQLiteStore) Clear() {
-	_, err := s.db.Exec(`delete from version;`)
+func (s *SQLiteStore) Clear() (err error) {
+	_, err = s.db.Exec(`delete from version;`)
 	if err != nil {
-		fmt.Println(err)
-		// TODO: should return error
-		return
+		return err
 	}
 	s.threshold = time.Now()
+	return nil
 }
 
-func (s *SQLiteStore) Trim(t time.Time) (c uint64) {
+func (s *SQLiteStore) Trim(t time.Time) (c uint64, err error) {
 	c = 0
 	un := t.UnixNano()
 	r, err := s.db.Exec(`delete from version where exact_update < ?;`, un)
 	if err != nil {
-		fmt.Println(err)
-		// TODO: should return error
-		return
+		return 0, err
 	}
 	ra, err := r.RowsAffected()
 	if err != nil {
-		fmt.Println(err)
-		// TODO: should return error
-		return
+		return 0, nil
 	}
-	fmt.Println(ra)
 	if ra >= 0 {
 		c = uint64(ra)
 	} else {
-		// TODO: should return error
-		return
+		return 0, errors.New(fmt.Sprint(
+			"negative value returned from RowsAffected(): ", ra))
 	}
-	return c
+	return c, nil
 }
 
 var sqls = []string{
