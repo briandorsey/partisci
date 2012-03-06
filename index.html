@@ -42,10 +42,6 @@
             
   <div class="section" id="partisci-s-documentation">
 <h1>Partisci&#8217;s documentation<a class="headerlink" href="#partisci-s-documentation" title="Permalink to this headline">¶</a></h1>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">This project is using readme driven development and has not been fully implemented yet.</p>
-</div>
 <p>Where is your software installed?  Is version X still in use anywhere?</p>
 <p>Partisci answers these questions by collecting updates from your programs and providing a REST API to access the data.</p>
 <p>Partisci can answer these questions:</p>
@@ -118,8 +114,6 @@ sent a version update within the number of seconds specified by <tt class="docut
 <p>The main command is <tt class="docutils literal"><span class="pre">update</span></tt>, which sends a single custom update message:</p>
 <div class="highlight-text"><div class="highlight"><pre>$ partisci update &quot;Demo App A&quot; 1.0 host1.example.com 0
 command: UPDATE
-sending version update to localhost:7777
-{&quot;app&quot;:&quot;Demo App A&quot;,&quot;ver&quot;:&quot;1.0&quot;,&quot;host&quot;:&quot;host1.example.com&quot;,&quot;instance&quot;:0}
 </pre></div>
 </div>
 <p><tt class="docutils literal"><span class="pre">partisci</span></tt> also supports the following flags:</p>
@@ -129,6 +123,69 @@ Usage of partisci:
 Options:
   -port=7777: partiscid port
   -server=&quot;localhost&quot;: partiscid address (IP or DNS name)
+</pre></div>
+</div>
+</div>
+</div>
+<span id="document-clients"></span><div class="section" id="clients">
+<h2>Clients<a class="headerlink" href="#clients" title="Permalink to this headline">¶</a></h2>
+<p>Partisci ships with clients for several languages.</p>
+<div class="section" id="python">
+<h3>python<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h3>
+<p>The <tt class="docutils literal"><span class="pre">pypartisci</span></tt> module implements an simple client which supports updates
+via either UDP or HTTP. It does not support the full REST API.</p>
+<p>The most applications should send updates via UDP:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pypartisci</span>
+
+<span class="n">SERVER</span> <span class="o">=</span> <span class="s">&quot;localhost&quot;</span>
+<span class="n">PORT</span> <span class="o">=</span> <span class="mi">7777</span>
+<span class="n">APP</span> <span class="o">=</span> <span class="s">&quot;Python UDP Example&quot;</span>
+<span class="n">VER</span> <span class="o">=</span> <span class="s">&quot;1.0&quot;</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">pypartisci</span><span class="o">.</span><span class="n">send_update</span><span class="p">(</span><span class="n">SERVER</span><span class="p">,</span> <span class="n">PORT</span><span class="p">,</span> <span class="n">APP</span><span class="p">,</span> <span class="n">VER</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If an application needs to be sure a version update is recieved,
+HTTP is also supported. If the server is unreachable for any reason,
+this function will raise an exception:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pypartisci</span>
+
+<span class="n">SERVER</span> <span class="o">=</span> <span class="s">&quot;localhost&quot;</span>
+<span class="n">PORT</span> <span class="o">=</span> <span class="mi">7777</span>
+<span class="n">APP</span> <span class="o">=</span> <span class="s">&quot;Python UDP Example&quot;</span>
+<span class="n">VER</span> <span class="o">=</span> <span class="s">&quot;1.0&quot;</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">pypartisci</span><span class="o">.</span><span class="n">send_update_http</span><span class="p">(</span><span class="n">SERVER</span><span class="p">,</span> <span class="n">PORT</span><span class="p">,</span> <span class="n">APP</span><span class="p">,</span> <span class="n">VER</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Both functions also accept host and instance parameters:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">send_update</span><span class="p">(</span><span class="n">SERVER</span><span class="p">,</span> <span class="n">PORT</span><span class="p">,</span> <span class="n">APP</span><span class="p">,</span> <span class="n">VER</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">instance</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">PORT</span></tt> and <tt class="docutils literal"><span class="pre">instance</span></tt> variables should be integers, all others are
+strings.</p>
+</div>
+<div class="section" id="go">
+<h3>go<a class="headerlink" href="#go" title="Permalink to this headline">¶</a></h3>
+<p>The golang client supports sending updates via UDP:</p>
+<div class="highlight-go"><div class="highlight"><pre><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+	<span class="s">&quot;log&quot;</span>
+	<span class="s">&quot;partisci/clients/go/client&quot;</span>
+	<span class="s">&quot;partisci/version&quot;</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="n">v</span> <span class="p">:=</span> <span class="n">version</span><span class="p">.</span><span class="n">Version</span><span class="p">{</span><span class="n">App</span><span class="p">:</span> <span class="s">&quot;app&quot;</span><span class="p">,</span> <span class="n">Ver</span><span class="p">:</span> <span class="s">&quot;1.2.3&quot;</span><span class="p">,</span>
+		<span class="n">Host</span><span class="p">:</span> <span class="s">&quot;example.com&quot;</span><span class="p">,</span> <span class="n">Instance</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+	<span class="n">err</span> <span class="p">:=</span> <span class="n">client</span><span class="p">.</span><span class="n">SendUDP</span><span class="p">(</span><span class="s">&quot;localhost&quot;</span><span class="p">,</span> <span class="mi">7777</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">err</span> <span class="p">!=</span> <span class="n">nil</span> <span class="p">{</span>
+		<span class="n">log</span><span class="p">.</span><span class="n">Fatal</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+	<span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </div>
@@ -268,13 +325,13 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;app&quot;: &quot;Demo App B&quot;, 
             &quot;app_id&quot;: &quot;demo_app_b&quot;, 
             &quot;host_count&quot;: 2, 
-            &quot;last_update&quot;: 1330819803
+            &quot;last_update&quot;: 1331067914
         }, 
         {
             &quot;app&quot;: &quot;Demo App A&quot;, 
             &quot;app_id&quot;: &quot;demo_app_a&quot;, 
             &quot;host_count&quot;: 2, 
-            &quot;last_update&quot;: 1330819803
+            &quot;last_update&quot;: 1331067914
         }
     ]
 }
@@ -289,13 +346,13 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
     &quot;data&quot;: [
         {
             &quot;app_count&quot;: 2, 
-            &quot;host&quot;: &quot;host1.example.com&quot;, 
-            &quot;last_update&quot;: 1330819803
+            &quot;host&quot;: &quot;host2.example.com&quot;, 
+            &quot;last_update&quot;: 1331067914
         }, 
         {
             &quot;app_count&quot;: 2, 
-            &quot;host&quot;: &quot;host2.example.com&quot;, 
-            &quot;last_update&quot;: 1330819803
+            &quot;host&quot;: &quot;host1.example.com&quot;, 
+            &quot;last_update&quot;: 1331067914
         }
     ]
 }
@@ -309,39 +366,39 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
 {
     &quot;data&quot;: [
         {
-            &quot;app&quot;: &quot;Demo App B&quot;, 
-            &quot;app_id&quot;: &quot;demo_app_b&quot;, 
+            &quot;app&quot;: &quot;Demo App A&quot;, 
+            &quot;app_id&quot;: &quot;demo_app_a&quot;, 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1330819803, 
+            &quot;last_update&quot;: 1331067914, 
             &quot;ver&quot;: &quot;1.0&quot;
         }, 
         {
-            &quot;app&quot;: &quot;Demo App A&quot;, 
-            &quot;app_id&quot;: &quot;demo_app_a&quot;, 
+            &quot;app&quot;: &quot;Demo App B&quot;, 
+            &quot;app_id&quot;: &quot;demo_app_b&quot;, 
             &quot;host&quot;: &quot;host2.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1330819803, 
+            &quot;last_update&quot;: 1331067914, 
             &quot;ver&quot;: &quot;2.0&quot;
         }, 
         {
-            &quot;app&quot;: &quot;Demo App A&quot;, 
-            &quot;app_id&quot;: &quot;demo_app_a&quot;, 
+            &quot;app&quot;: &quot;Demo App B&quot;, 
+            &quot;app_id&quot;: &quot;demo_app_b&quot;, 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1330819803, 
+            &quot;last_update&quot;: 1331067914, 
             &quot;ver&quot;: &quot;1.0&quot;
         }, 
         {
-            &quot;app&quot;: &quot;Demo App B&quot;, 
-            &quot;app_id&quot;: &quot;demo_app_b&quot;, 
+            &quot;app&quot;: &quot;Demo App A&quot;, 
+            &quot;app_id&quot;: &quot;demo_app_a&quot;, 
             &quot;host&quot;: &quot;host2.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1330819803, 
+            &quot;last_update&quot;: 1331067914, 
             &quot;ver&quot;: &quot;2.0&quot;
         }
     ]
@@ -358,20 +415,20 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
         {
             &quot;app&quot;: &quot;Demo App A&quot;, 
             &quot;app_id&quot;: &quot;demo_app_a&quot;, 
-            &quot;host&quot;: &quot;host2.example.com&quot;, 
+            &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1330819803, 
-            &quot;ver&quot;: &quot;2.0&quot;
+            &quot;last_update&quot;: 1331067914, 
+            &quot;ver&quot;: &quot;1.0&quot;
         }, 
         {
             &quot;app&quot;: &quot;Demo App A&quot;, 
             &quot;app_id&quot;: &quot;demo_app_a&quot;, 
-            &quot;host&quot;: &quot;host1.example.com&quot;, 
+            &quot;host&quot;: &quot;host2.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1330819803, 
-            &quot;ver&quot;: &quot;1.0&quot;
+            &quot;last_update&quot;: 1331067914, 
+            &quot;ver&quot;: &quot;2.0&quot;
         }
     ]
 }
@@ -390,7 +447,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1330819803, 
+            &quot;last_update&quot;: 1331067914, 
             &quot;ver&quot;: &quot;1.0&quot;
         }
     ]
@@ -405,21 +462,21 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
 {
     &quot;data&quot;: [
         {
-            &quot;app&quot;: &quot;Demo App B&quot;, 
-            &quot;app_id&quot;: &quot;demo_app_b&quot;, 
-            &quot;host&quot;: &quot;host1.example.com&quot;, 
-            &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
-            &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1330819803, 
-            &quot;ver&quot;: &quot;1.0&quot;
-        }, 
-        {
             &quot;app&quot;: &quot;Demo App A&quot;, 
             &quot;app_id&quot;: &quot;demo_app_a&quot;, 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1330819803, 
+            &quot;last_update&quot;: 1331067914, 
+            &quot;ver&quot;: &quot;1.0&quot;
+        }, 
+        {
+            &quot;app&quot;: &quot;Demo App B&quot;, 
+            &quot;app_id&quot;: &quot;demo_app_b&quot;, 
+            &quot;host&quot;: &quot;host1.example.com&quot;, 
+            &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
+            &quot;instance&quot;: 0, 
+            &quot;last_update&quot;: 1331067914, 
             &quot;ver&quot;: &quot;1.0&quot;
         }
     ]
@@ -436,7 +493,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;host&quot;: &quot;host1.example.com&quot;, 
             &quot;host_ip&quot;: &quot;127.0.0.1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1330819803, 
+            &quot;last_update&quot;: 1331067914, 
             &quot;ver&quot;: &quot;1.0&quot;
         }
     ]
@@ -459,7 +516,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
             &quot;host&quot;: &quot;terminal.example.com&quot;, 
             &quot;host_ip&quot;: &quot;::1&quot;, 
             &quot;instance&quot;: 0, 
-            &quot;last_update&quot;: 1330819804, 
+            &quot;last_update&quot;: 1331067916, 
             &quot;ver&quot;: &quot;1.0&quot;
         }
     ]
@@ -503,14 +560,14 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
 <li>optionally only keep recent updates (-trim)</li>
 </ul>
 </div>
-<div class="section" id="planned">
-<h3>Planned<a class="headerlink" href="#planned" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="planned-soon">
+<h3>Planned - soon<a class="headerlink" href="#planned-soon" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>tests - keep list of test functions centrally, iterate in the store tests</li>
-<li>UpdateStore interface: at error results to most methods</li>
-<li>write quickstart documentation</li>
 <li>python client: add docs</li>
+<li>document API error results</li>
 <li>add API support for returning a single AppSummary or HostSummary</li>
+<li>rename? verstat? verstate?</li>
+<li>golang post about ok, err combination</li>
 <li>test go get &amp; convert to github import paths</li>
 <li>experiment with cross-compiling windows/linux</li>
 <li>Setup build system<ul>
@@ -520,6 +577,7 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
 <li>linux binaries</li>
 </ul>
 </li>
+<li>write quickstart documentation</li>
 <li>profile update loop (pass pointer to V instead of V?)</li>
 <li>profile high update load, add buffer to updates chan?</li>
 <li>profile <tt class="docutils literal"><span class="pre">Version</span></tt> queries</li>
@@ -527,17 +585,25 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
 <li>test server with MAXGOPROCS &gt; 1</li>
 </ul>
 </div>
+<div class="section" id="planned-later">
+<h3>Planned - later<a class="headerlink" href="#planned-later" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>add commands to <tt class="docutils literal"><span class="pre">partisci</span></tt> client for most API calls</li>
+<li>rename python module pypartisci &#8211;&gt; partisci</li>
+<li>PYPI package for python update module.</li>
+</ul>
+</div>
 <div class="section" id="possible">
 <h3>Possible<a class="headerlink" href="#possible" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>implement other persistence options: redis, etc</li>
-<li>python client: add start_update_thread()</li>
 <li>include relative URLs to queries in API results<ul>
 <li>overview &#8211;&gt; summary</li>
 <li>summary &#8211;&gt; versions/&amp;with?parameters</li>
 </ul>
 </li>
 <li>add overview API</li>
+<li>implement other persistence options: redis, etc</li>
+<li>python client: add start_update_thread()</li>
 <li>add <tt class="docutils literal"><span class="pre">app</span></tt> and <tt class="docutils literal"><span class="pre">host</span></tt> version summaries with counts of each version</li>
 <li>gzip responses when possible</li>
 <li>Add paging to REST results</li>
@@ -573,6 +639,11 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
 <li class="toctree-l2"><a class="reference internal" href="index.html#partisci">partisci</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#document-clients">Clients</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="index.html#python">python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#go">go</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="index.html#document-api">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="index.html#version-json">Version JSON</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#update-clients">Update clients</a></li>
@@ -594,7 +665,8 @@ and <tt class="docutils literal"><span class="pre">last_update</span></tt> is a 
 </li>
 <li class="toctree-l1"><a class="reference internal" href="index.html#document-status">Implementation Status</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="index.html#implemented">Implemented</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#planned">Planned</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#planned-soon">Planned - soon</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#planned-later">Planned - later</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#possible">Possible</a></li>
 </ul>
 </li>
