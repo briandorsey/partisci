@@ -54,13 +54,13 @@ func (s *MemoryStore) Hosts() (hs []version.HostSummary, err error) {
 	return hs, nil
 }
 
-func (s *MemoryStore) Versions(app_id string, host string, ver string) (
+func (s *MemoryStore) Versions(AppId string, Host string, Ver string) (
 	vs []version.Version, err error) {
 	vs = make([]version.Version, 0)
 	for _, v := range s.version {
-		if (len(app_id) == 0 || app_id == v.AppId) &&
-			(len(host) == 0 || host == v.Host) &&
-			(len(ver) == 0 || ver == v.Ver) {
+		if (len(AppId) == 0 || AppId == v.AppId) &&
+			(len(Host) == 0 || Host == v.Host) &&
+			(len(Ver) == 0 || Ver == v.Ver) {
 			vs = append(vs, v)
 		}
 	}

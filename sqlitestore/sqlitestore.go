@@ -135,17 +135,17 @@ func (s *SQLiteStore) Update(v version.Version) (err error) {
 	return err
 }
 
-func (s *SQLiteStore) Versions(app_id string, host string, ver string) (
+func (s *SQLiteStore) Versions(AppId string, Host string, Ver string) (
 	vs []version.Version, err error) {
 	vs = make([]version.Version, 0)
-	if app_id == "" {
-		app_id = "%"
+	if AppId == "" {
+		AppId = "%"
 	}
-	if host == "" {
-		host = "%"
+	if Host == "" {
+		Host = "%"
 	}
-	if ver == "" {
-		ver = "%"
+	if Ver == "" {
+		Ver = "%"
 	}
 	rows, err := s.db.Query(`
         select app_id, app, ver, host, 
@@ -154,7 +154,7 @@ func (s *SQLiteStore) Versions(app_id string, host string, ver string) (
         where app_id like ?
             and host like ?
             and ver like ?;`,
-		app_id, host, ver)
+		AppId, Host, Ver)
 	if err != nil {
 		return nil, err
 	}

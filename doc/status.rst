@@ -16,12 +16,9 @@ Implemented
 Planned
 -------
 
-* UpdateStore interface: add error results to most methods
-* write quickstart documentation
 * add commands to ``partisci`` client for most API calls
 * python client: add docs
 * document API error results
-* review API consistency, eg: app_id -> AppId
 * add API support for returning a single AppSummary or HostSummary
 * test go get & convert to github import paths
 * experiment with cross-compiling windows/linux
@@ -32,6 +29,7 @@ Planned
   * OS/X binaries
   * linux binaries
 
+* write quickstart documentation
 * profile update loop (pass pointer to V instead of V?)
 * profile high update load, add buffer to updates chan?
 * profile ``Version`` queries
