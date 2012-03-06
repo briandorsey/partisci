@@ -2,9 +2,6 @@
 Partisci's documentation
 ========================
 
-.. WARNING::
-   This project is using readme driven development and has not been fully implemented yet.
-
 Where is your software installed?  Is version X still in use anywhere?
 
 Partisci answers these questions by collecting updates from your programs and providing a REST API to access the data.
@@ -55,6 +52,7 @@ Where does the name come from?
    :maxdepth: 2
 
    commands
+   clients
    api
    testing
    status

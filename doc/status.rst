@@ -13,14 +13,13 @@ Implemented
 * command line update client (and golang client API)
 * optionally only keep recent updates (-trim)
 
-Planned
--------
+Planned - soon
+--------------
 
-* add commands to ``partisci`` client for most API calls
-* python client: add docs
+* python & golang clients - more similar API?
 * document API error results
 * add API support for returning a single AppSummary or HostSummary
-* rename? verstat?
+* rename? verstat? verstate?
 * golang post about ok, err combination
 * test go get & convert to github import paths
 * experiment with cross-compiling windows/linux
@@ -38,17 +37,24 @@ Planned
 * create partisci_fuzz tool to synthesize many fake updates
 * test server with MAXGOPROCS > 1
 
+Planned - later
+---------------
+
+* add commands to ``partisci`` client for most API calls
+* rename python module pypartisci --> partisci
+* PYPI package for python update module.
+
 Possible
 --------
 
-* implement other persistence options: redis, etc
-* python client: add start_update_thread()
 * include relative URLs to queries in API results
 
   * overview --> summary
   * summary --> versions/&with?parameters
 
 * add overview API
+* implement other persistence options: redis, etc
+* python client: add start_update_thread()
 * add ``app`` and ``host`` version summaries with counts of each version
 * gzip responses when possible
 * Add paging to REST results

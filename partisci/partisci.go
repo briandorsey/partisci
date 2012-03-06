@@ -5,7 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"partisci/client"
+	"partisci/clients/go/client"
 	"partisci/version"
 	"strconv"
 	"strings"

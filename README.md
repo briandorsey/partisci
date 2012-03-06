@@ -1,7 +1,3 @@
-**WARNING**
-
-> > This project uses README driven development and is not yet fully implemented. See docs for the [current status](http://briandorsey.github.com/partisci/index.html#document-status).
-
 # Partisci knows where your software is deployed and what versions are in use.
 
 * Where is your software installed?

@@ -1,6 +1,6 @@
 package client_test
 
-import "partisci/client"
+import "partisci/clients/go/client"
 import "partisci/version"
 
 func ExampleSendUDP() {
