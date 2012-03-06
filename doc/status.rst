@@ -20,6 +20,8 @@ Planned
 * python client: add docs
 * document API error results
 * add API support for returning a single AppSummary or HostSummary
+* rename? verstat?
+* golang post about ok, err combination
 * test go get & convert to github import paths
 * experiment with cross-compiling windows/linux
 * Setup build system

@@ -1,4 +1,4 @@
-// Package sharedtest implements shared UpdateStore interface tests
+// Package sharedtest implements shared UpdateStore interface tests.
 //
 // The USTest* functions tests should be run by implementations
 // of the UpdateStore interface to ensure compatability between them.
