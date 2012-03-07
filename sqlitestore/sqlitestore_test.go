@@ -1,9 +1,9 @@
 package sqlitestore
 
 import (
+	"github.com/briandorsey/partisci/sharedtest"
 	"log"
 	"os"
-	"github.com/briandorsey/partisci/sharedtest"
 	"path/filepath"
 	"testing"
 )

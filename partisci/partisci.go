@@ -4,9 +4,9 @@ package main
 import (
 	"flag"
 	"fmt"
-	"os"
 	"github.com/briandorsey/partisci/clients/go/client"
 	"github.com/briandorsey/partisci/version"
+	"os"
 	"strconv"
 	"strings"
 )

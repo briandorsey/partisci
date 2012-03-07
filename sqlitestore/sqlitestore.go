@@ -6,8 +6,8 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	_ "github.com/mattn/go-sqlite3"
 	"github.com/briandorsey/partisci/version"
+	_ "github.com/mattn/go-sqlite3"
 	"time"
 )
 
