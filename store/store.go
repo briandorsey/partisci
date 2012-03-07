@@ -12,20 +12,20 @@ type UpdateStore interface {
 	Update(v version.Version) (err error)
 
 	// App returns an AppSummary for the given AppId.
-	// The value of ok follows map indexing conventions: 
+	// The value of ok follows map indexing conventions:
 	//     true if AppId is present, false otherwise.
 	App(AppId string) (as version.AppSummary, ok bool)
 
-	// Apps returns summary information about each application, 
+	// Apps returns summary information about each application,
 	// based on the known Versions.
 	Apps() (as []version.AppSummary, err error)
 
 	// Host returns a HostSummary for the given Host.
-	// The value of ok follows map indexing conventions: 
+	// The value of ok follows map indexing conventions:
 	//   true if Host is present, false otherwise.
 	Host(Host string) (hs version.HostSummary, ok bool)
 
-	// Hosts returns summary information about each host, 
+	// Hosts returns summary information about each host,
 	// based on the known Versions.
 	Hosts() (hs []version.HostSummary, err error)
 

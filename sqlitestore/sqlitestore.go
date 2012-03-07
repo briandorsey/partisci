@@ -127,7 +127,7 @@ func (s *SQLiteStore) Update(v version.Version) (err error) {
 		return
 	}
 	_, err = s.db.Exec(
-		`insert into version(key, app_id, app, ver, host, 
+		`insert into version(key, app_id, app, ver, host,
                     instance, host_ip, last_update, exact_update)
         values(?, ?, ?, ?, ?, ?, ?, ?, ?);`,
 		v.Key(), v.AppId, v.App, v.Ver, v.Host,
@@ -148,7 +148,7 @@ func (s *SQLiteStore) Versions(AppId string, Host string, Ver string) (
 		Ver = "%"
 	}
 	rows, err := s.db.Query(`
-        select app_id, app, ver, host, 
+        select app_id, app, ver, host,
             instance, host_ip, last_update, exact_update
         from version
         where app_id like ?
@@ -204,7 +204,7 @@ func (s *SQLiteStore) Trim(t time.Time) (c uint64, err error) {
 }
 
 var sqls = []string{
-	`create table if not exists version 
+	`create table if not exists version
         (key varchar not null on conflict replace primary key,
         app_id varchar not null,
         app varchar not null,
