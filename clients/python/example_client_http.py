@@ -6,4 +6,4 @@ APP = "Python UDP Example"
 VER = "1.0"
 
 if __name__ == "__main__":
-    pypartisci.send_update_http(SERVER, PORT, APP, VER)
+    pypartisci.send_http(SERVER, PORT, APP, VER)

@@ -16,4 +16,4 @@ versions = ["1.0", "2.0"]
 
 for app in apps:
     for i, host in enumerate(hosts):
-        pypartisci.send_update(server, port, app, versions[i], host)
+        pypartisci.send_http(server, port, app, versions[i], host)

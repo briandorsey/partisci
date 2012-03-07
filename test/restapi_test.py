@@ -58,7 +58,7 @@ class TestPartisci(object):
             for app in apps:
                 for i, host in enumerate(hosts):
                     ver = versions[i]
-                    pypartisci.send_update_http(
+                    pypartisci.send_http(
                         server, self.port, app, ver, host)
         do()
         return apps, hosts
@@ -276,7 +276,7 @@ class TestPartisci(object):
         info = json.loads(response.content)
         assert len(info["data"]) == 0
 
-        code, data = pypartisci.send_update_http(server, self.port, app, "1.0")
+        code, data = pypartisci.send_http(server, self.port, app, "1.0")
         assert code == 200
 
         response = requests.get(url)
@@ -302,7 +302,7 @@ class TestPartisci(object):
         app = "instance_update"
         instances = [0, 1, 2, 3]
         for inst in instances * 3:
-            code, data = pypartisci.send_update_http(
+            code, data = pypartisci.send_http(
                 server, self.port, app, "1.0", instance=inst)
 
         url = urlparse.urljoin(endpoint % self.port, "app/")
