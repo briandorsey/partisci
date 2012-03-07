@@ -167,3 +167,27 @@ Clients can POST a ``version`` update body to this url.
     :shell:
     :nostderr:
 
+
+Error results
+-------------------------
+
+All error results will be returned with an appropriate HTTP status code and a JSON   document body in the following format::
+
+    {
+        "error" : "<ERROR MESSAGE>"
+    }
+
+
+For example, an update missing keys:
+(curl -i also includes response headers in the output)
+
+.. command-output:: curl -i 'http://localhost:7777/api/v1/update/' --data '{}'
+    :shell:
+    :nostderr:
+
+Or attempting a GET on a POST only resource:
+
+.. command-output:: curl -i 'http://localhost:7777/api/v1/update/'
+    :shell:
+    :nostderr:
+

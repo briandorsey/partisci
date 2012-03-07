@@ -16,8 +16,6 @@ Implemented
 Planned - soon
 --------------
 
-* python & golang clients - more similar API?
-* document API error results
 * add API support for returning a single AppSummary or HostSummary
 * rename? verstat? verstate? verinuse? VerInUse? verusage?
 * golang post about ok, err combination
