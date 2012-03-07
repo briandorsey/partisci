@@ -4,8 +4,8 @@ package main
 
 import (
 	"log"
-	"partisci/clients/go/client"
-	"partisci/version"
+	"github.com/briandorsey/partisci/clients/go/client"
+	"github.com/briandorsey/partisci/version"
 )
 
 func main() {

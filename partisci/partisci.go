@@ -5,8 +5,8 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"partisci/clients/go/client"
-	"partisci/version"
+	"github.com/briandorsey/partisci/clients/go/client"
+	"github.com/briandorsey/partisci/version"
 	"strconv"
 	"strings"
 )

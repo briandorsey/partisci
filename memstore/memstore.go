@@ -2,7 +2,7 @@
 package memstore
 
 import (
-	"partisci/version"
+	"github.com/briandorsey/partisci/version"
 	"time"
 )
 

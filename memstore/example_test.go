@@ -1,8 +1,8 @@
 package memstore_test
 
 import "fmt"
-import "partisci/memstore"
-import "partisci/version"
+import "github.com/briandorsey/partisci/memstore"
+import "github.com/briandorsey/partisci/version"
 
 var s *memstore.MemoryStore
 

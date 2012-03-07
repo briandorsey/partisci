@@ -2,7 +2,7 @@
 package store
 
 import (
-	"partisci/version"
+	"github.com/briandorsey/partisci/version"
 	"time"
 )
 

@@ -7,7 +7,7 @@ import (
 	"errors"
 	"fmt"
 	_ "github.com/mattn/go-sqlite3"
-	"partisci/version"
+	"github.com/briandorsey/partisci/version"
 	"time"
 )
 

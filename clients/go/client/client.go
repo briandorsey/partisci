@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net"
-	"partisci/version"
+	"github.com/briandorsey/partisci/version"
 )
 
 // SendUDP serializes and sends a single Version to a partiscid server via UDP.

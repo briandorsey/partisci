@@ -1,7 +1,7 @@
 package memstore
 
 import (
-	"partisci/sharedtest"
+	"github.com/briandorsey/partisci/sharedtest"
 	"testing"
 )
 

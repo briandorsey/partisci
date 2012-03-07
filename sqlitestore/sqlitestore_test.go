@@ -3,7 +3,7 @@ package sqlitestore
 import (
 	"log"
 	"os"
-	"partisci/sharedtest"
+	"github.com/briandorsey/partisci/sharedtest"
 	"path/filepath"
 	"testing"
 )

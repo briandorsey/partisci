@@ -1,7 +1,7 @@
 package client_test
 
-import "partisci/clients/go/client"
-import "partisci/version"
+import "github.com/briandorsey/partisci/clients/go/client"
+import "github.com/briandorsey/partisci/version"
 
 func ExampleSendUDP() {
 	v := version.Version{App: "app", Ver: "1.2.3", Host: "example.com"}

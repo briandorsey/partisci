@@ -5,8 +5,8 @@
 package sharedtest
 
 import (
-	"partisci/store"
-	"partisci/version"
+	"github.com/briandorsey/partisci/store"
+	"github.com/briandorsey/partisci/version"
 	"testing"
 	"time"
 )
