@@ -16,17 +16,20 @@ Implemented
 Planned - soon
 --------------
 
-* add API support for returning a single AppSummary or HostSummary
 * rename? verstat? verstate? verinuse? VerInUse? verusage?
+  * vstat, vstate, vuse, vinuse, vusage
 * golang post about ok, err combination
+* Manually create and test Windows binary
+* Manually create and test linux binary
 * experiment with cross-compiling windows/linux
-* Setup build system
-
-  * create source distribution package with pre-built documentation
-  * Windows binaries
-  * OS/X binaries
-  * linux binaries
-
+* decide on tagging/release branch plan
+* Setup job to automatically build Windows binaries on new release
+* Setup job to automatically build OS/X binaries on new release
+* Setup job to automatically build Linux binaries on new release
+* Setup job to automatically build source distribution package on new release
+* write Windows install docs
+* write OS/X install docs
+* write Linux install docs
 * write quickstart documentation
 * profile update loop (pass pointer to V instead of V?)
 * profile high update load, add buffer to updates chan?
@@ -37,6 +40,7 @@ Planned - soon
 Planned - later
 ---------------
 
+* add API support for returning a single AppSummary or HostSummary
 * add commands to ``partisci`` client for most API calls
 * rename python module pypartisci --> partisci
 * PYPI package for python update module.
