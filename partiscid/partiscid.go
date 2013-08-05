@@ -10,7 +10,6 @@ import (
 	"flag"
 	"fmt"
 	"github.com/briandorsey/partisci/memstore"
-	"github.com/briandorsey/partisci/sqlitestore"
 	"github.com/briandorsey/partisci/store"
 	"github.com/briandorsey/partisci/version"
 	"io/ioutil"
@@ -269,15 +268,7 @@ func main() {
 	l.Print("listening on: ", conn.LocalAddr())
 
 	var st store.UpdateStore
-	if *sqlite == "" {
-		st = memstore.NewMemoryStore()
-	} else {
-		st, err = sqlitestore.NewSQLiteStore(*sqlite)
-		if err != nil {
-			l.Fatalf("Error opening SQLite database at:\n  %v\n  %v",
-				*sqlite, err)
-		}
-	}
+    st = memstore.NewMemoryStore()
 
 	updates := make(chan version.Version)
 	ss := storeServer{st, updates, *danger}
