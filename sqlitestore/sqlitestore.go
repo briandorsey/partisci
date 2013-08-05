@@ -1,3 +1,5 @@
+// +build ignore
+
 // Package sqlitestore is a SQLite-backed implementation of the UpdateStore
 // interface.
 package sqlitestore
